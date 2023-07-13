@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "digitaldome"
+version = "0.1.0"
+description = ""
+authors = ["Kamil Marut <kamil@kamilmarut.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-dotenv = "^1.0.0"
+django = "^4.2.3"
+psycopg = "^3.1.9"
+whitenoise = {extras = ["brotli"], version = "^6.5.0"}
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+flake8-annotations = "^3.0.1"
+ipython = "^8.14.0"
+bandit = {extras = ["toml"], version = "^1.7.5"}
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
