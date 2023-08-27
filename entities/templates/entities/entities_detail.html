@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load digitaldome_tags %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+<div class="container px-4 mx-auto">
+    <div class="max-w-lg mx-auto">
+        <div class="text-center mb-8">
+            {{ object.name }}
+            <a href="{% url 'tracking:track' object|verbosename object.id %}">Track</a>
+    </div>
+</div>
+{% endblock %}

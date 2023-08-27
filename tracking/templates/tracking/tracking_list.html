@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<table class="table-auto">
+    <thead>
+        <tr>
+            <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
+            <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
+            <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %}
+        <tr>
+            <td class="whitespace-nowrap px-4 text-left">
+                <div class="flex items-center -m-2">
+                    <div class="w-auto p-2">
+                        <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
+                    </div>
+                </div>
+            </td>
+        <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
+        <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

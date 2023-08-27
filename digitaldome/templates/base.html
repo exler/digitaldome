@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=manrope:400,700" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+</head>
+
+<body class="bg-orange-200">
+    <div class="max-w-6xl mx-auto">
+        {% include "partials/nav.html" %}
+
+        <main class="container my-4 mx-auto">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include "partials/footer.html" %}
+    </div>
+</body>
+
+</html>

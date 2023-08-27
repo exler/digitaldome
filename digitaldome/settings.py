@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 from digitaldome.utils.env import get_env_bool, get_env_list, get_env_str
@@ -17,7 +18,16 @@ DEBUG = get_env_bool("DJANGO_DEBUG", False)
 
 ALLOWED_HOSTS = get_env_list("DJANGO_ALLOWED_HOSTS")
 
+BASE_URL = get_env_str("BASE_URL")
+
 # Application definition #
+
+PROJECT_APPS = [
+    "digitaldome",
+    "users",
+    "entities",
+    "tracking",
+]
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
@@ -27,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-]
+] + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -53,6 +63,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "digitaldome.context_processors.base_url_processor",
             ],
         },
     },
@@ -75,9 +86,20 @@ DATABASES = {
     }
 }
 
+# Cache #
+# https://docs.djangoproject.com/en/4.2/topics/cache/
 
-# Password validation #
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "mechanical-sequence-version",
+    }
+}
+
+
+# Authentication #
+
+AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -93,6 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+LOGIN_URL = reverse_lazy("users:login")
 
 
 # Internationalization #

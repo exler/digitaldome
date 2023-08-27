@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-4">
+    <div class="flex flex-row justify-center">
+        <img src="" alt="Avatar" class="rounded-full">
+        <h1 class="ml-4">{{ user.display_name }}</h1>
+    </div>
+    <div class="flex flex-row justify-center items-center gap-4 border-y-2">
+        <a href="{% url 'tracking:dashboard' %}" class="text-xl font-bold">My Dashboard</a>
+        <a href="{% url 'tracking:tracking-list' 'movies' %}" class="text-xl font-bold">My Movies</a>
+        <a href="{% url 'tracking:tracking-list' 'shows' %}" class="text-xl font-bold">My Shows</a>
+        <a href="{% url 'tracking:tracking-list' 'games' %}" class="text-xl font-bold">My Games</a>
+        <a href="{% url 'tracking:tracking-list' 'books' %}" class="text-xl font-bold">My Books</a>
+        <a href="{% url 'tracking:stats' %}" class="text-xl font-bold">My Stats</a>
+    </div>
+    <div class="flex flex-col justify-center">
+        <h2 class="text-2xl font-bold">Recently Completed</h2>
+        <table class="table-auto mt-4">
+            <thead>
+                <tr>
+                    <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
+                    <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in completed_list %}
+                <tr>
+                    <td class="whitespace-nowrap px-4 text-left">
+                        <div class="flex items-center -m-2">
+                            <div class="w-auto p-2">
+                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
+                            </div>
+                        </div>
+                    </td>
+                <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="flex flex-col justify-center">
+        <h2 class="text-2xl font-bold">In progress</h2>
+        <table class="table-auto mt-4">
+            <thead>
+                <tr>
+                    <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
+                    <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in in_progress_list %}
+                <tr>
+                    <td class="whitespace-nowrap px-4 text-left">
+                        <div class="flex items-center -m-2">
+                            <div class="w-auto p-2">
+                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
+                            </div>
+                        </div>
+                    </td>
+                <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
