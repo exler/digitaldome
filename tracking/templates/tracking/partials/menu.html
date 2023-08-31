@@ -1,0 +1,12 @@
+<div class="flex flex-col justify-center items-center">
+    <h1 class="text-2xl">{{ user.display_name }}</h1>
+    <img src="" alt="Avatar">
+</div>
+<div class="flex flex-row justify-center items-center gap-4">
+    <a href="{% url 'tracking:dashboard' %}">Dashboard</a>
+    <a href="{% url 'tracking:tracking-list' 'movies' %}">Movies</a>
+    <a href="{% url 'tracking:tracking-list' 'shows' %}">Shows</a>
+    <a href="{% url 'tracking:tracking-list' 'games' %}">Games</a>
+    <a href="{% url 'tracking:tracking-list' 'books' %}">Books</a>
+    <a href="{% url 'tracking:stats' %}">Stats</a>
+</div>

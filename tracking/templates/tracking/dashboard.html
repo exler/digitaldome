@@ -4,19 +4,8 @@
 
 {% block content %}
 <div class="flex flex-col gap-4">
-    <div class="flex flex-row justify-center">
-        <img src="" alt="Avatar" class="rounded-full">
-        <h1 class="ml-4">{{ user.display_name }}</h1>
-    </div>
-    <div class="flex flex-row justify-center items-center gap-4 border-y-2">
-        <a href="{% url 'tracking:dashboard' %}" class="text-xl font-bold">My Dashboard</a>
-        <a href="{% url 'tracking:tracking-list' 'movies' %}" class="text-xl font-bold">My Movies</a>
-        <a href="{% url 'tracking:tracking-list' 'shows' %}" class="text-xl font-bold">My Shows</a>
-        <a href="{% url 'tracking:tracking-list' 'games' %}" class="text-xl font-bold">My Games</a>
-        <a href="{% url 'tracking:tracking-list' 'books' %}" class="text-xl font-bold">My Books</a>
-        <a href="{% url 'tracking:stats' %}" class="text-xl font-bold">My Stats</a>
-    </div>
-    <div class="flex flex-col justify-center">
+    {% include "tracking/partials/menu.html" %}
+    <div class="flex flex-col">
         <h2 class="text-2xl font-bold">Recently Completed</h2>
         <table class="table-auto mt-4">
             <thead>
@@ -28,14 +17,10 @@
             <tbody>
                 {% for object in completed_list %}
                 <tr>
-                    <td class="whitespace-nowrap px-4 text-left">
-                        <div class="flex items-center -m-2">
-                            <div class="w-auto p-2">
-                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
-                            </div>
-                        </div>
+                    <td class="whitespace-nowrap px-4 text-left text-sm font-medium text-coolGray-800">
+                        {{ forloop.counter }}
                     </td>
-                <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
+                <td class="whitespace-nowrap px-4 text-center text-sm font-medium text-coolGray-800">{{ object.content_object.name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -53,14 +38,10 @@
             <tbody>
                 {% for object in in_progress_list %}
                 <tr>
-                    <td class="whitespace-nowrap px-4 text-left">
-                        <div class="flex items-center -m-2">
-                            <div class="w-auto p-2">
-                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
-                            </div>
-                        </div>
+                    <td class="whitespace-nowrap px-4 text-left text-sm font-medium text-coolGray-800">
+                        {{ forloop.counter }}    
                     </td>
-                <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
+                <td class="whitespace-nowrap px-4 text-center text-sm font-medium text-coolGray-800">{{ object.content_object.name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

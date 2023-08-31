@@ -1,5 +1,4 @@
 import subprocess  # nosec
-import sys
 from typing import Any, Self
 
 from django.core.management.base import BaseCommand
@@ -17,14 +16,14 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("Resetting the database..."))
 
         subprocess.run(
-            ["docker-compose", "down", "-v", "db"],
+            ["docker", "compose", "down", "-v", "db"],
             stdout=subprocess.DEVNULL,
-            stderr=sys.stderr,
+            stderr=subprocess.DEVNULL,
         )  # nosec
         subprocess.run(
-            ["docker-compose", "up", "-d", "db"],
+            ["docker", "compose", "up", "-d", "db"],
             stdout=subprocess.DEVNULL,
-            stderr=sys.stderr,
+            stderr=subprocess.DEVNULL,
         )  # nosec
 
         self.stdout.write(self.style.SUCCESS("Done."))

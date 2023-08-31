@@ -4,79 +4,44 @@
 {% block title %}Digital Dome{% endblock %}
 
 {% block content %}
-<div class="container px-4 mx-auto relative">
-    <div class="flex flex-wrap -mx-4 items-center">
-        <div class="w-full lg:w-1/2 px-4 mb-12 lg:mb-0">
-            <div class="max-w-lg mx-auto">
-                <span class="text-xl md:text-2xl font-extrabold text-orange-500">Section label</span>
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-heading mt-1 mb-6">Heading</h1>
-                <p class="text-xl md:text-2xl font-extrabold leading-8 mb-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sollicitudin erat tortor, id molestie metus rhoncus et. Fusce eget bibendum orci. Proin eget justo nunc.</p>
-                <div>
-                    <div class="flex mb-4 items-center">
-                        <img class="block w-6 h-6 mr-2 object-contain" src="nigodo-assets/circle-icon-green.svg" alt="">
-                        <span class="text-lg font-extrabold">Mauris pellentesque congue libero nec</span>
-                    </div>
-                    <div class="flex mb-4 items-center">
-                        <img class="block w-6 h-6 mr-2 object-contain" src="nigodo-assets/circle-icon-green.svg" alt="">
-                        <span class="text-lg font-extrabold">Suspendisse mollis tincidunt</span>
-                    </div>
-                    <div class="flex items-center">
-                        <img class="block w-6 h-6 mr-2 object-contain" src="nigodo-assets/circle-icon-green.svg" alt="">
-                        <span class="text-lg font-extrabold">Praesent varius justo vel justo pulvinar</span>
-                    </div>
-                </div>
-            </div>
+<section
+  class="overflow-hidden dd-bg-index-hero-pattern bg-repeat"
+>
+  <div class="bg-black/25 p-8 md:p-12 lg:px-16 lg:py-24">
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+        Versatile media tracker
+      </h2>
+
+      <p
+        class="text-white/90 md:mt-6 md:text-lg md:leading-relaxed"
+      >
+        Track, rate and review all your favorite media in one place.
+      </p>
+
+      <div class="flex flex-row justify-center gap-4">
+        <div class="mt-4 sm:mt-8">
+            <a href="{% url 'entities:entities-list' 'movies' %}" class="btn">
+            Movies
+            </a>
         </div>
-        <div class="w-full lg:w-1/2 px-4">
-            <div
-                class="max-w-xl mx-auto py-16 px-6 md:px-14 bg-white border-3 border-indigo-900 shadow-md rounded-2xl text-center">
-                <img class="block w-40 mx-auto" src="{% static 'img/logo.svg' %}" alt="">
-                <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Join our community</h2>
-                <p class="sm:text-lg font-extrabold text-indigo-500 mb-8">Start your free trial</p>
-                <div class="text-left mb-4 md:mb-6">
-                    <label class="font-extrabold" for="">Email</label>
-                    <input
-                        class="block w-full mt-2 p-4 text-lg font-extrabold placeholder-indigo-900 shadow border-2 border-indigo-900 rounded"
-                        type="email" placeholder="hello@example.com">
-                </div>
-                <a class="block mb-6 py-4 px-6 text-center leading-6 text-lg text-white font-extrabold bg-indigo-800 hover:bg-indigo-900 border-3 border-indigo-900 shadow rounded transition duration-200"
-                    href="{% url 'users:register' %}">Sign Up</a>
-            </div>
+        <div class="mt-4 sm:mt-8">
+            <a href="{% url 'entities:entities-list' 'shows' %}" class="btn">
+                Shows
+            </a>
+        </div>
+        <div class="mt-4 sm:mt-8">
+            <a href="{% url 'entities:entities-list' 'books' %}" class="btn">
+                Books
+            </a>
+        </div>
+        <div class="mt-4 sm:mt-8">
+            <a href="{% url 'entities:entities-list' 'games' %}" class="btn">
+                Games
+            </a>
+        </div>
         </div>
     </div>
-</div>
-<div class="hidden navbar-menu relative z-50">
-    <div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
-    <nav
-        class="fixed top-0 left-0 bottom-0 flex flex-col w-full md:w-5/6 max-w-sm py-8 px-8 bg-white border-r overflow-y-auto">
-        <div class="flex items-center mb-8">
-            <a class="mr-auto text-2xl font-bold leading-none" href="#">
-                <img class="h-6" src="{% static 'img/logo.svg' %}" alt="" width="auto">
-            </a>
-            <button class="navbar-close">
-                <svg class="h-6 w-6 text-gray-500 cursor-pointer hover:text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewbox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-        </div>
-        <div class="my-auto">
-            <ul class="py-10">
-                <li class="mb-1"><a class="block p-4 text-lg font-extrabold hover:bg-gray-50 rounded"
-                        href="#">Product</a></li>
-                <li class="mb-1"><a class="block p-4 text-lg font-extrabold hover:bg-gray-50 rounded"
-                        href="#">Features</a></li>
-                <li class="mb-1"><a class="block p-4 text-lg font-extrabold hover:bg-gray-50 rounded"
-                        href="#">Pricing</a></li>
-                <li class="mb-1"><a class="block p-4 text-lg font-extrabold hover:bg-gray-50 rounded"
-                        href="#">Resources</a></li>
-            </ul>
-        </div>
-        <div><a class="block mb-6 text-center leading-6 text-lg font-extrabold hover:text-indigo-800" href="#">Log
-                In</a><a
-                class="block py-4 px-6 text-center leading-6 text-lg text-white font-extrabold bg-indigo-800 hover:bg-indigo-900 border-3 border-indigo-900 shadow rounded transition duration-200"
-                href="{% url 'users:register' %}">Sign Up</a></div>
-    </nav>
-</div>
+  </div>
+</section>
 {% endblock %}

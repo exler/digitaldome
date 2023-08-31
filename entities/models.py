@@ -1,89 +1,61 @@
 from typing import Self
 
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models import Q
 
 from digitaldome.common.models import TimestampedModel
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=255)
+
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        related_name="genres",
+        limit_choices_to=Q(app_label="entities") & ~Q(model="genre"),
+    )
+
+    def __str__(self: Self) -> str:
+        return f"{self.name} ({self.content_type.model_class().__name__})"
 
 
 class EntityBase(TimestampedModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
+    genres = models.ManyToManyField(Genre, related_name="+")
+
+    release_date = models.DateField()
+
     class Meta:
         abstract = True
 
 
-class Movie(EntityBase):
-    class Genres(models.IntegerChoices):
-        Action = 1
-        Adventure = 2
-        Animation = 3
-        Comedy = 4
-        Crime = 5
-        Documentary = 6
-        Drama = 7
-        Family = 8
-        Fantasy = 9
-        Foreign = 10
-        History = 11
-        Horror = 12
-        Music = 13
-        Mystery = 14
-        Romance = 15
-        ScienceFiction = 16
-        Thriller = 17
-        War = 18
-        Western = 19
+def cover_upload_target(instance: EntityBase, filename: str) -> str:
+    return f"{instance.__class__.__name__.lower()}s/covers/{filename}"
 
-    genres = ArrayField(models.IntegerField(choices=Genres.choices))
 
-    year = models.IntegerField()
+class CoverModelMixin(models.Model):
+    cover = models.ImageField(upload_to=cover_upload_target, null=True, blank=True)
 
-    poster = models.ImageField(upload_to="movies/posters", null=True, blank=True)
+    class Meta:
+        abstract = True
+
+
+class Movie(CoverModelMixin, EntityBase):
+    length = models.PositiveSmallIntegerField()  # In minutes
+
+    director = ArrayField(models.CharField(max_length=255))
+    cast = ArrayField(models.CharField(max_length=255))
 
     def __str__(self: Self) -> str:
-        return f"{self.name} ({self.year})"
+        return f"{self.name} ({self.release_date.year})"
 
 
 class Show(EntityBase):
-    class Genres(models.IntegerChoices):
-        Action = 1
-        Adventure = 2
-        Animation = 3
-        Children = 4
-        Comedy = 5
-        Crime = 6
-        Documentary = 7
-        Drama = 8
-        Family = 9
-        Fantasy = 10
-        Food = 11
-        GameShow = 12
-        History = 13
-        HomeAndGarden = 14
-        Horror = 15
-        KoreanDrama = 16
-        MartialArts = 17
-        MiniSeries = 18
-        Musical = 19
-        Mystery = 20
-        Reality = 21
-        Romance = 22
-        ScienceFiction = 23
-        Soap = 24
-        Sport = 25
-        Suspense = 26
-        TalkShow = 27
-        Thriller = 28
-        Travel = 29
-        War = 30
-        Western = 31
-
-    genres = ArrayField(models.IntegerField(choices=Genres.choices))
-
-    poster = models.ImageField(upload_to="shows/posters", null=True, blank=True)
-
     def __str__(self: Self) -> str:
         return self.name
 
@@ -94,65 +66,32 @@ class Episode(EntityBase):
     season = models.PositiveSmallIntegerField()
     number = models.PositiveSmallIntegerField()
 
-    release_date = models.DateField()
-
     def __str__(self: Self) -> str:
         return f"{self.show.name} S{self.season:02}E{self.number:02}"
 
 
-class Game(EntityBase):
-    release_date = models.DateField()
+class Game(CoverModelMixin, EntityBase):
+    class Platforms(models.IntegerChoices):
+        PC = 10, "PC"
+        PS3 = 20, "PS3"
+        PS4 = 21, "PS4"
+        PS5 = 22, "PS5"
+        XBOX_360 = 30, "Xbox 360"
+        XBOX_ONE = 31, "Xbox One"
+        SWITCH = 40, "Nintendo Switch"
 
-    cover = models.ImageField(upload_to="games/covers", null=True, blank=True)
+    platforms = ArrayField(models.PositiveSmallIntegerField(choices=Platforms.choices))
 
     def __str__(self: Self) -> str:
         return self.name
 
 
-class Book(EntityBase):
-    class Genres(models.IntegerChoices):
-        Art = 1
-        Biography = 2
-        Business = 3
-        ChickLit = 4
-        Children = 5
-        Classics = 6
-        Comics = 7
-        Contemporary = 8
-        Crime = 9
-        Fantasy = 10
-        Fiction = 11
-        HistoricalFiction = 12
-        History = 13
-        Horror = 14
-        HumorAndComedy = 15
-        Manga = 16
-        Music = 17
-        Mystery = 18
-        Nonfiction = 19
-        Paranormal = 20
-        Philosophy = 21
-        Poetry = 22
-        Psychology = 23
-        Religion = 24
-        Romance = 25
-        Science = 26
-        ScienceFiction = 27
-        SelfHelp = 28
-        Suspense = 29
-        Spirituality = 30
-        Sports = 31
-        Thriller = 32
-        Travel = 33
-        YoungAdult = 34
-
-    genres = ArrayField(models.IntegerField(choices=Genres.choices))
-
-    cover = models.ImageField(upload_to="books/covers", null=True, blank=True)
-
+class Book(CoverModelMixin, EntityBase):
     authors = ArrayField(models.CharField(max_length=255))
 
-    published_date = models.DateField()
+    pages = models.PositiveSmallIntegerField()
+
+    isbn = models.CharField(max_length=17)
 
     def __str__(self: Self) -> str:
         return self.name
