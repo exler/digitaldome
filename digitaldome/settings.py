@@ -22,13 +22,6 @@ BASE_URL = get_env_str("BASE_URL")
 
 # Application definition #
 
-PROJECT_APPS = [
-    "digitaldome",
-    "users",
-    "entities",
-    "tracking",
-]
-
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.admin",
@@ -37,7 +30,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-] + PROJECT_APPS
+    "digitaldome",
+    "users",
+    "entities",
+    "tracking",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -71,6 +68,42 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "digitaldome.wsgi.application"
 
+# Logging #
+# https://docs.djangoproject.com/en/4.2/howto/logging/
+
+LOG_LEVEL = "DEBUG" if DEBUG else "INFO"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "root": {
+        "level": LOG_LEVEL,
+        "handlers": ["console"],
+    },
+    "formatters": {
+        "verbose": {
+            "()": "digitaldome.formatters.ExtraFormatter",
+            "format": "[{asctime}] [{levelname}] [{name}] [{module}] {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        }
+    },
+}
 
 # Database #
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
