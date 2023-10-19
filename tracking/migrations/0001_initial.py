@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                         null=True,
                         validators=[
                             django.core.validators.MinValueValidator(1),
-                            django.core.validators.MaxValueValidator(10),
+                            django.core.validators.MaxValueValidator(5),
                         ],
                     ),
                 ),

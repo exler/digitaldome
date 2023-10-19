@@ -62,7 +62,7 @@
                              x-cloak>
                             <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
                                 <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-none">
-                                    {% for i in "AAAAAAAAAA" %}
+                                    {% for i in "AAAAA" %}
                                         {% comment %} djlint:off T001 {% endcomment %}
                                         <button @mouseover="hoverIndex = {{ forloop.counter }}"
                                                 hx-post="{% url 'tracking:track' object|verbosename object.id %}"

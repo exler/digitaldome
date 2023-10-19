@@ -26,7 +26,7 @@ class TrackingObject(TimestampedModel):
     status = models.PositiveSmallIntegerField(choices=Status.choices, default=Status.COMPLETED, blank=True)
 
     rating = models.PositiveSmallIntegerField(
-        null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)]
+        null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
     notes = models.TextField(blank=True, validators=[MaxLengthValidator(150)])
 
