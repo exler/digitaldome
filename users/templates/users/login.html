@@ -26,8 +26,8 @@
                 <div class="flex flex-wrap mb-6 items-center justify-between">
                     <div class="form-control">
                         <label class="label cursor-pointer">
-                            <input class="checkbox mr-2" type="checkbox">
-                            <span class="label-text">Remember me</span>
+                            {{ form.remember_me|addclass:"checkbox mr-2" }}
+                            <span class="label-text">{{ form.remember_me.label }}</span>
                         </label>
                     </div>
                     <div>

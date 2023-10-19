@@ -22,9 +22,11 @@ class LoginForm(forms.ModelForm):
         "user_inactive": _("This account is inactive."),
     }
 
+    remember_me = forms.BooleanField(required=False)
+
     class Meta:
         model = User
-        fields = ("email", "password")
+        fields = ("email", "password", "remember_me")
         widgets: ClassVar = {"password": forms.PasswordInput()}
 
     def __init__(self: Self, request: HttpRequest | None = None, *args: Any, **kwargs: Any) -> None:

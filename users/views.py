@@ -137,6 +137,8 @@ class LoginView(FormView):
     def form_valid(self: Self, form: LoginForm) -> HttpResponse:
         """Security check complete. Log the user in."""
         auth_login(self.request, form.get_user())
+        if form.cleaned_data.get("remember_me", False):
+            self.request.session.set_expiry(0)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self: Self) -> str:
