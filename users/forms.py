@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any, ClassVar, Self
 
 from django import forms
 from django.contrib.auth import authenticate, password_validation
@@ -9,13 +9,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from digitaldome.utils.url import get_full_url
-from users.tokens import PasswordResetTokenGenerator
+from users.tokens import EmailVerificationTokenGenerator, PasswordResetTokenGenerator
 
 from .models import User
 
 
 class LoginForm(forms.ModelForm):
-    error_messages = {
+    error_messages: ClassVar = {
         "invalid_credentials": _(
             "Please enter a correct email and password. Note that both fields may be case-sensitive."
         ),
@@ -25,7 +25,7 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("email", "password")
-        widgets = {"password": forms.PasswordInput()}
+        widgets: ClassVar = {"password": forms.PasswordInput()}
 
     def __init__(self: Self, request: HttpRequest | None = None, *args: Any, **kwargs: Any) -> None:
         self.request = request
@@ -40,7 +40,8 @@ class LoginForm(forms.ModelForm):
         if email is not None and password:
             self.user_cache = authenticate(self.request, email=email, password=password)
             if self.user_cache is None:
-                raise self.get_invalid_credentials_error()
+                error = self.get_invalid_credentials_error()
+                raise error
             else:
                 self.confirm_login_allowed(self.user_cache)
 
@@ -61,7 +62,7 @@ class LoginForm(forms.ModelForm):
 
 
 class RegisterForm(forms.ModelForm):
-    error_messages = {
+    error_messages: ClassVar = {
         "password_mismatch": _("The two password fields didn't match."),
     }
 
@@ -70,7 +71,7 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("email", "display_name", "password", "confirm_password")
-        widgets = {"password": forms.PasswordInput()}
+        widgets: ClassVar = {"password": forms.PasswordInput()}
 
     def clean_confirm_password(self: Self) -> None:
         password1 = self.cleaned_data.get("password")
@@ -81,11 +82,23 @@ class RegisterForm(forms.ModelForm):
                 code="password_mismatch",
             )
 
+    def send_email_verification_email(self: Self, user: User) -> None:
+        email_verification_token = EmailVerificationTokenGenerator.make_token(obj=user)
+        reset_url = get_full_url(reverse("users:verify-email", kwargs={"token": email_verification_token}))
+        send_mail(
+            subject="Verify your email",
+            message=f"Click here to verify your email: {reset_url}",
+            from_email=None,
+            recipient_list=[user.email],
+        )
+
     def save(self: Self, commit: bool = True) -> User:
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
+
+        self.send_email_verification_email(user)
         return user
 
 
@@ -128,7 +141,7 @@ class ResetPasswordForm(forms.Form):
 
 
 class ResetPasswordConfirmForm(forms.Form):
-    error_messages = {
+    error_messages: ClassVar = {
         "password_mismatch": _("The two password fields didn't match."),
     }
 

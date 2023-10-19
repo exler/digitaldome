@@ -11,7 +11,7 @@ class AuthenticatedTestCase(TestCase):
         super()._pre_setup()
 
         self.user = User.objects.create_user(  # nosec
-            email="skarlet@digitaldome.io",
+            email="liara@digitaldome.io",
             password="password",
             email_verified=True,
         )

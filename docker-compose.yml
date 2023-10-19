@@ -10,5 +10,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  web:
+    build: .
+    command: server
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_ALLOWED_HOSTS=localhost
+      - POSTGRES_DB_NAME=postgres
+      - POSTGRES_DB_USER=postgres
+      - POSTGRES_DB_PASSWORD=postgres
+      - POSTGRES_DB_HOST=db
+      - POSTGRES_DB_PORT=5432
+
 volumes:
   postgres_data:
