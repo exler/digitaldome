@@ -17,13 +17,13 @@
 <script>
 function preview() {
     return { 
-        imageUrl: '{{ widget.value.url }}' || '{% static "img/cover-placeholder.png" %}', 
+        imageUrl: '{{ widget.value.url }}' || '{% static "img/image-placeholder.png" %}', 
         updateImagePreview(event) { 
             const file = event.target.files[0];
             if (file) { 
                 this.imageUrl = URL.createObjectURL(file); 
             } else { 
-                this.imageUrl = '{{ widget.value.url }}' || '{% static "img/cover-placeholder.png" %}'; 
+                this.imageUrl = '{{ widget.value.url }}' || '{% static "img/image-placeholder.png" %}'; 
             } 
         } 
     }
