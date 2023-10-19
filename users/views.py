@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse, HttpResponseBase, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
@@ -133,12 +133,14 @@ class ResetPasswordConfirmView(FormView):
 class LoginView(FormView):
     form_class = LoginForm
     template_name = "users/login.html"
-    success_url = reverse_lazy("tracking:dashboard")
 
     def form_valid(self: Self, form: LoginForm) -> HttpResponse:
         """Security check complete. Log the user in."""
         auth_login(self.request, form.get_user())
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self: Self) -> str:
+        return reverse("tracking:dashboard", kwargs={"user_id": self.request.user.id})
 
 
 class LogoutView(RedirectView):

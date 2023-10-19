@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any, ClassVar, Self
 
 from django import forms
 
@@ -8,7 +8,7 @@ from tracking.models import TrackingObject
 class TrackingObjectForm(forms.ModelForm):
     class Meta:
         model = TrackingObject
-        fields = ["status"]
+        fields: ClassVar = ["status", "rating", "notes"]
 
     def __init__(self: Self, *args: Any, **kwargs: Any) -> None:
         self.entity = kwargs.pop("entity", None)

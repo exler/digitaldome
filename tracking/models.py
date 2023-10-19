@@ -1,6 +1,9 @@
+from typing import ClassVar, Self
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MaxLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
 from digitaldome.common.models import TimestampedModel
@@ -18,12 +21,30 @@ class TrackingObject(TimestampedModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     content_object = GenericForeignKey("content_type", "object_id")
 
-    status = models.PositiveSmallIntegerField(choices=Status.choices, default=Status.PLANNED)
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    status = models.PositiveSmallIntegerField(choices=Status.choices, default=Status.COMPLETED, blank=True)
+
+    rating = models.PositiveSmallIntegerField(
+        null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    notes = models.TextField(blank=True, validators=[MaxLengthValidator(150)])
+
     class Meta:
-        indexes = [
+        indexes: ClassVar = [
             models.Index(fields=["object_id", "content_type"]),
             models.Index(fields=["user", "status"]),
         ]
+        constraints: ClassVar = [
+            models.UniqueConstraint(fields=["object_id", "content_type", "user"], name="unique_tracking_object"),
+        ]
+
+
+class UserStats(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    # All time spent is in seconds.
+    time_spent_on_movies = models.BigIntegerField(default=0)
+
+    def __str__(self: Self) -> str:
+        return f"{self.user.username} (stats)"

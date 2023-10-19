@@ -1,11 +1,6 @@
 from django.contrib import admin
 
-from entities.models import Book, Game, Genre, Movie, Show
-
-
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    pass
+from entities.models import Book, Game, Movie, Show
 
 
 @admin.register(Movie)

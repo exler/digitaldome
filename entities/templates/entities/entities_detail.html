@@ -1,13 +1,224 @@
 {% extends "base.html" %}
-{% load digitaldome_tags %}
-
-{% block title %}{{ object.name }}{% endblock %}
-
+{% load digitaldome_tags entities %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
 {% block content %}
-<div class="max-w-lg mx-auto">
-    <div class="flex flex-col items-center">
-        {{ object.name }}
-        <a class="btn" href="{% url 'tracking:track' object|verbosename object.id %}">Track</a>
+    <div class="grid grid-cols-12 gap-y-6">
+        <div class="relative flex col-span-9 gap-4 rounded-lg border border-gray-100">
+            <div>
+                <figure>
+                    <img width="192" height="288" src="{{ object.image_url }}" alt="" />
+                </figure>
+            </div>
+            <div class="flex flex-col gap-2 mt-2 w-full">
+                <ul>
+                    <li>
+                        {% for tag in object.tags.all %}
+                            <span class="whitespace-nowrap rounded-full bg-purple-100 px-2.5 py-0.5 text-sm text-purple-700">{{ tag }}</span>
+                        {% endfor %}
+                    </li>
+                </ul>
+                <div class="flex flex-row justify-between">
+                    <div class="flex flex-row items-center">
+                        <h1 class="text-3xl font-bold">{{ object.name }}</h1>
+                        {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
+                        {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
+                    </div>
+                    {% if user.is_moderator %}
+                        <div class="flex flex-row gap-2 mr-2">
+                            <a class="btn btn-primary"
+                               href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
+                            {% if object.requires_approval %}
+                                <form action="{% url 'entities:entities-approve' object|verbosename object.id %}"
+                                      method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning">Approve</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <p>Released: {{ object.release_date }}</p>
+                <div class="flex flex-row gap-4">
+                    <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
+                         class="relative">
+                        <button @click="ratingDropdownOpen=true"
+                                class="w-28 px-6 py-12 flex flex-col gap-4 items-center justify-center h-12 border rounded-md">
+                            <span class="text-2xl uppercase font-bold">
+                                {% if tracking_obj.rating %}
+                                    {{ tracking_obj.rating }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </span>
+                            <span class="text-xs uppercase font-bold">Your rating</span>
+                        </button>
+                        <div x-show="ratingDropdownOpen"
+                             @click.away="ratingDropdownOpen=false"
+                             x-transition:enter="ease-out duration-200"
+                             x-transition:enter-start="-translate-y-2"
+                             x-transition:enter-end="translate-y-0"
+                             class="absolute top-0 z-50 mt-12 -translate-x-1/2 left-1/2"
+                             x-cloak>
+                            <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
+                                <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-none">
+                                    {% for i in "AAAAAAAAAA" %}
+                                        {% comment %} djlint:off T001 {% endcomment %}
+                                        <button @mouseover="hoverIndex = {{ forloop.counter }}"
+                                                hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                                hx-trigger="click"
+                                                hx-vals='{"rating": {{ forloop.counter }}}'
+                                                hx-target="body"
+                                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                                            <svg :class="hoverIndex && {{ forloop.counter }} <= hoverIndex ? 'text-yellow-400' : 'text-gray-400'"
+                                                 class="w-8 h-8"
+                                                 viewBox="0 0 1024 1024"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill="currentColor" d="m908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5c-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 0 0 .6 45.3l183.7 179.1l-43.4 252.9a31.95 31.95 0 0 0 46.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2c17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9l183.7-179.1c5-4.9 8.3-11.3 9.3-18.3c2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7L323.1 772l36.1-210.3l-152.8-149L417.6 382L512 190.7L606.4 382l211.2 30.7l-152.8 148.9z" />
+                                            </svg>
+                                        </button>
+                                        {% comment %} djlint:on T001 {% endcomment %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border rounded-md">
+                        <span class="text-2xl uppercase font-bold">{{ entity_stats.digitaldome_rating|default_if_none:"—" }}</span>
+                        <span class="text-[10px] uppercase">{{ entity_stats.digitaldome_rating_count }} vote{{ entity_stats.digitaldome_rating_count|pluralize }}</span>
+                        <span class="text-xs uppercase font-bold mt-2">Community rating</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="relative flex col-span-3 justify-center">
+            <!-- Start tracking dropdown button -->
+            <div x-data="{ statusDropdownOpen: false }" class="relative">
+                <button @click="statusDropdownOpen=true"
+                        class="w-48 inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                    {% if tracking_obj %}
+                        {% if tracking_obj.status == 0 %}
+                            {% include "entities/partials/dropdown_planned.html" %}
+                        {% elif tracking_obj.status == 1 %}
+                            {% include "entities/partials/dropdown_in_progress.html" %}
+                        {% elif tracking_obj.status == 2 %}
+                            {% include "entities/partials/dropdown_completed.html" %}
+                        {% elif tracking_obj.status == 3 %}
+                            {% include "entities/partials/dropdown_dropped.html" %}
+                        {% elif tracking_obj.status == 4 %}
+                            {% include "entities/partials/dropdown_on_hold.html" %}
+                        {% endif %}
+                    {% else %}
+                        <svg viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg"
+                             class="object-cover w-8 h-8 border rounded-full border-neutral-200">
+                            <path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                        </svg>
+                        <span class="ml-2 leading-none">
+                            <span>Start tracking</span>
+                        </span>
+                    {% endif %}
+                    <svg class="absolute right-0 w-4 h-4 mr-3"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                    </svg>
+                </button>
+                <div x-show="statusDropdownOpen"
+                     @click.away="statusDropdownOpen=false"
+                     x-transition:enter="ease-out duration-200"
+                     x-transition:enter-start="-translate-y-2"
+                     x-transition:enter-end="translate-y-0"
+                     class="absolute top-0 z-50 w-56 mt-12 -translate-x-1/2 left-1/2"
+                     x-cloak>
+                    <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
+                        {% if tracking_obj.status != 0 %}
+                            <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-vals='{"status": "0"}'
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {% include "entities/partials/dropdown_planned.html" %}
+                            </button>
+                        {% endif %}
+                        {% if tracking_obj.status != 1 %}
+                            <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-vals='{"status": "1"}'
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {% include "entities/partials/dropdown_in_progress.html" %}
+                            </button>
+                        {% endif %}
+                        {% if tracking_obj.status != 2 %}
+                            <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-vals='{"status": "2"}'
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {% include "entities/partials/dropdown_completed.html" %}
+                            </button>
+                        {% endif %}
+                        {% if tracking_obj.status != 3 %}
+                            <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-vals='{"status": "3"}'
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {% include "entities/partials/dropdown_dropped.html" %}
+                            </button>
+                        {% endif %}
+                        {% if tracking_obj.status != 4 %}
+                            <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-vals='{"status": "4"}'
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                {% include "entities/partials/dropdown_on_hold.html" %}
+                            </button>
+                        {% endif %}
+                        {% if tracking_obj %}
+                            <div class="h-px my-1 -mx-1 bg-neutral-200"></div>
+                            <button hx-delete="{% url 'tracking:tracking-delete' object|verbosename object.id %}"
+                                    hx-trigger="click"
+                                    hx-target="body"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                <svg viewBox="0 0 256 256"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     class="w-4 h-4 mr-2">
+                                    <path fill="currentColor" d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16ZM96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Zm48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0Z" />
+                                </svg>
+                                <span>Remove from tracking list</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Stop tracking dropdown button -->
+            </div>
+        </div>
+        <div class="relative flex col-span-9">
+            <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm w-full">
+                <dl class="-my-3 divide-y divide-gray-100 text-sm">
+                    {% for detail_field in object.ADDITIONAL_DETAIL_FIELDS %}
+                        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+                            <dt class="font-medium text-gray-900">{{ object|fieldlabel:detail_field|title }}</dt>
+                            <dd class="text-gray-700 sm:col-span-2">
+                                {{ object|detailfieldhtml:detail_field }}
+                            </dd>
+                        </div>
+                    {% endfor %}
+                </dl>
+            </div>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

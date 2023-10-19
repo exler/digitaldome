@@ -1,9 +1,7 @@
-import os.path
 from typing import Any, Self
 from urllib.parse import urlparse
 
 from django import template
-from django.conf import settings
 from django.db.models import Model
 from django.forms import BoundField
 from django.template.defaultfilters import stringfilter
@@ -37,6 +35,16 @@ def add_class(value: BoundField, arg: str) -> SafeString:
         raise MissingTemplateWidget
 
 
+@register.filter("fieldlabel")
+def field_label(value: Model, arg: str) -> str:
+    return value._meta.get_field(arg).verbose_name
+
+
+@register.filter("toint")
+def to_int(value: str) -> int:
+    return int(value)
+
+
 @register.filter("baseurl")
 @stringfilter
 def base_url(value: str) -> str:
@@ -44,5 +52,5 @@ def base_url(value: str) -> str:
 
 
 @register.simple_tag
-def static_base_url(path: str) -> str:
-    return get_full_url(os.path.join(settings.STATIC_URL, path))
+def full_url(path: str) -> str:
+    return get_full_url(path)

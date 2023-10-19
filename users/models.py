@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any, ClassVar, Self
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.validators import RegexValidator
@@ -21,12 +21,10 @@ class CustomUserManager(UserManager):
         return user
 
     def create_user(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
-        extra_fields.setdefault("is_staff", False)
-        extra_fields.setdefault("is_superuser", False)
-
         return self._create_user(display_name, email, password, **extra_fields)
 
     def create_superuser(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
+        extra_fields.setdefault("is_moderator", True)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("email_verified", True)
@@ -47,8 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     display_name = models.CharField(
         max_length=150,
         unique=True,
-        help_text=_("Required. 150 characters or fewer. Letters, digits and ./-/_ only."),
-        validators=[RegexValidator(r"^[\w.-]+\Z")],
+        help_text=_("Required. 150 characters or fewer. Alphanumeric, spaces and ./-/_ characters only."),
+        validators=[RegexValidator(r"^[\w. -]+\Z")],
         error_messages={
             "unique": _("A user with that display name already exists."),
         },
@@ -56,6 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
+
+    is_moderator = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["display_name"]
+    REQUIRED_FIELDS: ClassVar = ["display_name"]
 
     def __str__(self: Self) -> str:
         return f"{self.display_name} ({self.email})"

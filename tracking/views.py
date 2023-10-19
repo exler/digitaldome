@@ -1,23 +1,22 @@
-from typing import Any, Dict, Self, Type
+from typing import Any, ClassVar, Dict, Self
 
-from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import QuerySet
-from django.http import Http404
-from django.http.request import HttpRequest
-from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.views.generic import TemplateView
-from django.views.generic.detail import DetailView, SingleObjectTemplateResponseMixin
-from django.views.generic.edit import ModelFormMixin, ProcessFormView
-from django.views.generic.list import ListView
+from django.forms import ModelForm
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.views.generic import DetailView, TemplateView
+from django.views.generic.edit import DeleteView, ModelFormMixin, ProcessFormView
+from django_filters.filterset import FilterSet
+from django_filters.views import FilterView
 
-from entities.models import EntityBase
-from entities.utils import get_model_from_entity_type
+from digitaldome.common.mixins import DefaultFilterMixin
+from entities.helpers import format_time_spent
+from entities.mappings import get_model_from_entity_type
 from tracking.forms import TrackingObjectForm
-from tracking.models import TrackingObject
+from tracking.mixins import TrackingObjectMixin
+from tracking.models import TrackingObject, UserStats
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -31,9 +30,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class TrackingListView(LoginRequiredMixin, ListView):
+class TrackingFilter(FilterSet):
+    class Meta:
+        model = TrackingObject
+        fields: ClassVar = ["status"]
+
+
+class TrackingListView(LoginRequiredMixin, DefaultFilterMixin, FilterView):
     template_name = "tracking/tracking_list.html"
     paginate_by = 10
+    filterset_class = TrackingFilter
+
+    default_filter_values: ClassVar = {"status": TrackingObject.Status.IN_PROGRESS}
 
     def get_queryset(self: Self) -> QuerySet[TrackingObject]:
         entity_type = get_model_from_entity_type(self.kwargs["entity_type"])
@@ -42,58 +50,24 @@ class TrackingListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["page_title"] = self.kwargs["entity_type"].capitalize()
+        context["entity_type"] = self.kwargs["entity_type"]
         return context
 
 
-class TrackingDetailView(LoginRequiredMixin, DetailView):
-    template_name = "tracking/tracking_detail.html"
-
-    def get_queryset(self: Self) -> QuerySet[TrackingObject]:
-        entity_type = get_model_from_entity_type(self.kwargs["entity_type"])
-        content_type = ContentType.objects.get_for_model(entity_type)
-        return TrackingObject.objects.filter(user=self.request.user, content_type=content_type)
-
-
-class StatsView(LoginRequiredMixin, TemplateView):
+class StatsView(LoginRequiredMixin, DetailView):
     template_name = "tracking/stats.html"
 
+    def get_object(self: Self, queryset: QuerySet[UserStats] | None = None) -> UserStats:
+        return UserStats.objects.get_or_create(user=self.request.user)[0]
 
-class TrackingFormView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, ModelFormMixin, ProcessFormView):
-    template_name = "tracking/tracking_changeform.html"
+    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["time_spent_on_movies"] = format_time_spent(self.object.time_spent_on_movies)
+        return context
+
+
+class TrackingFormView(LoginRequiredMixin, TrackingObjectMixin, ModelFormMixin, ProcessFormView):
     form_class = TrackingObjectForm
-    model = TrackingObject
-
-    def _get_entity(self: Self) -> Type[EntityBase]:
-        entity_type = self.kwargs["entity_type"]
-        entity_type_model = get_model_from_entity_type(entity_type)
-        entity = get_object_or_404(entity_type_model, pk=self.kwargs["pk"])
-        return entity
-
-    def dispatch(self: Self, request: http.HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        self.entity = self._get_entity()
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self: Self, queryset: QuerySet[TrackingObject] | None = None) -> TrackingObject:
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        try:
-            return queryset.get(
-                content_type=ContentType.objects.get_for_model(self.entity),
-                object_id=self.entity.pk,
-                user=self.request.user,
-            )
-        except TrackingObject.DoesNotExist:
-            raise Http404
-
-    def get(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        try:
-            self.object = self.get_object()
-        except Http404:
-            self.object = None
-
-        return super().get(request, *args, **kwargs)
 
     def post(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -102,6 +76,12 @@ class TrackingFormView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, Mo
             self.object = None
 
         return super().post(request, *args, **kwargs)
+
+    def form_valid(self: Self, form: ModelForm) -> HttpResponse:
+        self.object = form.save()
+        return render(
+            self.request, "entities/entities_detail.html", {"object": self.entity, "tracking_obj": self.object}
+        )
 
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -115,7 +95,11 @@ class TrackingFormView(LoginRequiredMixin, SingleObjectTemplateResponseMixin, Mo
             form_kwargs["user"] = self.request.user
         return form_kwargs
 
-    def get_success_url(self: Self) -> str:
-        return reverse(
-            "entities:entities-detail", kwargs={"entity_type": self.kwargs["entity_type"], "pk": self.kwargs["pk"]}
-        )
+
+class TrackingDeleteView(LoginRequiredMixin, TrackingObjectMixin, DeleteView):
+    model = TrackingObject
+
+    def delete(self: Self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        self.object.delete()
+        return render(self.request, "entities/entities_detail.html", {"object": self.entity})

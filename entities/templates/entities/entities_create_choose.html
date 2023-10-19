@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load digitaldome_tags entities %}
+{% block title %}
+    Create new item
+{% endblock title %}
+{% block content %}
+    <ul>
+        {% for entity_type in entity_types %}
+            <li class="mt-2">
+                <a href="{% url 'entities:entities-create' entity_type %}">
+                    Create new <span class="btn btn-primary">{{ entity_type }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

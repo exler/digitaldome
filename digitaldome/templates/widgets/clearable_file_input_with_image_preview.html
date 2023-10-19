@@ -1,0 +1,31 @@
+{% load static %}
+<div class="flex flex-row items-end" x-data="preview()">
+    <img :src="imageUrl" width="96" height="144" alt="" class="border-2 mr-2">
+    <input type="{{ widget.type }}"
+           name="{{ widget.name }}"
+           x-on:change="updateImagePreview($event)"
+           {% include "django/forms/widgets/attrs.html" %}>
+    <div class="flex flex-col items-center ml-2">
+        <input type="checkbox"
+               name="{{ widget.checkbox_name }}"
+               id="{{ widget.checkbox_id }}"
+               class="transform scale-75"
+               {% if widget.attrs.disabled %}disabled{% endif %}>
+        <label for="{{ widget.checkbox_id }}" class="text-sm font-bold">{{ widget.clear_checkbox_label }}</label>
+    </div>
+</div>
+<script>
+function preview() {
+    return { 
+        imageUrl: '{{ widget.value.url }}' || '{% static "img/cover-placeholder.png" %}', 
+        updateImagePreview(event) { 
+            const file = event.target.files[0];
+            if (file) { 
+                this.imageUrl = URL.createObjectURL(file); 
+            } else { 
+                this.imageUrl = '{{ widget.value.url }}' || '{% static "img/cover-placeholder.png" %}'; 
+            } 
+        } 
+    }
+}
+</script>

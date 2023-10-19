@@ -1,0 +1,67 @@
+<div x-data="manyToManyWithTextInput('{{ widget.attrs.id }}')"
+     class="w-full flex flex-col items-center mx-auto">
+    <select multiple
+            name="{{ widget.name }}"
+            id="{{ widget.attrs.id }}"
+            class="hidden">
+        <template x-for="(item, index) in items" :key="index">
+            <option x-bind:value="item" selected x-text="item"></option>
+        </template>
+    </select>
+    <div class="w-full">
+        <div class="flex flex-col items-center relative">
+            <div class="w-full">
+                <div class="p-1 flex border border-gray-500">
+                    <div class="flex flex-auto flex-wrap">
+                        <template x-for="(item, index) in items" :key="index">
+                            <div class="flex justify-center items-center font-medium px-2 mr-1 rounded-full text-teal-700 bg-teal-100 border border-teal-300 ">
+                                <div class="text-xs font-normal leading-none max-w-full flex-initial"
+                                     x-model="item"
+                                     x-text="item"></div>
+                                <div class="flex flex-auto flex-row-reverse">
+                                    <div x-on:click="remove(index)">
+                                        <svg class="fill-current h-6 w-6 " role="button" viewBox="0 0 20 20">
+                                            <path d="M14.348,14.849c-0.469,0.469-1.229,0.469-1.697,0L10,11.819l-2.651,3.029c-0.469,0.469-1.229,0.469-1.697,0 c-0.469-0.469-0.469-1.229,0-1.697l2.758-3.15L5.651,6.849c-0.469-0.469-0.469-1.228,0-1.697s1.228-0.469,1.697,0L10,8.183 l2.651-3.031c0.469-0.469,1.228-0.469,1.697,0s0.469,1.229,0,1.697l-2.758,3.152l2.758,3.15 C14.817,13.62,14.817,14.38,14.348,14.849z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <!-- Input Field to Add Items -->
+                        <input x-model="textInput"
+                               x-on:keydown.enter.prevent="add(textInput)"
+                               class="p-1 border-none outline-0 shadow-none focus:border-none focus:outline-0 focus:shadow-none flex-grow"
+                               placeholder="Type and press Enter...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% with "widget-value-"|add:widget.attrs.id as value_id %}{{ widget.value|json_script:value_id }}{% endwith %}
+<script>
+    function manyToManyWithTextInput(widgetId) {
+        return {
+            initial: JSON.parse(document.getElementById(`widget-value-${widgetId}`).textContent),
+            items: [],
+            show: false,
+            textInput: '',
+            init() {
+                // https://alpinejs.dev/directives/init#auto-evaluate-init-method
+                this.items = this.initial;
+            },
+            add(value) {
+                // Check if the option already exists
+                let existingIndex = this.items.findIndex(item => item.toLowerCase() === value.toLowerCase());
+    
+                if (existingIndex === -1) {
+                    this.items.push(value);
+                }
+                this.textInput = ''; // Clear input after adding
+            },
+            remove(index) {
+                this.items.splice(index, 1);
+            }
+        }
+    }
+</script>

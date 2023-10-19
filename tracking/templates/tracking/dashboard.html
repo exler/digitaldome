@@ -1,51 +1,51 @@
 {% extends "base.html" %}
-
-{% block title %}My Dashboard{% endblock %}
-
+{% load digitaldome_tags %}
+{% block title %}
+    My Dashboard
+{% endblock title %}
 {% block content %}
-<div class="flex flex-col gap-4">
-    {% include "tracking/partials/menu.html" %}
-    <div class="flex flex-col">
-        <h2 class="text-2xl font-bold">Recently Completed</h2>
-        <table class="table-auto mt-4">
-            <thead>
-                <tr>
-                    <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
-                    <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for object in completed_list %}
-                <tr>
-                    <td class="whitespace-nowrap px-4 text-left text-sm font-medium text-coolGray-800">
-                        {{ forloop.counter }}
-                    </td>
-                <td class="whitespace-nowrap px-4 text-center text-sm font-medium text-coolGray-800">{{ object.content_object.name }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="flex flex-col justify-center">
-        <h2 class="text-2xl font-bold">In progress</h2>
-        <table class="table-auto mt-4">
-            <thead>
-                <tr>
-                    <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
-                    <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="flex flex-col gap-4">
+        {% include "users/partials/menu.html" %}
+        {% if in_progress_list %}
+            <h2 class="text-2xl font-bold">In progress</h2>
+            <div class="grid grid-cols-5 gap-4 justify-items-center">
                 {% for object in in_progress_list %}
-                <tr>
-                    <td class="whitespace-nowrap px-4 text-left text-sm font-medium text-coolGray-800">
-                        {{ forloop.counter }}    
-                    </td>
-                <td class="whitespace-nowrap px-4 text-center text-sm font-medium text-coolGray-800">{{ object.content_object.name }}</td>
-                </tr>
+                    <div class="card image-full w-48">
+                        <figure>
+                            <img width="192"
+                                 height="288"
+                                 src="{{ object.content_object.image_url }}"
+                                 alt="" />
+                        </figure>
+                        <div class="card-body">
+                            <h2 class="card-title break-words">{{ object.content_object.name }}</h2>
+                            <a href="{% url 'entities:entities-detail' object|verbosename object.content_object.id %}"
+                               class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
+                        </div>
+                    </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        {% endif %}
+        {% if completed_list %}
+            <h2 class="text-2xl font-bold">Recently Completed</h2>
+            <div class="grid grid-cols-5 gap-4 justify-items-center">
+                {% for object in completed_list %}
+                    <div class="card image-full w-48">
+                        <figure>
+                            <img width="192"
+                                 height="288"
+                                 src="{{ object.content_object.image_url }}"
+                                 alt="" />
+                        </figure>
+                        <div class="card-body">
+                            <h2 class="card-title break-words">{{ object.content_object.name }}</h2>
+                            <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
+                               rel="noopener noreferrer"
+                               class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

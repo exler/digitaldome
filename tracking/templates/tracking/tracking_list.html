@@ -1,32 +1,60 @@
 {% extends "base.html" %}
-
-{% block title %}{{ page_title }}{% endblock %}
-
+{% load digitaldome_tags %}
+{% block title %}
+    {{ entity_type|title }}
+{% endblock title %}
 {% block content %}
-{% include "tracking/partials/menu.html" %}
-<table class="table-auto">
-    <thead>
-        <tr>
-            <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
-            <th class="whitespace-nowrap px-4 font-semibold text-xs text-coolGray-500 uppercase text-center">Title</th>
-            <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for object in object_list %}
-        <tr>
-            <td class="whitespace-nowrap px-4 text-left">
-                <div class="flex items-center -m-2">
-                    <div class="w-auto p-2">
-                        <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
-                    </div>
-                </div>
-            </td>
-        <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.content_object.name }}</td>
-        <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">{{ object.get_status_display }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
-
+    <div class="flex flex-col gap-4">
+        {% include "users/partials/menu.html" %}
+        <div class="flex flex-col">
+            <h2 class="text-2xl font-bold">{{ entity_type|title }}</h2>
+            <form method="get" class="flex flex-row mt-2">
+                <select name="{{ filter.form.status.name }}"
+                        class="select select-secondary h-8 min-h-0 py-0">
+                    {% for option in filter.form.status.field.choices %}
+                        {% if option.0 != '' %}
+                            <option value="{{ option.0 }}"
+                                    {% if option.0 == filter.form.status.data|toint %}selected{% endif %}>
+                                {{ option.1 }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-secondary ml-4 h-8 min-h-0">Filter</button>
+            </form>
+            <table class="table table-auto mt-4">
+                <thead>
+                    <tr>
+                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
+                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-l-md">Title</th>
+                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Year</th>
+                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Status</th>
+                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in object_list %}
+                        <tr>
+                            <td class="whitespace-nowrap px-4 text-left">
+                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter }}</p>
+                            </td>
+                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
+                                {{ object.content_object.name }}
+                            </td>
+                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
+                                {{ object.content_object.release_date|date:"Y" }}
+                            </td>
+                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
+                                {{ object.get_status_display }}
+                            </td>
+                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
+                                <a href="{% url 'entities:entities-detail' entity_type object.content_object.id %}"
+                                   class="inline btn btn-primary py-1 px-2 text-white">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

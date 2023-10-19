@@ -1,0 +1,17 @@
+<div class="flex flex-col justify-center items-center">
+    <h1 class="text-2xl">{{ user.display_name }}</h1>
+    <img src="" width="80" height="80" alt="Avatar" class="text-center">
+    {% if user.is_moderator %}<div class="badge badge-warning gap-2">Moderator</div>{% endif %}
+</div>
+<div class="flex flex-row justify-center items-center gap-4">
+    <a href="{% url 'tracking:dashboard' user.id %}">Dashboard</a>
+    <a href="{% url 'tracking:tracking-list' user.id 'movies' %}">Movies</a>
+    <a href="{% url 'tracking:tracking-list' user.id 'shows' %}">Shows</a>
+    <a href="{% url 'tracking:tracking-list' user.id 'games' %}">Games</a>
+    <a href="{% url 'tracking:tracking-list' user.id 'books' %}">Books</a>
+    <a href="{% url 'entities:drafts-list' %}">Drafts</a>
+    {% if user.is_moderator %}
+        <a href="{% url 'entities:approvals-list' %}">Approval List</a>
+    {% endif %}
+    <a href="{% url 'tracking:stats' user.id %}">Stats</a>
+</div>

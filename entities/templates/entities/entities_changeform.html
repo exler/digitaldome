@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load digitaldome_tags %}
+{% block title %}
+    Create new {{ entity_type }}
+{% endblock title %}
+{% block content %}
+    <div class="container px-4 mx-auto">
+        <div class="max-w-lg mx-auto">
+            <form method="post"
+                  action="{{ form_url }}"
+                  enctype="multipart/form-data"
+                  id="entity-create-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-control">
+                        {{ field.label_tag }}
+                        {% for err in field.errors %}<span class="text-red-600">{{ err }}</span>{% endfor %}
+                        {% if field.name == "image" %}
+                            {{ field|addclass:"file-input file-input-bordered" }}
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary w-full mt-2">Create</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
