@@ -37,7 +37,8 @@ RUN apt-get update \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -U liara \
-    && install -d -m 0755 -o liara -g liara /app/staticfiles
+    && install -d -m 0755 -o liara -g liara /app/staticfiles \
+    && install -d -m 0755 -o liara -g liara /app/media
 
 WORKDIR /app
 
