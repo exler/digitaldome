@@ -80,10 +80,6 @@ class EntityBase(TimestampedModel):
         return reverse("entities:entities-detail", kwargs={"entity_type": self._meta.verbose_name, "pk": self.pk})
 
     @property
-    def all_required_fields_filled(self: Self) -> bool:
-        return all(getattr(self, field) for field in self.ADDITIONAL_DETAIL_FIELDS)
-
-    @property
     def requires_approval(self: Self) -> bool:
         return not self.draft and not self.approved
 
@@ -147,7 +143,7 @@ class Show(EntityBase):
 
 
 class Game(EntityBase):
-    release_date = models.DateField()
+    release_date = models.DateField(null=True, blank=True)
 
     platforms = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 

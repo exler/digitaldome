@@ -4,6 +4,10 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
+    <div class="flex flex-row items-center mb-2">
+        {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
+        {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
+    </div>
     <div class="grid grid-cols-12 gap-y-6">
         <div class="relative flex col-span-9 gap-4 rounded-lg border border-gray-100">
             <div>
@@ -20,13 +24,9 @@
                     </li>
                 </ul>
                 <div class="flex flex-row justify-between">
-                    <div class="flex flex-row items-center">
-                        <h1 class="text-3xl font-bold">{{ object.name }}</h1>
-                        {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
-                        {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
-                    </div>
+                    <h1 class="text-3xl font-bold">{{ object.name }}</h1>
                     {% if user.is_moderator %}
-                        <div class="flex flex-row gap-2 mr-2">
+                        <div class="flex flex-row gap-2 mx-2">
                             <a class="btn btn-primary"
                                href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
                             {% if object.requires_approval %}
@@ -39,7 +39,6 @@
                         </div>
                     {% endif %}
                 </div>
-                <p>Released: {{ object.release_date }}</p>
                 <div class="flex flex-row gap-4">
                     <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
                          class="relative">

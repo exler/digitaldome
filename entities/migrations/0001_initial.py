@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ("wikipedia_url", models.URLField(blank=True)),
                 ("draft", models.BooleanField(default=False)),
                 ("approved", models.BooleanField(default=False)),
-                ("release_date", models.DateField()),
+                ("release_date", models.DateField(blank=True, null=True)),
                 (
                     "platforms",
                     django.contrib.postgres.fields.ArrayField(
