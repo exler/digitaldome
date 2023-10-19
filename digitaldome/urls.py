@@ -19,4 +19,4 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += [path("404/", page_not_found, kwargs={"exception": Exception("Debug exception")})]
+    urlpatterns = [*[path("404/", page_not_found, kwargs={"exception": Exception("Debug exception")}), *urlpatterns]]

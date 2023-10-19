@@ -2511,6 +2511,11 @@ html {
   margin-bottom: -0.75rem;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -2526,17 +2531,8 @@ html {
   margin-bottom: 1rem;
 }
 
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .mb-2 {
   margin-bottom: 0.5rem;
-}
-
-.mb-3 {
-  margin-bottom: 0.75rem;
 }
 
 .mb-4 {
@@ -2595,10 +2591,6 @@ html {
   display: block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .inline {
   display: inline;
 }
@@ -2649,6 +2641,10 @@ html {
 
 .h-px {
   height: 1px;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .min-h-0 {
@@ -2713,10 +2709,6 @@ html {
 
 .max-w-sm {
   max-width: 24rem;
-}
-
-.max-w-xl {
-  max-width: 36rem;
 }
 
 .flex-auto {
@@ -2800,6 +2792,10 @@ html {
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.place-content-center {
+  place-content: center;
 }
 
 .items-end {
@@ -2923,11 +2919,6 @@ html {
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
-.border-indigo-900 {
-  --tw-border-opacity: 1;
-  border-color: rgb(49 46 129 / var(--tw-border-opacity));
-}
-
 .border-neutral-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 229 229 / var(--tw-border-opacity));
@@ -2964,16 +2955,6 @@ html {
 .bg-blue-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(219 234 254 / var(--tw-bg-opacity));
-}
-
-.bg-green-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-}
-
-.bg-indigo-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 48 163 / var(--tw-bg-opacity));
 }
 
 .bg-neutral-200 {
@@ -3103,11 +3084,6 @@ html {
   padding-bottom: 0.75rem;
 }
 
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
 .pl-3 {
   padding-left: 0.75rem;
 }
@@ -3138,11 +3114,6 @@ html {
   font-size: 10px;
 }
 
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -3160,10 +3131,6 @@ html {
 
 .font-bold {
   font-weight: 700;
-}
-
-.font-extrabold {
-  font-weight: 800;
 }
 
 .font-medium {
@@ -3186,20 +3153,16 @@ html {
   text-transform: none;
 }
 
-.leading-6 {
-  line-height: 1.5rem;
-}
-
-.leading-7 {
-  line-height: 1.75rem;
-}
-
 .leading-none {
   line-height: 1;
 }
 
 .leading-tight {
   line-height: 1.25;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
 }
 
 .text-base-content {
@@ -3235,11 +3198,6 @@ html {
 .text-indigo-500 {
   --tw-text-opacity: 1;
   color: rgb(99 102 241 / var(--tw-text-opacity));
-}
-
-.text-indigo-900 {
-  --tw-text-opacity: 1;
-  color: rgb(49 46 129 / var(--tw-text-opacity));
 }
 
 .text-neutral-700 {
@@ -3360,11 +3318,6 @@ html {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='40' viewBox='0 0 50 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.12'%3E%3Cpath d='M40 10L36.67 0h-2.11l3.33 10H20l-2.28 6.84L12.11 0H10l6.67 20H10l-2.28 6.84L2.11 10 5.44 0h-2.1L0 10l6.67 20-3.34 10h2.11l2.28-6.84L10 40h20l2.28-6.84L34.56 40h2.1l-3.33-10H40l2.28-6.84L47.89 40H50l-6.67-20L50 0h-2.1l-5.62 16.84L40 10zm1.23 10l-2.28-6.84L34 28h4.56l2.67-8zm-10.67 8l-2-6h-9.12l2 6h9.12zm-12.84-4.84L12.77 38h15.79l2.67-8H20l-2.28-6.84zM18.77 20H30l2.28 6.84L37.23 12H21.44l-2.67 8zm-7.33 2H16l-4.95 14.84L8.77 30l2.67-8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.hover\:bg-indigo-900:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(49 46 129 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-neutral-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(245 245 245 / var(--tw-bg-opacity));
@@ -3464,28 +3417,11 @@ html {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
-
-  .sm\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
 }
 
 @media (min-width: 768px) {
-  .md\:mb-0 {
-    margin-bottom: 0px;
-  }
-
-  .md\:mr-6 {
-    margin-right: 1.5rem;
-  }
-
   .md\:mt-6 {
     margin-top: 1.5rem;
-  }
-
-  .md\:w-auto {
-    width: auto;
   }
 
   .md\:p-12 {
@@ -3524,12 +3460,5 @@ html {
   .lg\:py-24 {
     padding-top: 6rem;
     padding-bottom: 6rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .xl\:text-5xl {
-    font-size: 3rem;
-    line-height: 1;
   }
 }
