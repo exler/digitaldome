@@ -95,7 +95,7 @@
             <!-- Start tracking dropdown button -->
             <div x-data="{ statusDropdownOpen: false }" class="relative">
                 <button @click="statusDropdownOpen=true"
-                        class="w-48 inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                        class="w-full inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                     {% if tracking_obj %}
                         {% if tracking_obj.status == 0 %}
                             {% include "entities/partials/dropdown_planned.html" %}
@@ -203,6 +203,23 @@
                     </div>
                 </div>
                 <!-- Stop tracking dropdown button -->
+                {% if tracking_obj %}
+                    <form>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Notes</span>
+                            </label>
+                            <textarea class="textarea textarea-bordered h-24"
+                                      placeholder="Add a note..."
+                                      name="notes">{{ tracking_obj.notes }}</textarea>
+                        </div>
+                        <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                hx-trigger="click"
+                                hx-target="body"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                class="btn btn-primary min-h-0 h-8 px-2 mt-2">Save</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
         <div class="relative flex col-span-9">
