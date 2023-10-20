@@ -19,7 +19,7 @@
                         </figure>
                         <div class="card-body">
                             <h2 class="card-title break-words">{{ object.content_object.name }}</h2>
-                            <a href="{% url 'entities:entities-detail' object|verbosename object.content_object.id %}"
+                            <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
                                class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
                         </div>
                     </div>
