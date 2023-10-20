@@ -14,6 +14,12 @@ class ClearableFileInputWithImagePreview(ClearableFileInput):
 
     template_name = "widgets/clearable_file_input_with_image_preview.html"
 
+    def __init__(self: Self, attrs: dict | None = None) -> None:
+        attrs = attrs or {}
+        if not all(key in attrs for key in ("width", "height", "placeholder")):
+            raise ValueError("All of 'width', 'height' and 'placeholder' must be provided.")
+        super().__init__(attrs)
+
 
 class ArrayField(SelectMultiple):
     """

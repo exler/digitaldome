@@ -1,9 +1,11 @@
 from typing import Any, ClassVar, Self
 
 from django import forms
+from django.templatetags.static import static
 
 from digitaldome.common.fields import GetOrCreateManyToManyField
 from digitaldome.common.widgets import ArrayField, ClearableFileInputWithImagePreview
+from digitaldome.utils.image import resize_and_crop_image
 from entities.models import Book, EntityBase, Game, Identity, Movie, Show, Tag
 
 
@@ -13,12 +15,19 @@ class EntityBaseForm(forms.ModelForm):
     class Meta:
         fields = ("name", "description", "image", "tags")
         widgets: ClassVar = {
-            "image": ClearableFileInputWithImagePreview(),
+            "image": ClearableFileInputWithImagePreview(
+                attrs={"width": 96, "height": 144, "placeholder": static("img/image-placeholder.png")}
+            ),
         }
 
     def __init__(self: Self, *args: Any, **kwargs: Any) -> None:
         self.user = kwargs.pop("user")
         super().__init__(*args, **kwargs)
+
+    def clean_image(self: Self) -> None:
+        if image := self.cleaned_data.get("image"):
+            image = resize_and_crop_image(image, EntityBase.IMAGE_WIDTH, EntityBase.IMAGE_HEIGHT)
+        return image
 
     def _check_if_all_required_fields_filled(self: Self) -> None:
         return all(self.cleaned_data.get(field) for field in self.instance.ADDITIONAL_DETAIL_FIELDS)

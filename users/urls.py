@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from users.views import (
+from users.auth_views import (
     LoginView,
     LogoutView,
     RegisterView,
@@ -9,6 +9,7 @@ from users.views import (
     ResetPasswordView,
     VerifyEmailView,
 )
+from users.views import SettingsView
 
 app_name = "users"
 
@@ -27,4 +28,5 @@ urlpatterns = [
             ]
         ),
     ),
+    path("settings/", SettingsView.as_view(), name="settings"),
 ]

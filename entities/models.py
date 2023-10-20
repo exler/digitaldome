@@ -2,7 +2,6 @@ from typing import ClassVar, Self
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
-from django.core.files import File
 from django.db import models
 from django.db.models.functions import Lower
 from django.db.models.query_utils import Q
@@ -11,7 +10,6 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 
 from digitaldome.common.models import TimestampedModel
-from digitaldome.utils.image import resize_and_crop_image
 from entities.helpers import format_time_spent
 from users.models import User
 
@@ -91,14 +89,6 @@ class EntityBase(TimestampedModel):
         if self.image:
             return self.image.url
         return static("img/image-placeholder.png")
-
-    def save_image(self: Self, source_file: File) -> None:
-        """
-        Saves the image file to the upload target under the file's name.
-        Automatically crops the image to the desired size.
-        """
-        image_file = resize_and_crop_image(source_file, self.IMAGE_WIDTH, self.IMAGE_HEIGHT)
-        self.image.save(image_file.name, image_file, save=False)
 
 
 class Identity(EntityBase):

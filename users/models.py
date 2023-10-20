@@ -3,6 +3,8 @@ from typing import Any, ClassVar, Self
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.validators import RegexValidator
 from django.db import models
+from django.templatetags.static import static
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 
@@ -52,6 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         },
     )
 
+    avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
+
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
 
@@ -66,9 +70,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
+    AVATAR_WIDTH = 128
+    AVATAR_HEIGHT = 128
+
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar = ["display_name"]
 
     def __str__(self: Self) -> str:
         return f"{self.display_name} ({self.email})"
+
+    @cached_property
+    def avatar_url(self: Self) -> str | None:
+        """
+        Gets avatar URL to display or a placeholder if user has no avatar.
+        """
+        if self.avatar:
+            return self.avatar.url
+
+        return static("img/avatar-placeholder.png")

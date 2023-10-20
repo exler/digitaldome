@@ -1,6 +1,10 @@
 <div class="flex flex-col justify-center items-center">
     <h1 class="text-2xl">{{ user.display_name }}</h1>
-    <img src="" width="80" height="80" alt="Avatar" class="text-center">
+    <img src="{{ user.avatar_url }}"
+         width="80"
+         height="80"
+         alt="Avatar"
+         class="text-center py-4">
     {% if user.is_moderator %}<div class="badge badge-warning gap-2">Moderator</div>{% endif %}
 </div>
 <div class="flex flex-row justify-center items-center gap-4">

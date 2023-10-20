@@ -1,6 +1,17 @@
 {% load static %}
 <div class="flex flex-row items-end" x-data="preview()">
-    <img :src="imageUrl" width="96" height="144" alt="" class="border-2 mr-2">
+    <img x-show="!imageUrl"
+         src="{% firstof widget.value.url widget.attrs.placeholder %}"
+         width="{{ widget.attrs.width }}"
+         height="{{ widget.attrs.height }}"
+         alt=""
+         class="border-2 mr-2">
+    <img x-show="imageUrl"
+         :src="imageUrl"
+         width="{{ widget.attrs.width }}"
+         height="{{ widget.attrs.height }}"
+         alt=""
+         class="border-2 mr-2">
     <input type="{{ widget.type }}"
            name="{{ widget.name }}"
            x-on:change="updateImagePreview($event)"
@@ -17,14 +28,12 @@
 <script>
 function preview() {
     return { 
-        imageUrl: '{{ widget.value.url }}' || '{% static "img/image-placeholder.png" %}', 
-        updateImagePreview(event) { 
+        imageUrl: null,
+        updateImagePreview(event) {
             const file = event.target.files[0];
-            if (file) { 
+            if (file) {
                 this.imageUrl = URL.createObjectURL(file); 
-            } else { 
-                this.imageUrl = '{{ widget.value.url }}' || '{% static "img/image-placeholder.png" %}'; 
-            } 
+            }
         } 
     }
 }
