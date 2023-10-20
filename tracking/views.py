@@ -24,9 +24,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self: Self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        tracking_objects = TrackingObject.objects.filter(user=self.request.user)
-        context["completed_list"] = tracking_objects.filter(status=TrackingObject.Status.COMPLETED)
-        context["in_progress_list"] = tracking_objects.filter(status=TrackingObject.Status.IN_PROGRESS)
+        tracking_objects = TrackingObject.objects.filter(user=self.request.user).prefetch_related("content_object")
+        context["completed_list"] = tracking_objects.filter(status=TrackingObject.Status.COMPLETED).order_by(
+            "-updated_at"
+        )[:5]
+        context["in_progress_list"] = tracking_objects.filter(status=TrackingObject.Status.IN_PROGRESS).order_by(
+            "-updated_at"
+        )[:5]
         return context
 
 
@@ -38,7 +42,7 @@ class TrackingFilter(FilterSet):
 
 class TrackingListView(LoginRequiredMixin, DefaultFilterMixin, FilterView):
     template_name = "tracking/tracking_list.html"
-    paginate_by = 10
+    paginate_by = 20
     filterset_class = TrackingFilter
 
     default_filter_values: ClassVar = {"status": TrackingObject.Status.IN_PROGRESS}

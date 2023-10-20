@@ -23,6 +23,8 @@ class EntitiesListView(LoginRequiredMixin, FilterView):
 
     template_name = "entities/entities_list.html"
 
+    paginate_by = 20
+
     def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
         super().setup(request, *args, **kwargs)
         self.model = get_model_from_entity_type(self.kwargs["entity_type"])

@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from django import template
 from django.db.models import Model
 from django.forms import BoundField
+from django.http import HttpRequest
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import SafeString
 
@@ -54,3 +55,12 @@ def base_url(value: str) -> str:
 @register.simple_tag
 def full_url(path: str) -> str:
     return get_full_url(path)
+
+
+@register.simple_tag(takes_context=True)
+def merge_query_params(context: dict, **new_params: str) -> str:
+    request: HttpRequest = context["request"]
+    params = request.GET.copy()
+    for key, value in new_params.items():
+        params[key] = value
+    return f"?{params.urlencode()}"

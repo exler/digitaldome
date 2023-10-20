@@ -64,7 +64,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
             </a>
-            <a href="{% url 'tracking:dashboard' user.id %}">{{ user.display_name }}</a>
+            <a class="mr-2" href="{% url 'tracking:dashboard' user.id %}">{{ user.display_name }}</a>
             <div x-data="{ open: false }"
                  @click.outside="open=false"
                  class="dropdown dropdown-bottom dropdown-end">
