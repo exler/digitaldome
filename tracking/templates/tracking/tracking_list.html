@@ -27,7 +27,6 @@
                     <tr>
                         <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
                         <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-l-md">Title</th>
-                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Year</th>
                         <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Status</th>
                         <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Actions</th>
                     </tr>
@@ -40,9 +39,6 @@
                             </td>
                             <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
                                 {{ object.content_object.name }}
-                            </td>
-                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
-                                {{ object.content_object.release_date|date:"Y" }}
                             </td>
                             <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
                                 {{ object.get_status_display }}
