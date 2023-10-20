@@ -1,9 +1,11 @@
 from pathlib import Path
 
+import sentry_sdk
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
+from sentry_sdk.integrations.django import DjangoIntegration
 
-from digitaldome.utils.env import get_env_bool, get_env_list, get_env_str
+from digitaldome.utils.env import get_env_bool, get_env_float, get_env_list, get_env_str
 
 load_dotenv()
 
@@ -68,6 +70,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "digitaldome.wsgi.application"
+
+# Sentry #
+# https://docs.sentry.io/platforms/python/integrations/django/
+
+if SENTRY_DSN := get_env_str("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=get_env_float("SENTRY_TRACES_SAMPLE_RATE", 0.0),
+        send_default_pii=True,
+    )
 
 # Logging #
 # https://docs.djangoproject.com/en/4.2/howto/logging/

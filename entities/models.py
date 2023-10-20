@@ -102,7 +102,11 @@ class Movie(EntityBase):
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "length", "director", "cast")
 
     def __str__(self: Self) -> str:
-        return f"{self.name} ({self.release_date.year})"
+        res = self.name
+        if self.release_date:
+            res += f" ({self.release_date.year})"
+
+        return res
 
     def get_length_display(self: Self) -> str:
         if not self.length:
