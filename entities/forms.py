@@ -13,7 +13,7 @@ class EntityBaseForm(forms.ModelForm):
     tags = GetOrCreateManyToManyField(queryset=Tag.objects.all(), to_field_name="name", required=False)
 
     class Meta:
-        fields = ("name", "description", "image", "tags")
+        fields = ("name", "description", "image", "wikipedia_url", "tags")
         widgets: ClassVar = {
             "image": ClearableFileInputWithImagePreview(
                 attrs={"width": 96, "height": 144, "placeholder": static("img/image-placeholder.png")}

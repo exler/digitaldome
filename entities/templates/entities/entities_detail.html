@@ -225,6 +225,14 @@
         <div class="relative flex col-span-9">
             <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm w-full">
                 <dl class="-my-3 divide-y divide-gray-100 text-sm">
+                    {% if object.wikipedia_url %}
+                        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+                            <dt class="font-medium text-gray-900">Wikipedia</dt>
+                            <dd class="text-gray-700 sm:col-span-2">
+                                <a href="{{ object.wikipedia_url }}">{{ object.wikipedia_url }}</a>
+                            </dd>
+                        </div>
+                    {% endif %}
                     {% for detail_field in object.ADDITIONAL_DETAIL_FIELDS %}
                         <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                             <dt class="font-medium text-gray-900">{{ object|fieldlabel:detail_field|title }}</dt>
