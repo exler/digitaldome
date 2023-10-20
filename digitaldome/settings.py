@@ -163,13 +163,27 @@ USE_I18N = True
 
 USE_TZ = True
 
+# S3 Storage Auth #
+# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+
+AWS_STORAGE_BUCKET_NAME = get_env_str("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = get_env_str("AWS_S3_ENDPOINT_URL")
+AWS_S3_ACCESS_KEY = get_env_str("AWS_S3_ACCESS_KEY")
+AWS_S3_SECRET_KEY = get_env_str("AWS_S3_SECRET_KEY")
+AWS_S3_SIGNATURE_VERSION = get_env_str("AWS_S3_SIGNATURE_VERSION", "s3v4")
 
 # Storage and static files (CSS, JavaScript, Images) #
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "endpoint_url": AWS_S3_ENDPOINT_URL,
+            "access_key": AWS_S3_ACCESS_KEY,
+            "secret_key": AWS_S3_SECRET_KEY,
+        },
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",

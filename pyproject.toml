@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 python-dotenv = "^1.0.0"
 django = "^4.2.3"
+django-storages = {extras = ["s3"], version = "^1.14.2"}
 django-filter = "^23.3"
 psycopg = "^3.1.9"
 whitenoise = {extras = ["brotli"], version = "^6.5.0"}
