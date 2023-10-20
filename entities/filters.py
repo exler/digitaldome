@@ -4,7 +4,7 @@ import django_filters
 from django.db.models import QuerySet
 from django_filters.filterset import FilterSet
 
-from entities.models import Book, EntityBase, Game, Identity, Movie, Show
+from entities.models import Book, EntityBase, Game, Movie, Show
 
 
 class EntityBaseFilter(FilterSet):
@@ -15,11 +15,6 @@ class EntityBaseFilter(FilterSet):
 
     def search_filter(self: Self, queryset: QuerySet[EntityBase], name: str, value: str) -> QuerySet[EntityBase]:
         return queryset.filter(name__icontains=value)
-
-
-class IdentityFilter(EntityBaseFilter):
-    class Meta(EntityBaseFilter.Meta):
-        model = Identity
 
 
 class MovieFilter(EntityBaseFilter):

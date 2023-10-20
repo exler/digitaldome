@@ -17,6 +17,7 @@ pillow = "^10.0.0"
 pyjwt = "^2.8.0"
 httpx = "^0.24.1"
 gunicorn = "^21.2.0"
+python-magic = "^0.4.27"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"

@@ -91,22 +91,13 @@ class EntityBase(TimestampedModel):
         return static("img/image-placeholder.png")
 
 
-class Identity(EntityBase):
-    birth_date = models.DateField(null=True, blank=True)
-
-    ADDITIONAL_DETAIL_FIELDS = ("birth_date",)
-
-    def __str__(self: Self) -> str:
-        return self.name
-
-
 class Movie(EntityBase):
     release_date = models.DateField(null=True, blank=True)
 
     length = models.PositiveSmallIntegerField(null=True, blank=True)  # In minutes
 
-    director = models.ManyToManyField(Identity, related_name="directed_movies", blank=True)
-    cast = models.ManyToManyField(Identity, related_name="acted_in_movies", blank=True)
+    director = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    cast = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "length", "director", "cast")
 
@@ -123,8 +114,8 @@ class Movie(EntityBase):
 class Show(EntityBase):
     release_date = models.DateField(null=True, blank=True)
 
-    creator = models.ManyToManyField(Identity, related_name="created_shows", blank=True)
-    stars = models.ManyToManyField(Identity, related_name="starred_in_shows", blank=True)
+    creator = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    stars = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "creator", "stars")
 
@@ -137,8 +128,8 @@ class Game(EntityBase):
 
     platforms = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
-    producer = models.ManyToManyField(Identity, related_name="produced_games", blank=True)
-    publisher = models.ManyToManyField(Identity, related_name="published_games", blank=True)
+    producer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    publisher = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "platforms", "producer", "publisher")
 
@@ -149,7 +140,7 @@ class Game(EntityBase):
 class Book(EntityBase):
     publish_date = models.DateField(null=True, blank=True)
 
-    author = models.ManyToManyField(Identity, related_name="written_books", blank=True)
+    author = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_DETAIL_FIELDS = ("publish_date", "author")
 

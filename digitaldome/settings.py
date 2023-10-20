@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "users",
     "entities",
     "tracking",
+    "integrations",
 ]
 
 MIDDLEWARE = [

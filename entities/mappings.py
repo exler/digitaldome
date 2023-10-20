@@ -1,11 +1,10 @@
 from typing import Type
 
-from entities.filters import BookFilter, GameFilter, IdentityFilter, MovieFilter, ShowFilter
-from entities.forms import BookForm, GameForm, IdentityForm, MovieForm, ShowForm
-from entities.models import Book, EntityBase, Game, Identity, Movie, Show
+from entities.filters import BookFilter, GameFilter, MovieFilter, ShowFilter
+from entities.forms import BookForm, GameForm, MovieForm, ShowForm
+from entities.models import Book, EntityBase, Game, Movie, Show
 
 ENTITY_MODEL_TO_FORM_MAPPING = {
-    Identity: IdentityForm,
     Movie: MovieForm,
     Show: ShowForm,
     Game: GameForm,
@@ -13,7 +12,6 @@ ENTITY_MODEL_TO_FORM_MAPPING = {
 }
 
 ENTITY_MODEL_TO_FILTER_MAPPING = {
-    Identity: IdentityFilter,
     Movie: MovieFilter,
     Show: ShowFilter,
     Game: GameFilter,

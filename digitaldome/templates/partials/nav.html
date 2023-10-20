@@ -77,11 +77,14 @@
                     </svg>
                 </button>
                 <ul x-show="open"
-                    class="absolute origin-top-left top-0 w-32 mt-4 dropdown-content menu bg-base-100 shadow rounded-box"
+                    class="absolute origin-top-left top-0 w-36 mt-4 dropdown-content menu bg-base-100 shadow rounded-box"
                     x-transition
                     x-cloak>
                     <li>
                         <a href="{% url 'users:settings' %}">Settings</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'integrations:import-tracking-data' %}">Import library</a>
                     </li>
                     <li>
                         <a href="{% url 'users:logout' %}">Log out</a>

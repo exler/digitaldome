@@ -6,7 +6,7 @@ from django.templatetags.static import static
 from digitaldome.common.fields import GetOrCreateManyToManyField
 from digitaldome.common.widgets import ArrayField, ClearableFileInputWithImagePreview
 from digitaldome.utils.image import resize_and_crop_image
-from entities.models import Book, EntityBase, Game, Identity, Movie, Show, Tag
+from entities.models import Book, EntityBase, Game, Movie, Show, Tag
 
 
 class EntityBaseForm(forms.ModelForm):
@@ -38,25 +38,14 @@ class EntityBaseForm(forms.ModelForm):
         return super().save(commit)
 
 
-class IdentityForm(EntityBaseForm):
-    class Meta(EntityBaseForm.Meta):
-        model = Identity
-        fields = (*EntityBaseForm.Meta.fields, *("birth_date",))
-        widgets: ClassVar = {
-            **EntityBaseForm.Meta.widgets,
-            "birth_date": forms.DateInput(attrs={"type": "date"}),
-        }
-
-
 class MovieForm(EntityBaseForm):
-    director = GetOrCreateManyToManyField(queryset=Identity.objects.all(), to_field_name="name", required=False)
-    cast = GetOrCreateManyToManyField(queryset=Identity.objects.all(), to_field_name="name", required=False)
-
     class Meta(EntityBaseForm.Meta):
         model = Movie
         fields = (*EntityBaseForm.Meta.fields, *("release_date", "length", "director", "cast"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
+            "director": ArrayField(),
+            "cast": ArrayField(),
             "release_date": forms.DateInput(attrs={"type": "date"}),
         }
 
@@ -72,9 +61,6 @@ class ShowForm(EntityBaseForm):
 
 
 class GameForm(EntityBaseForm):
-    producer = GetOrCreateManyToManyField(queryset=Identity.objects.all(), to_field_name="name", required=False)
-    publisher = GetOrCreateManyToManyField(queryset=Identity.objects.all(), to_field_name="name", required=False)
-
     class Meta(EntityBaseForm.Meta):
         model = Game
         fields = (
@@ -84,17 +70,18 @@ class GameForm(EntityBaseForm):
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "release_date": forms.DateInput(attrs={"type": "date"}),
+            "producer": ArrayField(),
+            "publisher": ArrayField(),
             "platforms": ArrayField(),
         }
 
 
 class BookForm(EntityBaseForm):
-    author = GetOrCreateManyToManyField(queryset=Identity.objects.all(), to_field_name="name", required=False)
-
     class Meta(EntityBaseForm.Meta):
         model = Book
         fields = (*EntityBaseForm.Meta.fields, *("publish_date", "author"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
+            "author": ArrayField(),
             "publish_date": forms.DateInput(attrs={"type": "date"}),
         }
