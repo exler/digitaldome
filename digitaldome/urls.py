@@ -12,7 +12,7 @@ urlpatterns = [
         path("", IndexView.as_view(), name="index"),
         path("", include("users.urls")),
         path("entities/", include("entities.urls")),
-        path("tracking/", include("tracking.urls")),
+        path("user/", include("tracking.urls")),
         path("integrations/", include("integrations.urls")),
     ],
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),

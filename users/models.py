@@ -8,6 +8,11 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 
+class CustomUserQuerySet(models.QuerySet):
+    def active(self: Self) -> Self:
+        return self.filter(is_active=True, email_verified=True)
+
+
 class CustomUserManager(UserManager):
     def _create_user(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
         """
@@ -68,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    objects = CustomUserManager()
+    objects = CustomUserManager.from_queryset(CustomUserQuerySet)()
 
     AVATAR_WIDTH = 128
     AVATAR_HEIGHT = 128

@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import QuerySet
 from django.forms import ModelForm
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import DeleteView, ModelFormMixin, ProcessFormView
 from django_filters.filterset import FilterSet
@@ -17,14 +17,26 @@ from entities.mappings import get_model_from_entity_type
 from tracking.forms import TrackingObjectForm
 from tracking.mixins import TrackingObjectMixin
 from tracking.models import TrackingObject, UserStats
+from users.models import User
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class UserDashboardMixin:
+    def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
+        super().setup(request, *args, **kwargs)
+        self.dashboard_user = get_object_or_404(User.objects.active(), pk=self.kwargs["user_id"])
+
+    def get_context_data(self: Self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.dashboard_user
+        return context
+
+
+class DashboardView(UserDashboardMixin, LoginRequiredMixin, TemplateView):
     template_name = "tracking/dashboard.html"
 
     def get_context_data(self: Self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        tracking_objects = TrackingObject.objects.filter(user=self.request.user).prefetch_related("content_object")
+        tracking_objects = TrackingObject.objects.filter(user=self.dashboard_user).prefetch_related("content_object")
         context["completed_list"] = tracking_objects.filter(status=TrackingObject.Status.COMPLETED).order_by(
             "-updated_at"
         )[:5]
@@ -40,7 +52,7 @@ class TrackingFilter(FilterSet):
         fields: ClassVar = ["status"]
 
 
-class TrackingListView(LoginRequiredMixin, DefaultFilterMixin, FilterView):
+class TrackingListView(UserDashboardMixin, LoginRequiredMixin, DefaultFilterMixin, FilterView):
     template_name = "tracking/tracking_list.html"
     paginate_by = 20
     filterset_class = TrackingFilter
@@ -50,7 +62,7 @@ class TrackingListView(LoginRequiredMixin, DefaultFilterMixin, FilterView):
     def get_queryset(self: Self) -> QuerySet[TrackingObject]:
         entity_type = get_model_from_entity_type(self.kwargs["entity_type"])
         content_type = ContentType.objects.get_for_model(entity_type)
-        return TrackingObject.objects.filter(user=self.request.user, content_type=content_type)
+        return TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type)
 
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -58,11 +70,11 @@ class TrackingListView(LoginRequiredMixin, DefaultFilterMixin, FilterView):
         return context
 
 
-class StatsView(LoginRequiredMixin, DetailView):
+class StatsView(UserDashboardMixin, LoginRequiredMixin, DetailView):
     template_name = "tracking/stats.html"
 
     def get_object(self: Self, queryset: QuerySet[UserStats] | None = None) -> UserStats:
-        return UserStats.objects.get_or_create(user=self.request.user)[0]
+        return UserStats.objects.get_or_create(user=self.dashboard_user)[0]
 
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
