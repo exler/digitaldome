@@ -8,6 +8,7 @@ from django.db.models.query_utils import Q
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 
 from digitaldome.common.models import TimestampedModel
 from entities.helpers import format_time_spent
@@ -39,7 +40,7 @@ class EntityBase(TimestampedModel):
 
     image = models.ImageField(upload_to=image_upload_destination, null=True, blank=True)
 
-    wikipedia_url = models.URLField(blank=True)
+    wikipedia_url = models.URLField(verbose_name=_("Wikipedia URL"), blank=True)
 
     tags = models.ManyToManyField(Tag, blank=True)
 

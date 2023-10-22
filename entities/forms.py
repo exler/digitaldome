@@ -4,7 +4,7 @@ from django import forms
 from django.templatetags.static import static
 
 from digitaldome.common.fields import GetOrCreateManyToManyField
-from digitaldome.common.widgets import ArrayField, ClearableFileInputWithImagePreview
+from digitaldome.common.widgets import ArrayField, ClearableFileInputWithImagePreview, TimeWidget
 from digitaldome.utils.image import resize_and_crop_image
 from entities.models import Book, EntityBase, Game, Movie, Show, Tag
 
@@ -44,6 +44,7 @@ class MovieForm(EntityBaseForm):
         fields = (*EntityBaseForm.Meta.fields, *("release_date", "length", "director", "cast"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
+            "length": TimeWidget(attrs={"style": "width: 8rem;"}),
             "director": ArrayField(),
             "cast": ArrayField(),
             "release_date": forms.DateInput(attrs={"type": "date"}),

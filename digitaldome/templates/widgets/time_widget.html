@@ -1,0 +1,12 @@
+{% spaceless %}
+    <div class="flex items-center self-center space-x-2">
+        {% for widget in widget.subwidgets %}
+            {% if forloop.counter0 == 0 %}
+                <label for="{{ widget.attrs.id }}">Hours:</label>
+            {% elif forloop.counter0 == 1 %}
+                <label for="{{ widget.attrs.id }}">Minutes:</label>
+            {% endif %}
+            {% include widget.template_name %}
+        {% endfor %}
+    </div>
+{% endspaceless %}
