@@ -39,10 +39,10 @@ class DashboardView(UserDashboardMixin, LoginRequiredMixin, TemplateView):
         tracking_objects = TrackingObject.objects.filter(user=self.dashboard_user).prefetch_related("content_object")
         context["completed_list"] = tracking_objects.filter(status=TrackingObject.Status.COMPLETED).order_by(
             "-updated_at"
-        )[:5]
+        )[:6]
         context["in_progress_list"] = tracking_objects.filter(status=TrackingObject.Status.IN_PROGRESS).order_by(
             "-updated_at"
-        )[:5]
+        )[:6]
         return context
 
 

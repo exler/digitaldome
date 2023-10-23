@@ -12,18 +12,18 @@
                 </svg>
             </label>
             <ul tabindex="0"
-                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                class="menu menu-sm dropdown-content mt-2 z-[100] p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
-                    <a href="{% url 'entities:entities-list' 'movies' %}">Movies</a>
+                    <a class="py-2" href="{% url 'entities:entities-list' 'movies' %}">Movies</a>
                 </li>
                 <li>
-                    <a href="{% url 'entities:entities-list' 'shows' %}">Shows</a>
+                    <a class="py-2" href="{% url 'entities:entities-list' 'shows' %}">Shows</a>
                 </li>
                 <li>
-                    <a href="{% url 'entities:entities-list' 'books' %}">Books</a>
+                    <a class="py-2" href="{% url 'entities:entities-list' 'books' %}">Books</a>
                 </li>
                 <li>
-                    <a href="{% url 'entities:entities-list' 'games' %}">Games</a>
+                    <a class="py-2" href="{% url 'entities:entities-list' 'games' %}">Games</a>
                 </li>
             </ul>
         </div>
@@ -64,7 +64,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
             </a>
-            <a class="mr-2" href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.display_name }}</a>
+            <a class="mr-2 hidden md:block"
+               href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.display_name }}</a>
             <div x-data="{ open: false }"
                  @click.outside="open=false"
                  class="dropdown dropdown-bottom dropdown-end">
@@ -77,9 +78,23 @@
                     </svg>
                 </button>
                 <ul x-show="open"
-                    class="absolute origin-top-left top-0 w-36 mt-4 dropdown-content menu bg-base-100 shadow rounded-box"
+                    class="absolute z-[100] origin-top-left top-0 w-36 mt-4 dropdown-content menu bg-base-100 shadow rounded-box"
                     x-transition
                     x-cloak>
+                    <li>
+                        <a class="block md:hidden"
+                           href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.display_name }}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'entities:drafts-list' %}">Drafts</a>
+                    </li>
+                    {% if user.is_moderator %}
+                        <li>
+                            <a href="{% url 'entities:approvals-list' %}">Approval List</a>
+                        </li>
+                    {% endif %}
+                    <!-- Separator -->
+                    <div class="h-px my-2 bg-base-200"></div>
                     <li>
                         <a href="{% url 'users:settings' %}">Settings</a>
                     </li>
@@ -92,7 +107,7 @@
                 </ul>
             </div>
         {% else %}
-            <a href="{% url 'users:login' %}" class="mr-2">Sign in</a>
+            <a class="hidden md:block" href="{% url 'users:login' %}">Sign in</a>
             <a href="{% url 'users:register' %}" class="btn">Sign up</a>
         {% endif %}
     </div>

@@ -1,47 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
-
-{% block title %}Digital Dome{% endblock %}
-
+{% block title %}
+    Digital Dome
+{% endblock title %}
 {% block content %}
-<section
-  class="overflow-hidden dd-bg-index-hero-pattern bg-repeat"
->
-  <div class="bg-black/25 p-8 md:p-12 lg:px-16 lg:py-24">
-    <div class="text-center">
-      <h2 class="text-2xl font-bold text-white sm:text-3xl md:text-5xl">
-        Versatile media tracker
-      </h2>
-
-      <p
-        class="text-white/90 md:mt-6 md:text-lg md:leading-relaxed"
-      >
-        Track, rate and review all your favorite media in one place.
-      </p>
-
-      <div class="flex flex-row justify-center gap-4">
-        <div class="mt-4 sm:mt-8">
-            <a href="{% url 'entities:entities-list' 'movies' %}" class="btn">
-            Movies
-            </a>
+    <section class="overflow-hidden dd-bg-index-hero-pattern bg-repeat">
+        <div class="bg-black/25 p-8 md:p-12 lg:px-16 lg:py-24">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-white sm:text-3xl md:text-5xl">Versatile media tracker</h2>
+                <p class="text-white/90 md:mt-6 md:text-lg md:leading-relaxed">
+                    Track, rate and review all your favorite media in one place.
+                </p>
+                <div class="grid grid-cols-2 md:flex md:flex-row justify-center gap-4">
+                    <div class="mt-4 sm:mt-8">
+                        <a href="{% url 'entities:entities-list' 'movies' %}" class="btn">Movies</a>
+                    </div>
+                    <div class="mt-4 sm:mt-8">
+                        <a href="{% url 'entities:entities-list' 'shows' %}" class="btn">Shows</a>
+                    </div>
+                    <div class="mt-4 sm:mt-8">
+                        <a href="{% url 'entities:entities-list' 'books' %}" class="btn">Books</a>
+                    </div>
+                    <div class="mt-4 sm:mt-8">
+                        <a href="{% url 'entities:entities-list' 'games' %}" class="btn">Games</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="mt-4 sm:mt-8">
-            <a href="{% url 'entities:entities-list' 'shows' %}" class="btn">
-                Shows
-            </a>
-        </div>
-        <div class="mt-4 sm:mt-8">
-            <a href="{% url 'entities:entities-list' 'books' %}" class="btn">
-                Books
-            </a>
-        </div>
-        <div class="mt-4 sm:mt-8">
-            <a href="{% url 'entities:entities-list' 'games' %}" class="btn">
-                Games
-            </a>
-        </div>
-        </div>
-    </div>
-  </div>
-</section>
-{% endblock %}
+    </section>
+{% endblock content %}

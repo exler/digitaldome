@@ -4,17 +4,34 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
-    <div class="flex flex-row items-center mb-2">
-        {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
-        {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
-    </div>
-    <div class="grid grid-cols-12 gap-y-6">
-        <div class="relative flex col-span-9 gap-4 rounded-lg border border-gray-100">
-            <div>
-                <figure>
-                    <img width="192" height="288" src="{{ object.image_url }}" alt="" />
-                </figure>
+    <div class="flex flex-row items-center justify-between mb-2">
+        <div>
+            {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
+            {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
+        </div>
+        {% if request.user.is_moderator or request.user == object.created_by %}
+            <div class="flex flex-row gap-2 mx-2">
+                <a class="btn btn-primary"
+                   href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
+                {% if request.user.is_moderator and object.requires_approval %}
+                    <form action="{% url 'entities:entities-approve' object|verbosename object.id %}"
+                          method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Approve</button>
+                    </form>
+                {% endif %}
             </div>
+        {% endif %}
+    </div>
+    <div class="md:grid md:grid-cols-12 gap-y-6 gap-x-4">
+        <div class="relative h-60 md:h-80 flex col-span-9 gap-4 rounded-lg md:border md:border-gray-100">
+            <figure class="p-4">
+                <img width="192"
+                     height="288"
+                     class="max-w-[8rem] md:max-w-none"
+                     src="{{ object.image_url }}"
+                     alt="" />
+            </figure>
             <div class="flex flex-col gap-2 mt-2 w-full">
                 <ul>
                     <li>
@@ -23,77 +40,81 @@
                         {% endfor %}
                     </li>
                 </ul>
-                <div class="flex flex-row justify-between">
+                <div>
                     <h1 class="text-3xl font-bold">{{ object.name }}</h1>
-                    {% if request.user.is_moderator %}
-                        <div class="flex flex-row gap-2 mx-2">
-                            <a class="btn btn-primary"
-                               href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
-                            {% if object.requires_approval %}
-                                <form action="{% url 'entities:entities-approve' object|verbosename object.id %}"
-                                      method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-warning">Approve</button>
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="flex flex-row gap-4">
-                    <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
-                         class="relative">
-                        <button @click="ratingDropdownOpen=true"
-                                class="w-28 px-6 py-12 flex flex-col gap-4 items-center justify-center h-12 border rounded-md">
-                            <span class="text-2xl uppercase font-bold">
-                                {% if tracking_obj.rating %}
-                                    {{ tracking_obj.rating }}
-                                {% else %}
-                                    —
-                                {% endif %}
-                            </span>
-                            <span class="text-xs uppercase font-bold">Your rating</span>
-                        </button>
-                        <div x-show="ratingDropdownOpen"
-                             @click.away="ratingDropdownOpen=false"
-                             x-transition:enter="ease-out duration-200"
-                             x-transition:enter-start="-translate-y-2"
-                             x-transition:enter-end="translate-y-0"
-                             class="absolute top-0 z-50 mt-12 -translate-x-1/2 left-1/2"
-                             x-cloak>
-                            <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
-                                <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-none">
-                                    {% for i in "AAAAA" %}
-                                        {% comment %} djlint:off T001 {% endcomment %}
-                                        <button @mouseover="hoverIndex = {{ forloop.counter }}"
-                                                hx-post="{% url 'tracking:track' object|verbosename object.id %}"
-                                                hx-trigger="click"
-                                                hx-vals='{"rating": {{ forloop.counter }}}'
-                                                hx-target="body"
-                                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-                                            <svg :class="hoverIndex && {{ forloop.counter }} <= hoverIndex ? 'text-yellow-400' : 'text-gray-400'"
-                                                 class="w-8 h-8"
-                                                 viewBox="0 0 1024 1024"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path fill="currentColor" d="m908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5c-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 0 0 .6 45.3l183.7 179.1l-43.4 252.9a31.95 31.95 0 0 0 46.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2c17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9l183.7-179.1c5-4.9 8.3-11.3 9.3-18.3c2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7L323.1 772l36.1-210.3l-152.8-149L417.6 382L512 190.7L606.4 382l211.2 30.7l-152.8 148.9z" />
-                                            </svg>
-                                        </button>
-                                        {% comment %} djlint:on T001 {% endcomment %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
+                    <div class="py-2">
+                        {% if object.wikipedia_url %}
+                            <a href="{{ object.wikipedia_url }}">
+                                <svg class="w-8 h-8 fill-current text-purple-600"
+                                     viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.09 13.119c-.936 1.932-2.217 4.548-2.853 5.728-.616 1.074-1.127.931-1.532.029-1.406-3.321-4.293-9.144-5.651-12.409-.251-.601-.441-.987-.619-1.139-.181-.15-.554-.24-1.122-.271C.103 5.033 0 4.982 0 4.898v-.455l.052-.045c.924-.005 5.401 0 5.401 0l.051.045v.434c0 .119-.075.176-.225.176l-.564.031c-.485.029-.727.164-.727.436 0 .135.053.33.166.601 1.082 2.646 4.818 10.521 4.818 10.521l.136.046 2.411-4.81-.482-1.067-1.658-3.264s-.318-.654-.428-.872c-.728-1.443-.712-1.518-1.447-1.617-.207-.023-.313-.05-.313-.149v-.468l.06-.045h4.292l.113.037v.451c0 .105-.076.15-.227.15l-.308.047c-.792.061-.661.381-.136 1.422l1.582 3.252 1.758-3.504c.293-.64.233-.801.111-.947-.07-.084-.305-.22-.812-.24l-.201-.021c-.052 0-.098-.015-.145-.051-.045-.031-.067-.076-.067-.129v-.427l.061-.045c1.247-.008 4.043 0 4.043 0l.059.045v.436c0 .121-.059.178-.193.178-.646.03-.782.095-1.023.439-.12.186-.375.589-.646 1.039l-2.301 4.273-.065.135 2.792 5.712.17.048 4.396-10.438c.154-.422.129-.722-.064-.895-.197-.172-.346-.273-.857-.295l-.42-.016c-.061 0-.105-.014-.152-.045-.043-.029-.072-.075-.072-.119v-.436l.059-.045h4.961l.041.045v.437c0 .119-.074.18-.209.18-.648.03-1.127.18-1.443.421-.314.255-.557.616-.736 1.067 0 0-4.043 9.258-5.426 12.339-.525 1.007-1.053.917-1.503-.031-.571-1.171-1.773-3.786-2.646-5.71l.053-.036z" />
+                                </svg>
+                            </a>
+                        {% else %}
+                            <svg class="w-8 h-8 fill-current text-gray-400"
+                                 viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.09 13.119c-.936 1.932-2.217 4.548-2.853 5.728-.616 1.074-1.127.931-1.532.029-1.406-3.321-4.293-9.144-5.651-12.409-.251-.601-.441-.987-.619-1.139-.181-.15-.554-.24-1.122-.271C.103 5.033 0 4.982 0 4.898v-.455l.052-.045c.924-.005 5.401 0 5.401 0l.051.045v.434c0 .119-.075.176-.225.176l-.564.031c-.485.029-.727.164-.727.436 0 .135.053.33.166.601 1.082 2.646 4.818 10.521 4.818 10.521l.136.046 2.411-4.81-.482-1.067-1.658-3.264s-.318-.654-.428-.872c-.728-1.443-.712-1.518-1.447-1.617-.207-.023-.313-.05-.313-.149v-.468l.06-.045h4.292l.113.037v.451c0 .105-.076.15-.227.15l-.308.047c-.792.061-.661.381-.136 1.422l1.582 3.252 1.758-3.504c.293-.64.233-.801.111-.947-.07-.084-.305-.22-.812-.24l-.201-.021c-.052 0-.098-.015-.145-.051-.045-.031-.067-.076-.067-.129v-.427l.061-.045c1.247-.008 4.043 0 4.043 0l.059.045v.436c0 .121-.059.178-.193.178-.646.03-.782.095-1.023.439-.12.186-.375.589-.646 1.039l-2.301 4.273-.065.135 2.792 5.712.17.048 4.396-10.438c.154-.422.129-.722-.064-.895-.197-.172-.346-.273-.857-.295l-.42-.016c-.061 0-.105-.014-.152-.045-.043-.029-.072-.075-.072-.119v-.436l.059-.045h4.961l.041.045v.437c0 .119-.074.18-.209.18-.648.03-1.127.18-1.443.421-.314.255-.557.616-.736 1.067 0 0-4.043 9.258-5.426 12.339-.525 1.007-1.053.917-1.503-.031-.571-1.171-1.773-3.786-2.646-5.71l.053-.036z" />
+                            </svg>
+                        {% endif %}
                     </div>
-                    <button class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border rounded-md">
-                        <span class="text-2xl uppercase font-bold">{{ entity_stats.digitaldome_rating|default_if_none:"—" }}</span>
-                        <span class="text-[10px] uppercase">{{ entity_stats.digitaldome_rating_count }} vote{{ entity_stats.digitaldome_rating_count|pluralize }}</span>
-                        <span class="text-xs uppercase font-bold mt-2">Community rating</span>
-                    </button>
+                    <p class="hidden md:block">{{ object.description }}</p>
                 </div>
             </div>
         </div>
-        <div class="relative flex col-span-3 justify-center">
-            <!-- Start tracking dropdown button -->
-            <div x-data="{ statusDropdownOpen: false }" class="relative">
+        <div class="relative flex flex-col col-span-3 justify-center gap-2">
+            <div class="flex flex-row gap-4 self-center">
+                <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
+                     class="relative">
+                    <button @click="ratingDropdownOpen=true"
+                            class="w-28 px-6 py-12 flex flex-col md:gap-4 items-center justify-center h-12 border rounded-md">
+                        <span class="text-2xl uppercase font-bold">
+                            {% if tracking_obj.rating %}
+                                {{ tracking_obj.rating }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+                        <span class="text-xs uppercase font-bold">Your rating</span>
+                    </button>
+                    <div x-show="ratingDropdownOpen"
+                         @click.away="ratingDropdownOpen=false"
+                         x-transition:enter="ease-out duration-200"
+                         x-transition:enter-start="-translate-y-2"
+                         x-transition:enter-end="translate-y-0"
+                         class="absolute top-0 z-50 mt-12 -translate-x-1/2 left-1/2"
+                         x-cloak>
+                        <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
+                            <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-none">
+                                {% for i in "AAAAA" %}
+                                    {% comment %} djlint:off T001 {% endcomment %}
+                                    <button @mouseover="hoverIndex = {{ forloop.counter }}"
+                                            hx-post="{% url 'tracking:track' object|verbosename object.id %}"
+                                            hx-trigger="click"
+                                            hx-vals='{"rating": {{ forloop.counter }}}'
+                                            hx-target="body"
+                                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                                        <svg :class="hoverIndex && {{ forloop.counter }} <= hoverIndex ? 'text-yellow-400' : 'text-gray-400'"
+                                             class="w-8 h-8"
+                                             viewBox="0 0 1024 1024"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="currentColor" d="m908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5c-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 0 0 .6 45.3l183.7 179.1l-43.4 252.9a31.95 31.95 0 0 0 46.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2c17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9l183.7-179.1c5-4.9 8.3-11.3 9.3-18.3c2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7L323.1 772l36.1-210.3l-152.8-149L417.6 382L512 190.7L606.4 382l211.2 30.7l-152.8 148.9z" />
+                                        </svg>
+                                    </button>
+                                    {% comment %} djlint:on T001 {% endcomment %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border rounded-md text-center">
+                    <span class="text-2xl uppercase font-bold">{{ entity_stats.digitaldome_rating|default_if_none:"—" }}</span>
+                    <span class="text-[10px] uppercase">{{ entity_stats.digitaldome_rating_count }} vote{{ entity_stats.digitaldome_rating_count|pluralize }}</span>
+                    <span class="text-xs uppercase font-bold mt-2">Community rating</span>
+                </div>
+            </div>
+            <div x-data="{ statusDropdownOpen: false }" class="relative px-4 md:px-0">
                 <button @click="statusDropdownOpen=true"
                         class="w-full inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                     {% if tracking_obj %}
@@ -202,7 +223,6 @@
                         {% endif %}
                     </div>
                 </div>
-                <!-- Stop tracking dropdown button -->
                 {% if tracking_obj %}
                     <form>
                         <div class="form-control">
@@ -222,17 +242,15 @@
                 {% endif %}
             </div>
         </div>
-        <div class="relative flex col-span-9">
+        <div class="relative flex col-span-9 mx-4 mt-4 md:mt-0">
             <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm w-full">
                 <dl class="-my-3 divide-y divide-gray-100 text-sm">
-                    {% if object.wikipedia_url %}
-                        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
-                            <dt class="font-medium text-gray-900">Wikipedia</dt>
-                            <dd class="text-gray-700 sm:col-span-2">
-                                <a href="{{ object.wikipedia_url }}">{{ object.wikipedia_url }}</a>
-                            </dd>
-                        </div>
-                    {% endif %}
+                    <div class="grid md:hidden grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+                        <dt class="font-medium text-gray-900">Description</dt>
+                        <dd class="text-gray-700 sm:col-span-2">
+                            {{ object.description }}
+                        </dd>
+                    </div>
                     {% for detail_field in object.ADDITIONAL_DETAIL_FIELDS %}
                         <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                             <dt class="font-medium text-gray-900">{{ object|fieldlabel:detail_field|title }}</dt>

@@ -23,7 +23,7 @@ class EntitiesListView(LoginRequiredMixin, FilterView):
 
     template_name = "entities/entities_list.html"
 
-    paginate_by = 20
+    paginate_by = 18
 
     def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
         super().setup(request, *args, **kwargs)
@@ -92,7 +92,7 @@ class EntitiesCreateChooseView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        entity_types = [model._meta.verbose_name for model in EntityBase.__subclasses__()]
+        entity_types = [(model._meta.verbose_name, model.COLOR) for model in EntityBase.__subclasses__()]
         context["entity_types"] = entity_types
         return context
 

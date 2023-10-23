@@ -2,6 +2,7 @@ from typing import ClassVar, Self
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models.functions import Lower
 from django.db.models.query_utils import Q
@@ -36,7 +37,7 @@ def image_upload_destination(instance: object, filename: str) -> str:
 
 class EntityBase(TimestampedModel):
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 
     image = models.ImageField(upload_to=image_upload_destination, null=True, blank=True)
 
@@ -68,6 +69,9 @@ class EntityBase(TimestampedModel):
 
     IMAGE_WIDTH = 192
     IMAGE_HEIGHT = 288
+
+    # Used in the frontend to color the entity type record
+    COLOR: str
 
     class Meta:
         abstract = True
@@ -102,6 +106,8 @@ class Movie(EntityBase):
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "length", "director", "cast")
 
+    COLOR = "#f44336"
+
     def __str__(self: Self) -> str:
         res = self.name
         if self.release_date:
@@ -124,6 +130,8 @@ class Show(EntityBase):
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "creator", "stars")
 
+    COLOR = "#ff9800"
+
     def __str__(self: Self) -> str:
         return self.name
 
@@ -138,6 +146,8 @@ class Game(EntityBase):
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "platforms", "producer", "publisher")
 
+    COLOR = "#4caf50"
+
     def __str__(self: Self) -> str:
         return self.name
 
@@ -148,6 +158,8 @@ class Book(EntityBase):
     author = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_DETAIL_FIELDS = ("publish_date", "author")
+
+    COLOR = "#2196f3"
 
     def __str__(self: Self) -> str:
         return self.name

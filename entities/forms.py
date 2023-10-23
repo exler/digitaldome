@@ -44,7 +44,7 @@ class MovieForm(EntityBaseForm):
         fields = (*EntityBaseForm.Meta.fields, *("release_date", "length", "director", "cast"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
-            "length": TimeWidget(attrs={"style": "width: 8rem;"}),
+            "length": TimeWidget(attrs={"style": "width: inherit;"}),
             "director": ArrayField(),
             "cast": ArrayField(),
             "release_date": forms.DateInput(attrs={"type": "date"}),
