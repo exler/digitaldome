@@ -1,11 +1,13 @@
+from datetime import datetime
 from typing import Self
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, View
 
+from integrations.exporters import Exporter
 from integrations.forms import ImportTrackingDataForm
 from integrations.importers import IMPORTER_MAPPING
 
@@ -28,3 +30,9 @@ class ImportTrackingDataView(LoginRequiredMixin, FormView):
         messages.add_message(self.request, messages.SUCCESS, "Your tracking data has been imported.")
 
         return super().form_valid(form)
+
+
+class ExportTrackingDataView(LoginRequiredMixin, View):
+    def get(self: Self, request: HttpRequest) -> HttpResponse:
+        exporter = Exporter(request.user, f"digitaldome_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
+        return exporter.get_streaming_response()
