@@ -64,3 +64,8 @@ def merge_query_params(context: dict, **new_params: str) -> str:
     for key, value in new_params.items():
         params[key] = value
     return f"?{params.urlencode()}"
+
+
+@register.filter("getattr")
+def get_attr(obj: object, attr: str) -> object:
+    return getattr(obj, attr)

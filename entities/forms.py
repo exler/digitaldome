@@ -41,7 +41,7 @@ class EntityBaseForm(forms.ModelForm):
 class MovieForm(EntityBaseForm):
     class Meta(EntityBaseForm.Meta):
         model = Movie
-        fields = (*EntityBaseForm.Meta.fields, *("release_date", "length", "director", "cast"))
+        fields = (*EntityBaseForm.Meta.fields, *("release_date", "length", "director", "cast", "imdb_url"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "length": TimeWidget(attrs={"style": "width: inherit;"}),
@@ -54,7 +54,7 @@ class MovieForm(EntityBaseForm):
 class ShowForm(EntityBaseForm):
     class Meta(EntityBaseForm.Meta):
         model = Show
-        fields = (*EntityBaseForm.Meta.fields, *("release_date", "creator", "stars"))
+        fields = (*EntityBaseForm.Meta.fields, *("release_date", "creator", "stars", "imdb_url"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "release_date": forms.DateInput(attrs={"type": "date"}),
@@ -66,7 +66,7 @@ class GameForm(EntityBaseForm):
         model = Game
         fields = (
             *EntityBaseForm.Meta.fields,
-            *("release_date", "platforms", "producer", "publisher"),
+            *("release_date", "platforms", "producer", "publisher", "steam_url"),
         )
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
@@ -80,7 +80,7 @@ class GameForm(EntityBaseForm):
 class BookForm(EntityBaseForm):
     class Meta(EntityBaseForm.Meta):
         model = Book
-        fields = (*EntityBaseForm.Meta.fields, *("publish_date", "author"))
+        fields = (*EntityBaseForm.Meta.fields, *("publish_date", "author", "goodreads_url"))
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "author": ArrayField(),

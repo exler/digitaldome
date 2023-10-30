@@ -60,6 +60,12 @@ class EntityBase(TimestampedModel):
     # Waiting for approval from moderator/admin.
     approved = models.BooleanField(default=False)
 
+    # Fields and their icon's partial templates (svg as HTML file)
+    # that are show in the detail view.
+    ADDITIONAL_LINK_AS_ICON_FIELDS: tuple[tuple[str, str]] = (
+        ("wikipedia_url", "entities/partials/icons/wikipedia_svg.html"),
+    )
+
     # Fields that are shown in the detail view.
     # Their HTML representation can be configured with a function named
     # `get_<field_name>_display` on the model.
@@ -99,10 +105,17 @@ class EntityBase(TimestampedModel):
 class Movie(EntityBase):
     release_date = models.DateField(null=True, blank=True)
 
+    imdb_url = models.URLField(verbose_name=_("IMDB URL"), blank=True)
+
     length = models.PositiveSmallIntegerField(null=True, blank=True)  # In minutes
 
     director = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     cast = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    ADDITIONAL_LINK_AS_ICON_FIELDS = (
+        *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
+        ("imdb_url", "entities/partials/icons/imdb_svg.html"),
+    )
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "length", "director", "cast")
 
@@ -125,8 +138,15 @@ class Movie(EntityBase):
 class Show(EntityBase):
     release_date = models.DateField(null=True, blank=True)
 
+    imdb_url = models.URLField(verbose_name=_("IMDB URL"), blank=True)
+
     creator = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     stars = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    ADDITIONAL_LINK_AS_ICON_FIELDS = (
+        *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
+        ("imdb_url", "entities/partials/icons/imdb_svg.html"),
+    )
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "creator", "stars")
 
@@ -139,10 +159,17 @@ class Show(EntityBase):
 class Game(EntityBase):
     release_date = models.DateField(null=True, blank=True)
 
+    steam_url = models.URLField(verbose_name=_("Steam URL"), blank=True)
+
     platforms = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     producer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     publisher = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    ADDITIONAL_LINK_AS_ICON_FIELDS = (
+        *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
+        ("steam_url", "entities/partials/icons/steam_svg.html"),
+    )
 
     ADDITIONAL_DETAIL_FIELDS = ("release_date", "platforms", "producer", "publisher")
 
@@ -155,7 +182,14 @@ class Game(EntityBase):
 class Book(EntityBase):
     publish_date = models.DateField(null=True, blank=True)
 
+    goodreads_url = models.URLField(verbose_name=_("Goodreads URL"), blank=True)
+
     author = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    ADDITIONAL_LINK_AS_ICON_FIELDS = (
+        *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
+        ("goodreads_url", "entities/partials/icons/goodreads_svg.html"),
+    )
 
     ADDITIONAL_DETAIL_FIELDS = ("publish_date", "author")
 
