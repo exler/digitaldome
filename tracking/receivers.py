@@ -32,13 +32,18 @@ def update_user_stats_pre_save(
             return
 
     user_stats = UserStats.objects.get_or_create(user=instance.user)[0]
+    user_stats_update_fields = []
     if instance.content_type == ContentType.objects.get_for_model(Movie):
         if instance.status == TrackingObject.Status.COMPLETED:
-            user_stats.time_spent_on_movies += instance.content_object.length
+            if instance.content_object.length:
+                user_stats.time_spent_on_movies += instance.content_object.length
+                user_stats_update_fields.append("time_spent_on_movies")
         else:
-            user_stats.time_spent_on_movies -= instance.content_object.length
+            if instance.content_object.length:
+                user_stats.time_spent_on_movies -= instance.content_object.length
+                user_stats_update_fields.append("time_spent_on_movies")
 
-        user_stats.save(update_fields=["time_spent_on_movies"])
+        user_stats.save(update_fields=user_stats_update_fields)
 
 
 @receiver(post_delete, sender=TrackingObject)
@@ -47,6 +52,9 @@ def update_user_stats_post_delete(sender: type[TrackingObject], instance: Tracki
         return
 
     user_stats = UserStats.objects.get(user=instance.user)
+    user_stats_update_fields = []
     if instance.content_type == ContentType.objects.get_for_model(Movie):
-        user_stats.time_spent_on_movies -= instance.content_object.length
-        user_stats.save(update_fields=["time_spent_on_movies"])
+        if instance.content_object.length:
+            user_stats.time_spent_on_movies -= instance.content_object.length
+            user_stats_update_fields.append("time_spent_on_movies")
+        user_stats.save(update_fields=user_stats_update_fields)
