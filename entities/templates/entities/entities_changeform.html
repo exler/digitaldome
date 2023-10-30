@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% load digitaldome_tags %}
 {% block title %}
-    Create new {{ entity_type }}
+    {% if object %}
+        Edit {{ entity_type }}
+    {% else %}
+        Create new {{ entity_type }}
+    {% endif %}
 {% endblock title %}
 {% block content %}
     <div class="container px-4 mx-auto">
         <div class="max-w-lg mx-auto">
-            <form method="post"
-                  action="{{ form_url }}"
+            <form {% if object %}action="{% url 'entities:entities-update' entity_type object.id %}"{% else %}action="{% url 'digitaldome:create' entity_type %}"{% endif %}
+                  method="post"
                   enctype="multipart/form-data"
                   id="entity-create-form">
                 {% csrf_token %}
@@ -22,7 +26,13 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                <button class="btn btn-primary w-full mt-2">Create</button>
+                <button class="btn btn-primary w-full mt-2">
+                    {% if object %}
+                        Update
+                    {% else %}
+                        Create
+                    {% endif %}
+                </button>
             </form>
         </div>
     </div>

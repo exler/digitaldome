@@ -1,22 +1,22 @@
 from typing import Any, Self
 
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg, Count, QuerySet
 from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView, View
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
 from entities.mappings import ENTITY_MODEL_TO_FILTER_MAPPING, ENTITY_MODEL_TO_FORM_MAPPING, get_model_from_entity_type
+from entities.mixins import DynamicEntityMixin, ModeratorOnlyMixin
 from entities.models import EntityBase
 from tracking.models import TrackingObject
 
 
-class EntitiesListView(LoginRequiredMixin, FilterView):
+class EntitiesListView(DynamicEntityMixin, LoginRequiredMixin, FilterView):
     """
     View for rendering a list of entities of a type passed in the URL.
     """
@@ -24,10 +24,6 @@ class EntitiesListView(LoginRequiredMixin, FilterView):
     template_name = "entities/entities_list.html"
 
     paginate_by = 18
-
-    def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
-        super().setup(request, *args, **kwargs)
-        self.model = get_model_from_entity_type(self.kwargs["entity_type"])
 
     def get_filterset_class(self: Self) -> type[FilterSet]:
         return ENTITY_MODEL_TO_FILTER_MAPPING[self.model]
@@ -39,18 +35,9 @@ class EntitiesListView(LoginRequiredMixin, FilterView):
 
         return super().get_queryset().visible_for_user(self.request.user)
 
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = self.kwargs["entity_type"].capitalize()
-        return context
 
-
-class EntitiesDetailView(LoginRequiredMixin, DetailView):
+class EntitiesDetailView(DynamicEntityMixin, LoginRequiredMixin, DetailView):
     template_name = "entities/entities_detail.html"
-
-    def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
-        super().setup(request, *args, **kwargs)
-        self.model = get_model_from_entity_type(self.kwargs["entity_type"])
 
     def get_queryset(self: Self) -> QuerySet[EntityBase]:
         """
@@ -97,12 +84,8 @@ class EntitiesCreateChooseView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class EntitiesCreateView(LoginRequiredMixin, CreateView):
+class EntitiesCreateView(DynamicEntityMixin, LoginRequiredMixin, CreateView):
     template_name = "entities/entities_changeform.html"
-
-    def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
-        super().setup(request, *args, **kwargs)
-        self.model = get_model_from_entity_type(self.kwargs["entity_type"])
 
     def get_form_kwargs(self: Self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
@@ -112,26 +95,9 @@ class EntitiesCreateView(LoginRequiredMixin, CreateView):
     def get_form_class(self: Self) -> type[BaseModelForm]:
         return ENTITY_MODEL_TO_FORM_MAPPING[self.model]
 
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["entity_type"] = self.kwargs["entity_type"]
-        if self.object:
-            context["form_url"] = reverse(
-                "entities:entities-update", kwargs={"entity_type": self.kwargs["entity_type"], "pk": self.object.pk}
-            )
-        else:
-            context["form_url"] = reverse(
-                "entities:entities-create", kwargs={"entity_type": self.kwargs["entity_type"]}
-            )
-        return context
 
-
-class EntitiesUpdateView(LoginRequiredMixin, UpdateView):
+class EntitiesUpdateView(DynamicEntityMixin, LoginRequiredMixin, UpdateView):
     template_name = "entities/entities_changeform.html"
-
-    def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
-        super().setup(request, *args, **kwargs)
-        self.model = get_model_from_entity_type(self.kwargs["entity_type"])
 
     def get_form_kwargs(self: Self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
@@ -140,19 +106,6 @@ class EntitiesUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_class(self: Self) -> type[BaseModelForm]:
         return ENTITY_MODEL_TO_FORM_MAPPING[self.model]
-
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["entity_type"] = self.kwargs["entity_type"]
-        if self.object:
-            context["form_url"] = reverse(
-                "entities:entities-update", kwargs={"entity_type": self.kwargs["entity_type"], "pk": self.object.pk}
-            )
-        else:
-            context["form_url"] = reverse(
-                "entities:entities-create", kwargs={"entity_type": self.kwargs["entity_type"]}
-            )
-        return context
 
 
 class DraftsListView(LoginRequiredMixin, TemplateView):
@@ -168,11 +121,6 @@ class DraftsListView(LoginRequiredMixin, TemplateView):
 
         context["object_list"] = object_list
         return context
-
-
-class ModeratorOnlyMixin(UserPassesTestMixin):
-    def test_func(self: Self) -> bool:
-        return self.request.user.is_moderator
 
 
 class ApprovalListView(ModeratorOnlyMixin, LoginRequiredMixin, TemplateView):
