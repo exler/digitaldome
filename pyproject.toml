@@ -32,7 +32,7 @@ target-version = ["py311"]
 
 [tool.ruff]
 select = ["E", "F", "ANN", "ASYNC", "S", "A", "DJ", "G", "PIE", "T20", "RSE", "SIM", "PTH", "PD", "TRY", "RUF"]
-ignore = ["ANN401", "TRY003"]
+ignore = ["ANN401", "TRY003", "SIM118"]
 line-length = 120
 target-version = "py311"
 
