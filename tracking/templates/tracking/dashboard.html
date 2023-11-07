@@ -17,8 +17,13 @@
                                  src="{{ object.content_object.image_url }}"
                                  alt="" />
                         </figure>
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 justify-between">
                             <h2 class="card-title break-words">{{ object.content_object.name }}</h2>
+                            <div class="badge"
+                                 style="background-color: {{ object.content_object.COLOR }};
+                                        border-color: {{ object.content_object.COLOR }}">
+                                {{ object.content_object|verbosename|title }}
+                            </div>
                             <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
                                class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
                         </div>
@@ -37,8 +42,13 @@
                                  src="{{ object.content_object.image_url }}"
                                  alt="" />
                         </figure>
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 justify-between">
                             <h2 class="card-title break-words">{{ object.content_object.name }}</h2>
+                            <div class="badge"
+                                 style="background-color: {{ object.content_object.COLOR }};
+                                        border-color: {{ object.content_object.COLOR }}">
+                                {{ object.content_object|verbosename|title }}
+                            </div>
                             <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
                                rel="noopener noreferrer"
                                class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
