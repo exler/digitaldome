@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container px-4 mx-auto">
         <div class="max-w-lg mx-auto">
-            <form {% if object %}action="{% url 'entities:entities-update' entity_type object.id %}"{% else %}action="{% url 'digitaldome:create' entity_type %}"{% endif %}
+            <form {% if object %}action="{% url 'entities:entities-update' entity_type object.id %}"{% else %}action="{% url 'entities:entities-create' entity_type %}"{% endif %}
                   method="post"
                   enctype="multipart/form-data"
                   id="entity-create-form">
