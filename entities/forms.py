@@ -58,6 +58,8 @@ class ShowForm(EntityBaseForm):
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "release_date": forms.DateInput(attrs={"type": "date"}),
+            "creator": ArrayField(),
+            "stars": ArrayField(),
         }
 
 
