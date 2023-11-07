@@ -163,7 +163,7 @@ class Game(EntityBase):
 
     platforms = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
-    producer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    developer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     publisher = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     ADDITIONAL_LINK_AS_ICON_FIELDS = (
@@ -171,7 +171,7 @@ class Game(EntityBase):
         ("steam_url", "entities/partials/icons/steam_svg.html"),
     )
 
-    ADDITIONAL_DETAIL_FIELDS = ("release_date", "platforms", "producer", "publisher")
+    ADDITIONAL_DETAIL_FIELDS = ("release_date", "platforms", "developer", "publisher")
 
     COLOR = "#4caf50"
 

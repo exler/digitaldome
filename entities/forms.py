@@ -68,12 +68,12 @@ class GameForm(EntityBaseForm):
         model = Game
         fields = (
             *EntityBaseForm.Meta.fields,
-            *("release_date", "platforms", "producer", "publisher", "steam_url"),
+            *("release_date", "platforms", "developer", "publisher", "steam_url"),
         )
         widgets: ClassVar = {
             **EntityBaseForm.Meta.widgets,
             "release_date": forms.DateInput(attrs={"type": "date"}),
-            "producer": ArrayField(),
+            "developer": ArrayField(),
             "publisher": ArrayField(),
             "platforms": ArrayField(),
         }
