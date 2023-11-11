@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from digitaldome.common.models import TimestampedModel
 
@@ -46,5 +47,9 @@ class UserStats(models.Model):
     # All time spent is in seconds.
     time_spent_on_movies = models.BigIntegerField(default=0)
 
+    class Meta:
+        verbose_name_plural = _("User Stats")
+        verbose_name = _("User Stats")
+
     def __str__(self: Self) -> str:
-        return f"{self.user.username} (stats)"
+        return f"{self.user.display_name} (stats)"
