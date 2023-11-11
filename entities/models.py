@@ -134,7 +134,7 @@ class Movie(EntityBase):
 
     def get_length_display(self: Self) -> str:
         if not self.length:
-            return "n/a"
+            return ""
 
         return format_time_spent(self.length)
 

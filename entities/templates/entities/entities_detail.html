@@ -62,7 +62,7 @@
                 <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
                      class="relative">
                     <button @click="ratingDropdownOpen=true"
-                            class="w-28 px-6 py-12 flex flex-col md:gap-4 items-center justify-center h-12 border rounded-md">
+                            class="w-28 px-6 py-12 flex flex-col md:gap-4 items-center justify-center h-12 border bg-white rounded-md">
                         <span class="text-2xl uppercase font-bold">
                             {% if tracking_obj.rating %}
                                 {{ tracking_obj.rating }}
@@ -102,12 +102,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border rounded-md text-center">
+                <div class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border bg-white rounded-md text-center">
                     <div class="inline-block">
                         <span class="text-2xl uppercase font-bold">{{ entity_stats.digitaldome_rating|default_if_none:"—" }}</span>
-                        {% if entity_stats.digitaldome_rating %}
-                        <span class="text-xs uppercase">/5</span>
-                        {% endif %}
+                        {% if entity_stats.digitaldome_rating %}<span class="text-xs uppercase">/5</span>{% endif %}
                     </div>
                     <span class="text-xs uppercase">{{ entity_stats.digitaldome_rating_count }} vote{{ entity_stats.digitaldome_rating_count|pluralize }}</span>
                     <span class="text-xs uppercase font-bold mt-1">Community rating</span>
@@ -228,7 +226,7 @@
                             <label class="label">
                                 <span class="label-text">Notes</span>
                             </label>
-                            <textarea class="textarea textarea-bordered h-24"
+                            <textarea class="textarea textarea-bordered bg-white h-24"
                                       placeholder="Add a note..."
                                       name="notes">{{ tracking_obj.notes }}</textarea>
                         </div>
@@ -254,7 +252,7 @@
                         <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                             <dt class="font-medium text-gray-900">{{ object|fieldlabel:detail_field|title }}</dt>
                             <dd class="text-gray-700 sm:col-span-2">
-                                {{ object|detailfieldhtml:detail_field }}
+                                {{ object|detailfieldhtml:detail_field|default:"n/a" }}
                             </dd>
                         </div>
                     {% endfor %}

@@ -9,7 +9,21 @@ module.exports = {
     }
   },
   daisyui: {
-    themes: ["corporate"],
+    themes: [
+      {
+        mytheme: {
+          "primary": "#65c3c8",
+          "secondary": "#ef9fbc",
+          "accent": "#eeaf3a",
+          "neutral": "#291334",
+          "base-100": "#faf7f5",
+          "info": "#3abff8",
+          "success": "#36d399",
+          "warning": "#fbbd23",
+          "error": "#f87272",
+        },
+      },
+    ],
     darkTheme: false,
     base: true,
     styled: true,
@@ -20,7 +34,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms'),
-    require("@tailwindcss/typography"),
+    require('@tailwindcss/typography'),
     require('daisyui')
   ],
 }

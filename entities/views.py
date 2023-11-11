@@ -23,7 +23,7 @@ class EntitiesListView(DynamicEntityMixin, LoginRequiredMixin, FilterView):
 
     template_name = "entities/entities_list.html"
 
-    paginate_by = 18
+    paginate_by = 20
 
     def get_filterset_class(self: Self) -> type[FilterSet]:
         return ENTITY_MODEL_TO_FILTER_MAPPING[self.model]

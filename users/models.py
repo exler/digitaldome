@@ -1,7 +1,7 @@
 from typing import Any, ClassVar, Self
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
-from django.core.validators import RegexValidator
+from django.core.validators import MaxLengthValidator, RegexValidator
 from django.db import models
 from django.templatetags.static import static
 from django.utils.functional import cached_property
@@ -60,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
+    bio = models.TextField(blank=True, validators=[MaxLengthValidator(200)])
 
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
