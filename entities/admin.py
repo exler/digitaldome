@@ -8,9 +8,14 @@ from django.urls import path
 from django.urls.resolvers import URLPattern
 from django.utils.safestring import mark_safe
 
-from entities.models import Book, EntityBase, Game, Movie, Show
+from entities.models import Book, EntityBase, Game, Movie, Show, Tag
 from integrations.openai.client import get_openai_json_response
 from integrations.openai.prompts import GET_ENTITY_PROMPT
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
 
 
 class EntityBaseAdmin(admin.ModelAdmin):
