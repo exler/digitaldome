@@ -3300,12 +3300,12 @@ html {
   fill: currentColor;
 }
 
-.stroke-purple-700 {
-  stroke: #7e22ce;
-}
-
 .stroke-current {
   stroke: currentColor;
+}
+
+.stroke-purple-700 {
+  stroke: #7e22ce;
 }
 
 .object-cover {

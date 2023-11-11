@@ -226,3 +226,9 @@ EMAIL_HOST_PASSWORD = get_env_str("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = get_env_bool("EMAIL_USE_TLS")
 EMAIL_USE_SSL = get_env_bool("EMAIL_USE_SSL")
 DEFAULT_FROM_EMAIL = get_env_str("DEFAULT_FROM_EMAIL")
+
+# Integrations #
+# OpenAI #
+# https://platform.openai.com/docs/quickstart?context=python
+
+OPENAI_API_KEY = get_env_str("OPENAI_API_KEY")
