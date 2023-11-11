@@ -27,11 +27,14 @@ class EntityBaseAdmin(admin.ModelAdmin):
 
     def get_urls(self: Self) -> list[URLPattern]:
         default_urls = super().get_urls()
+
+        app_label = self.model._meta.app_label
+        model_name = self.model._meta.model_name
         custom_urls = [
             path(
                 "<path:object_id>/fill-automagically/",
                 self.admin_site.admin_view(self.fill_automagically),
-                name="fill-automagically",
+                name=f"fill-automagically-{app_label}-{model_name}",
             )
         ]
         return custom_urls + default_urls
