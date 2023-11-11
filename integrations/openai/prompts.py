@@ -31,4 +31,7 @@ Book:
 - goodreads_url: URL to the Goodreads page of this book 
 (if not on Goodreads, return null; if multiple found, return most popular match)
 - author: array of names of the book authors
+
+Always return the description in English and link to the English wikipedia if possible, 
+even if the title is in another language.
 """
