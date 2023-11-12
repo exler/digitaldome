@@ -20,6 +20,7 @@ class LoginForm(forms.ModelForm):
             "Please enter a correct email and password. Note that both fields may be case-sensitive."
         ),
         "user_inactive": _("This account is inactive."),
+        "email_not_verified": _("This email is not verified."),
     }
 
     remember_me = forms.BooleanField(required=False)
@@ -58,6 +59,9 @@ class LoginForm(forms.ModelForm):
     def confirm_login_allowed(self: Self, user: User) -> None:
         if not user.is_active:
             raise ValidationError(self.error_messages["user_inactive"], code="user_inactive")
+
+        if not user.email_verified:
+            raise ValidationError(self.error_messages["email_not_verified"], code="email_not_verified")
 
     def get_user(self: Self) -> User | None:
         return self.user_cache
