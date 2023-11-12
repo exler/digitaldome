@@ -1,13 +1,8 @@
 from django.contrib import admin
 
-from tracking.models import TrackingObject, UserStats
+from tracking.models import TrackingObject
 
 
 @admin.register(TrackingObject)
 class TrackingObjectAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(UserStats)
-class UserStatsAdmin(admin.ModelAdmin):
     pass

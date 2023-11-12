@@ -6,17 +6,16 @@ from django.db.models import QuerySet
 from django.forms import ModelForm
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 from django.views.generic.edit import DeleteView, ModelFormMixin, ProcessFormView
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
 from digitaldome.common.mixins import DefaultFilterMixin
-from entities.helpers import format_time_spent
 from entities.mappings import get_model_from_entity_type
 from tracking.forms import TrackingObjectForm
 from tracking.mixins import TrackingObjectMixin
-from tracking.models import TrackingObject, UserStats
+from tracking.models import TrackingObject
 from users.models import User
 
 
@@ -67,18 +66,6 @@ class TrackingListView(UserDashboardMixin, LoginRequiredMixin, DefaultFilterMixi
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["entity_type"] = self.kwargs["entity_type"]
-        return context
-
-
-class StatsView(UserDashboardMixin, LoginRequiredMixin, DetailView):
-    template_name = "tracking/stats.html"
-
-    def get_object(self: Self, queryset: QuerySet[UserStats] | None = None) -> UserStats:
-        return UserStats.objects.get_or_create(user=self.dashboard_user)[0]
-
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["time_spent_on_movies"] = format_time_spent(self.object.time_spent_on_movies)
         return context
 
 
