@@ -6,9 +6,9 @@
 {% block content %}
     <div class="flex flex-col gap-4">
         {% include "users/partials/menu.html" %}
-        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 md:gap-x-12 gap-y-6 justify-items-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 md:gap-x-6 gap-y-6 justify-items-center">
             {% for object in object_list %}
-                <div class="card image-full w-40 md:w-48">
+                <div class="card image-full w-40">
                     <figure>
                         <img width="192" height="288" src="{{ object.image_url }}" alt="" />
                     </figure>
