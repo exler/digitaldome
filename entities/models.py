@@ -1,3 +1,6 @@
+import random
+import string
+from pathlib import Path
 from typing import ClassVar, Self
 
 from django.conf import settings
@@ -32,14 +35,16 @@ class EntityQueryset(models.QuerySet):
 
 
 def image_upload_destination(instance: object, filename: str) -> str:
-    return f"entities/{instance.__class__.__name__.lower()}s/{filename}"
+    ext = Path(filename).suffix
+    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=14))  # noqa: S311
+    return f"entities/{instance.__class__.__name__.lower()}s/{random_string}{ext}"
 
 
 class EntityBase(TimestampedModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 
-    image = models.ImageField(upload_to=image_upload_destination, null=True, blank=True)
+    image = models.ImageField(upload_to=image_upload_destination, blank=True)
 
     wikipedia_url = models.URLField(verbose_name=_("Wikipedia URL"), blank=True)
 
