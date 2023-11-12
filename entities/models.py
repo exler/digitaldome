@@ -31,6 +31,9 @@ class Tag(TimestampedModel):
 
 class EntityQueryset(models.QuerySet):
     def visible_for_user(self: Self, user: User) -> Self:
+        if user.is_moderator:
+            return self
+
         return self.filter(Q(created_by=user) | Q(approved=True))
 
 
