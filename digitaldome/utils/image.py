@@ -10,6 +10,8 @@ def resize_and_crop_image(image: File, width: int, height: int) -> File:
     """
 
     img = Image.open(image)
+    img_format = img.format
+
     img_width, img_height = img.size
 
     width_scale = width / img_width
@@ -29,6 +31,6 @@ def resize_and_crop_image(image: File, width: int, height: int) -> File:
     img = img.crop((left, top, right, bottom))
 
     img_io = BytesIO()
-    img.save(img_io, format="JPEG")
+    img.save(img_io, format=img_format)
 
     return ContentFile(img_io.getvalue(), name=image.name)
