@@ -20,32 +20,36 @@
             </button>
         </form>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 md:gap-x-6 gap-y-6 justify-items-center">
-        {% for object in page_obj %}
-            <div class="card image-full w-40 md:w-48">
-                <figure>
-                    <img width="192" height="288" src="{{ object.image_url }}" alt="" />
-                </figure>
-                <div class="card-body p-4">
-                    {% comment %} djlint:off H021 {% endcomment %}
-                    <h2 class="card-title" style="word-break: break-word">{{ object.name }}</h2>
-                    {% comment %} djlint:on H021 {% endcomment %}
-                    <a href="{% url 'entities:entities-detail' object|verbosename object.id %}"
-                       rel="noopener noreferrer"
-                       class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
+    {% if page_obj %}
+        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 md:gap-x-6 gap-y-6 justify-items-center">
+            {% for object in page_obj %}
+                <div class="card image-full w-40 md:w-48">
+                    <figure>
+                        <img width="192" height="288" src="{{ object.image_url }}" alt="" />
+                    </figure>
+                    <div class="card-body p-4">
+                        {% comment %} djlint:off H021 {% endcomment %}
+                        <h2 class="card-title" style="word-break: break-word">{{ object.name }}</h2>
+                        {% comment %} djlint:on H021 {% endcomment %}
+                        <a href="{% url 'entities:entities-detail' object|verbosename object.id %}"
+                           rel="noopener noreferrer"
+                           class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="join mt-4 flex flex-row justify-center">
-        {% if page_obj.has_previous %}
-            <a href="{% merge_query_params page=page_obj.previous_page_number %}"
-               class="join-item btn">«</a>
-        {% endif %}
-        <a class="join-item btn">Page {{ page_obj.number }}</a>
-        {% if page_obj.has_next %}
-            <a href="{% merge_query_params page=page_obj.next_page_number %}"
-               class="join-item btn">»</a>
-        {% endif %}
-    </div>
+            {% endfor %}
+        </div>
+        <div class="join mt-4 flex flex-row justify-center">
+            {% if page_obj.has_previous %}
+                <a href="{% merge_query_params page=page_obj.previous_page_number %}"
+                   class="join-item btn">«</a>
+            {% endif %}
+            <a class="join-item btn">Page {{ page_obj.number }}</a>
+            {% if page_obj.has_next %}
+                <a href="{% merge_query_params page=page_obj.next_page_number %}"
+                   class="join-item btn">»</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <h3 class="text-xl py-4 text-center">No {{ entity_type }} found.</h3>
+    {% endif %}
 {% endblock content %}
