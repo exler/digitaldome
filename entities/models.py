@@ -44,7 +44,7 @@ def image_upload_destination(instance: object, filename: str) -> str:
 
 
 class EntityBase(TimestampedModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=128)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 
     image = models.ImageField(upload_to=image_upload_destination, blank=True)

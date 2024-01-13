@@ -4,6 +4,7 @@
     {{ entity_type|title }}
 {% endblock title %}
 {% block content %}
+    <h2 class="text-2xl font-bold mb-4">{{ entity_type|title }}</h2>
     <div class="mb-4">
         <form method="get"
               class="relative flex justify-center md:justify-normal w-96">
@@ -28,9 +29,7 @@
                         <img width="192" height="288" src="{{ object.image_url }}" alt="" />
                     </figure>
                     <div class="card-body p-4">
-                        {% comment %} djlint:off H021 {% endcomment %}
-                        <h2 class="card-title" style="word-break: break-word">{{ object.name }}</h2>
-                        {% comment %} djlint:on H021 {% endcomment %}
+                        <span class="card-title text-base">{{ object.name }}</span>
                         <a href="{% url 'entities:entities-detail' object|verbosename object.id %}"
                            rel="noopener noreferrer"
                            class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>

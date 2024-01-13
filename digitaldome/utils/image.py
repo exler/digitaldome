@@ -17,7 +17,7 @@ def resize_and_crop_image(image: File, width: int, height: int) -> File:
     width_scale = width / img_width
     height_scale = height / img_height
 
-    if width_scale > height_scale:
+    if width_scale < height_scale:
         img = img.resize((int(img_width * height_scale), height))
     else:
         img = img.resize((width, int(img_height * width_scale)))
