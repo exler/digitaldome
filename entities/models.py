@@ -96,6 +96,7 @@ class EntityBase(TimestampedModel):
                 violation_error_message=_("Item with that name already exists."),
             ),
         ]
+        ordering = ("name", "-id")
 
     def get_absolute_url(self: Self) -> str:
         return reverse("entities:entities-detail", kwargs={"entity_type": self._meta.verbose_name, "pk": self.pk})
