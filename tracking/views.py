@@ -11,7 +11,7 @@ from django.views.generic.edit import DeleteView, ModelFormMixin, ProcessFormVie
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
-from digitaldome.common.mixins import DefaultFilterMixin
+from digitaldome.common.mixins import DefaultFilterMixin, ElidedPaginationMixin
 from entities.mappings import get_model_from_entity_type
 from tracking.forms import TrackingObjectForm
 from tracking.mixins import TrackingObjectMixin
@@ -51,7 +51,7 @@ class TrackingFilter(FilterSet):
         fields: ClassVar = ["status"]
 
 
-class TrackingListView(UserDashboardMixin, LoginRequiredMixin, DefaultFilterMixin, FilterView):
+class TrackingListView(UserDashboardMixin, ElidedPaginationMixin, DefaultFilterMixin, LoginRequiredMixin, FilterView):
     template_name = "tracking/tracking_list.html"
     paginate_by = 20
     filterset_class = TrackingFilter

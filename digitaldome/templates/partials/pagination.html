@@ -1,0 +1,21 @@
+{% load digitaldome_tags %}
+<div class="{% if page_obj.has_next or page_obj.has_previous %}join {% endif %} mt-4 flex flex-row justify-center">
+    {% if page_obj.has_previous %}
+        <a href="{% merge_query_params page=page_obj.previous_page_number %}"
+           class="join-item btn">«</a>
+    {% endif %}
+    {% for page_number in page_obj.adjusted_elided_pages %}
+        {% if page_number == page_obj.paginator.ELLIPSIS %}
+            <a class="join-item btn">...</a>
+        {% elif page_number == page_obj.number %}
+            <a class="join-item btn btn-secondary">{{ page_number }}</a>
+        {% else %}
+            <a href="{% merge_query_params page=page_number %}"
+               class="join-item btn">{{ page_number }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="{% merge_query_params page=page_obj.next_page_number %}"
+           class="join-item btn">»</a>
+    {% endif %}
+</div>

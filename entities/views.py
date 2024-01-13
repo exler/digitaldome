@@ -10,13 +10,14 @@ from django.views.generic import CreateView, DetailView, TemplateView, UpdateVie
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
+from digitaldome.common.mixins import ElidedPaginationMixin
 from entities.mappings import ENTITY_MODEL_TO_FILTER_MAPPING, ENTITY_MODEL_TO_FORM_MAPPING, get_model_from_entity_type
 from entities.mixins import DynamicEntityMixin, ModeratorOnlyMixin
 from entities.models import EntityBase
 from tracking.models import TrackingObject
 
 
-class EntitiesListView(DynamicEntityMixin, LoginRequiredMixin, FilterView):
+class EntitiesListView(ElidedPaginationMixin, DynamicEntityMixin, LoginRequiredMixin, FilterView):
     """
     View for rendering a list of entities of a type passed in the URL.
     """
