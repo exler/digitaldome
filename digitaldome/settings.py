@@ -20,6 +20,8 @@ DEBUG = get_env_bool("DJANGO_DEBUG", False)
 
 ALLOWED_HOSTS = get_env_list("DJANGO_ALLOWED_HOSTS")
 
+CSRF_TRUSTED_ORIGINS = get_env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
+
 BASE_URL = get_env_str("BASE_URL")
 
 # Application definition #
