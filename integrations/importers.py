@@ -30,12 +30,10 @@ class BaseImporter(ABC):
         self.import_data()
 
     @abstractmethod
-    def validate(self: Self) -> None:
-        ...
+    def validate(self: Self) -> None: ...
 
     @abstractmethod
-    def import_data(self: Self) -> None:
-        ...
+    def import_data(self: Self) -> None: ...
 
 
 class CSVImporter(BaseImporter):

@@ -27,6 +27,10 @@ ipython = "^8.31.0"
 djlint = "^1.36.4"
 
 [tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
 select = [
     "E",
     "F",
@@ -46,10 +50,8 @@ select = [
     "RUF",
 ]
 ignore = ["ANN401", "TRY003", "SIM118"]
-line-length = 120
-target-version = "py311"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "**/management/commands/*.py" = ["A003"]
 "**/migrations/0*_*.py" = ["RUF012"]
 

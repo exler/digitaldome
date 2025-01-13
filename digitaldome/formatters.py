@@ -3,7 +3,7 @@ from typing import Self
 
 
 class ExtraFormatter(logging.Formatter):
-    def format(self: Self, record: logging.LogRecord) -> str:  # noqa: A003
+    def format(self: Self, record: logging.LogRecord) -> str:
         # Original formatted message
         msg = super().format(record)
 

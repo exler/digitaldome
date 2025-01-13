@@ -10,9 +10,9 @@ class AuthenticatedTestCase(TestCase):
     def _pre_setup(self: Self) -> None:
         super()._pre_setup()
 
-        self.user = User.objects.create_user(  # nosec
+        self.user = User.objects.create_user(
             email="liara@digitaldome.io",
-            password="password",
+            password="password",  # noqa: S106
             email_verified=True,
         )
         self.client.force_login(self.user)

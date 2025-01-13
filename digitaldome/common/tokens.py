@@ -2,7 +2,7 @@ import base64
 import binascii
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
-from typing import Any, Self, Type
+from typing import Any, ClassVar, Iterable, Self, Type
 
 import jwt
 from django.conf import settings
@@ -23,7 +23,7 @@ class JSONWebTokenGenerator(TokenGenerator):
     JWT_SECRET_KEY = settings.SECRET_KEY
 
     model = None
-    obj_kwargs = []
+    obj_kwargs: ClassVar[Iterable[Any]] = ()
     token_expiration = 60 * 60 * 24  # 1 day
 
     @classmethod
