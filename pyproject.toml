@@ -6,33 +6,45 @@ authors = ["Kamil Marut <kamil@kamilmarut.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-python-dotenv = "^1.0.0"
-django = "^4.2.7"
-django-storages = {extras = ["s3"], version = "^1.14.2"}
-django-filter = "^23.3"
-psycopg = "^3.1.9"
-whitenoise = {extras = ["brotli"], version = "^6.5.0"}
-pillow = "^10.0.0"
-pyjwt = "^2.8.0"
-httpx = "^0.24.1"
-gunicorn = "^21.2.0"
+python = "^3.13"
+python-dotenv = "^1.0.1"
+django = "^5.1.4"
+django-storages = { extras = ["s3"], version = "^1.14.4" }
+django-filter = "^24.3"
+psycopg = "^3.2.3"
+whitenoise = { extras = ["brotli"], version = "^6.8.2" }
+pillow = "^11.1.0"
+pyjwt = "^2.10.1"
+httpx = "^0.28.1"
+gunicorn = "^23.0.0"
 python-magic = "^0.4.27"
-sentry-sdk = {extras = ["django"], version = "^1.32.0"}
-openai = "^1.2.3"
+sentry-sdk = { extras = ["django"], version = "^2.19.2" }
+openai = "^1.59.7"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.7.0"
-ruff = "^0.0.286"
-ipython = "^8.14.0"
-djlint = "^1.33.0"
-
-[tool.black]
-line-length = 120
-target-version = ["py311"]
+ruff = "^0.9.1"
+ipython = "^8.31.0"
+djlint = "^1.36.4"
 
 [tool.ruff]
-select = ["E", "F", "ANN", "ASYNC", "S", "A", "DJ", "G", "PIE", "T20", "RSE", "SIM", "PTH", "PD", "TRY", "RUF"]
+select = [
+    "E",
+    "F",
+    "ANN",
+    "ASYNC",
+    "S",
+    "A",
+    "DJ",
+    "G",
+    "PIE",
+    "T20",
+    "RSE",
+    "SIM",
+    "PTH",
+    "PD",
+    "TRY",
+    "RUF",
+]
 ignore = ["ANN401", "TRY003", "SIM118"]
 line-length = 120
 target-version = "py311"

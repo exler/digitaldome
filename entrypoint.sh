@@ -4,7 +4,6 @@ set -euo pipefail
 
 cd /app
 
-python manage.py collectstatic --noinput
 python manage.py migrate
 
 PROCESS_TYPE=$1

@@ -4,14 +4,17 @@ import logging
 from django.conf import settings
 from openai import OpenAI
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
-
 logger = logging.getLogger(__name__)
+
+
+def get_client() -> OpenAI:
+    return OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 def get_openai_json_response(
     system_prompt: str, user_prompt: str, model: str = "gpt-3.5-turbo-1106", temperature: float = 0.0
 ) -> dict:
+    client = get_client()
     response = client.chat.completions.create(
         model=model,
         response_format={"type": "json_object"},
