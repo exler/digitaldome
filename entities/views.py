@@ -17,7 +17,7 @@ from entities.models import EntityBase
 from tracking.models import TrackingObject
 
 
-class EntitiesListView(ElidedPaginationMixin, DynamicEntityMixin, LoginRequiredMixin, FilterView):
+class EntitiesListView(ElidedPaginationMixin, DynamicEntityMixin, FilterView):
     """
     View for rendering a list of entities of a type passed in the URL.
     """
@@ -37,7 +37,7 @@ class EntitiesListView(ElidedPaginationMixin, DynamicEntityMixin, LoginRequiredM
         return super().get_queryset().visible_for_user(self.request.user)
 
 
-class EntitiesDetailView(DynamicEntityMixin, LoginRequiredMixin, DetailView):
+class EntitiesDetailView(DynamicEntityMixin, DetailView):
     template_name = "entities/entities_detail.html"
 
     def get_queryset(self: Self) -> QuerySet[EntityBase]:
