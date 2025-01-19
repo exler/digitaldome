@@ -21,7 +21,7 @@ You can also choose to run external services in Docker and the webapp locally
 
 * Clone the repository and navigate to the project directory.
 * Run `docker compose up -d db minio` to start the database and storage containers
-* Run `poetry install` to install dependencies using [Poetry](https://python-poetry.org/)
+* Run `uv sync` to install dependencies using [uv](https://docs.astral.sh/uv/)
 
 
 ## Usage

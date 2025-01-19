@@ -3,21 +3,21 @@ FROM python:3.13-slim AS builder
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV POETRY_VERSION=1.8.3
+ENV UV_VERSION=0.5.21
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     && pip install --upgrade pip \
-    && pip install "poetry==$POETRY_VERSION"
+    && pip install "uv==$UV_VERSION"
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml uv.lock /app/
 
 # Use poetry to install dependencies
-RUN poetry export -f requirements.txt --without-hashes --output /app/requirements.txt
+RUN uv export --format requirements-txt --no-hashes -o /app/requirements.txt
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r /app/requirements.txt
 
 # Final stage
