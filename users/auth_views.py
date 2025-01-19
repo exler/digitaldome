@@ -11,29 +11,14 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import CreateView, FormView, RedirectView, TemplateView
+from django.views.generic import FormView, RedirectView, TemplateView
 
 from users.auth_forms import (
     LoginForm,
-    RegisterForm,
     ResetPasswordConfirmForm,
     ResetPasswordForm,
 )
 from users.tokens import EmailVerificationTokenGenerator
-
-
-class RegisterView(CreateView):
-    form_class = RegisterForm
-    template_name = "users/register.html"
-    success_url = reverse_lazy("users:login")
-
-    def form_valid(self: Self, form: RegisterForm) -> HttpResponseBase:
-        messages.add_message(
-            self.request,
-            messages.INFO,
-            "Your account has been created. Please check your email to verify your account.",
-        )
-        return super().form_valid(form)
 
 
 class VerifyEmailView(RedirectView):
