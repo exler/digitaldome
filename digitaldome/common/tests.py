@@ -11,8 +11,7 @@ class AuthenticatedTestCase(TestCase):
         super()._pre_setup()
 
         self.user = User.objects.create_user(
-            email="liara@digitaldome.io",
+            username="liara",
             password="password",  # noqa: S106
-            email_verified=True,
         )
         self.client.force_login(self.user)

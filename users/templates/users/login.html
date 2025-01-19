@@ -11,10 +11,10 @@
                 {{ form.non_field_errors }}
                 <div class="form-control">
                     <label class="label">
-                        <span class="label-text">{{ form.email.label }}</span>
+                        <span class="label-text">{{ form.username.label }}</span>
                     </label>
-                    {{ form.email|addclass:"input input-bordered" }}
-                    {{ form.email.errors }}
+                    {{ form.username|addclass:"input input-bordered" }}
+                    {{ form.username.errors }}
                 </div>
                 <div class="form-control">
                     <label class="label">
@@ -29,10 +29,6 @@
                             {{ form.remember_me|addclass:"checkbox mr-2" }}
                             <span class="label-text">{{ form.remember_me.label }}</span>
                         </label>
-                    </div>
-                    <div>
-                        <a href="{% url 'users:reset-password' %}"
-                           class="text-indigo-500 hover:underline">Forgot your password?</a>
                     </div>
                 </div>
                 <button class="btn btn-primary w-full">Sign in</button>

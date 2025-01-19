@@ -65,7 +65,7 @@
                 </svg>
             </a>
             <a class="mr-2 hidden md:block"
-               href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.display_name }}</a>
+               href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.username }}</a>
             <div x-data="{ open: false }"
                  @click.outside="open=false"
                  class="dropdown dropdown-bottom dropdown-end">
@@ -83,7 +83,7 @@
                     x-cloak>
                     <li>
                         <a class="block md:hidden"
-                           href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.display_name }}</a>
+                           href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.username }}</a>
                     </li>
                     <li>
                         <a href="{% url 'entities:drafts-list' %}">Drafts</a>

@@ -1,47 +1,62 @@
-from typing import Any, ClassVar, Self
+from typing import Any, Self
 
+from django.apps import apps
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.validators import MaxLengthValidator, RegexValidator
 from django.db import models
 from django.templatetags.static import static
+from django.utils.deconstruct import deconstructible
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserQuerySet(models.QuerySet):
     def active(self: Self) -> Self:
-        return self.filter(is_active=True, email_verified=True)
+        return self.filter(is_active=True)
 
 
 class CustomUserManager(UserManager.from_queryset(CustomUserQuerySet)):
-    def _create_user(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
+    def _create_user(self: Self, username: str, password: str, **extra_fields: Any) -> Any:
         """
-        Create and save a User with the provided email and password.
+        Create and save a User with the provided username and password.
         """
-        if not email:
-            raise ValueError("The given email address must be set")
+        if not username:
+            raise ValueError("The given username address must be set")
 
-        email = self.normalize_email(email)
-        user = self.model(display_name=display_name, email=email, **extra_fields)
+        # Lookup the real model class from the global app registry so this
+        # manager method can be used in migrations. This is fine because
+        # managers are by definition working on the real model.
+        GlobalUserModel = apps.get_model(self.model._meta.app_label, self.model._meta.object_name)
+        username = GlobalUserModel.normalize_username(username)
+        user = self.model(username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
-        return self._create_user(display_name, email, password, **extra_fields)
+    def create_user(self: Self, username: str, password: str, **extra_fields: Any) -> Any:
+        return self._create_user(username, password, **extra_fields)
 
-    def create_superuser(self: Self, display_name: str, email: str, password: str, **extra_fields: Any) -> Any:
+    def create_superuser(self: Self, username: str, password: str, **extra_fields: Any) -> Any:
         extra_fields.setdefault("is_moderator", True)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("email_verified", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self._create_user(display_name, email, password, **extra_fields)
+        return self._create_user(username, password, **extra_fields)
+
+
+@deconstructible
+class UsernameValidator(RegexValidator):
+    regex = r"^[\w-]+$"
+    message = _("Username can only contain letters, numbers, underscores, or hyphens.")
+    code = "invalid_username"
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(self.regex, self.message, self.code, *args, **kwargs)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -49,21 +64,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     Default user model.
     """
 
-    display_name = models.CharField(
+    username = models.CharField(
+        _("username"),
         max_length=150,
         unique=True,
-        help_text=_("Required. 150 characters or fewer. Alphanumeric, spaces and ./-/_ characters only."),
-        validators=[RegexValidator(r"^[\w. -]+\Z")],
+        help_text=_("Required. 150 characters or fewer. Letters, digits and -/_ only."),
+        validators=[UsernameValidator()],
         error_messages={
-            "unique": _("A user with that display name already exists."),
+            "unique": _("A user with that username already exists."),
         },
     )
 
     avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
     bio = models.TextField(blank=True, validators=[MaxLengthValidator(200)])
-
-    email = models.EmailField(unique=True)
-    email_verified = models.BooleanField(default=False)
 
     is_moderator = models.BooleanField(default=False)
 
@@ -79,12 +92,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     AVATAR_WIDTH = 128
     AVATAR_HEIGHT = 128
 
-    EMAIL_FIELD = "email"
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS: ClassVar = ["display_name"]
+    USERNAME_FIELD = "username"
 
     def __str__(self: Self) -> str:
-        return f"{self.display_name} ({self.email})"
+        return self.username
 
     @cached_property
     def avatar_url(self: Self) -> str | None:
