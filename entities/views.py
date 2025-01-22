@@ -61,13 +61,16 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
-        try:
-            tracking_obj = TrackingObject.objects.get(
-                object_id=self.object.id,
-                content_type=ContentType.objects.get_for_model(self.object),
-                user=self.request.user,
-            )
-        except TrackingObject.DoesNotExist:
+        if self.request.user.is_authenticated:
+            try:
+                tracking_obj = TrackingObject.objects.get(
+                    object_id=self.object.id,
+                    content_type=ContentType.objects.get_for_model(self.object),
+                    user=self.request.user,
+                )
+            except TrackingObject.DoesNotExist:
+                tracking_obj = None
+        else:
             tracking_obj = None
 
         context["tracking_obj"] = tracking_obj
