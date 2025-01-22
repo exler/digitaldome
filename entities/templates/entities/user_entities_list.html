@@ -14,7 +14,6 @@
                     </figure>
                     <div class="card-body p-4 justify-between">
                         <h2 class="card-title break-words">{{ object.name }}</h2>
-                        {% if object.draft %}<div class="badge badge-primary">Draft</div>{% endif %}
                         <a href="{% url 'entities:entities-detail' object|verbosename object.id %}"
                            rel="noopener noreferrer"
                            class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>

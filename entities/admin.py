@@ -21,7 +21,7 @@ class TagAdmin(admin.ModelAdmin):
 class EntityBaseAdmin(admin.ModelAdmin):
     change_form_template = "entities/admin/change_form.html"
 
-    list_display = ("__str__", "thumbnail", "draft", "approved")
+    list_display = ("__str__", "thumbnail")
     search_fields = ("name",)
 
     def thumbnail(self: Self, obj: EntityBase) -> str:

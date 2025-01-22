@@ -8,7 +8,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models.functions import Lower
-from django.db.models.query_utils import Q
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -16,7 +15,6 @@ from django.utils.translation import gettext_lazy as _
 
 from digitaldome.common.models import TimestampedModel
 from entities.helpers import format_time_spent
-from users.models import User
 
 
 class Tag(TimestampedModel):
@@ -30,14 +28,7 @@ class Tag(TimestampedModel):
 
 
 class EntityQueryset(models.QuerySet):
-    def visible_for_user(self: Self, user: User) -> Self:
-        if user.is_anonymous:
-            return self.filter(approved=True)
-
-        if user.is_moderator:
-            return self
-
-        return self.filter(Q(created_by=user) | Q(approved=True))
+    pass
 
 
 def image_upload_destination(instance: object, filename: str) -> str:
@@ -62,14 +53,6 @@ class EntityBase(TimestampedModel):
         null=True,
         related_name="+",
     )
-
-    # Incomplete object that is only visible to the creating user.
-    # Can be completed by the user themselves.
-    draft = models.BooleanField(default=False)
-
-    # Visible to the creating user only and moderator/admin.
-    # Waiting for approval from moderator/admin.
-    approved = models.BooleanField(default=False)
 
     # Fields and their icon's partial templates (svg as HTML file)
     # that are show in the detail view.
@@ -103,10 +86,6 @@ class EntityBase(TimestampedModel):
 
     def get_absolute_url(self: Self) -> str:
         return reverse("entities:entities-detail", kwargs={"entity_type": self._meta.verbose_name, "pk": self.pk})
-
-    @property
-    def requires_approval(self: Self) -> bool:
-        return not self.draft and not self.approved
 
     @cached_property
     def image_url(self: Self) -> str | None:

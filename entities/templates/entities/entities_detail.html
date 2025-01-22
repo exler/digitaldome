@@ -4,22 +4,11 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
-    <div class="flex flex-row items-center justify-between mb-2">
-        <div>
-            {% if object.draft %}<div class="badge badge-primary ml-2">Draft</div>{% endif %}
-            {% if not object.approved %}<div class="badge badge-warning ml-2">Not approved</div>{% endif %}
-        </div>
+    <div class="flex flex-row items-center justify-end mb-2">
         {% if request.user.is_moderator or request.user == object.created_by %}
             <div class="flex flex-row gap-2 mx-2">
                 <a class="btn btn-primary"
                    href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
-                {% if request.user.is_moderator and object.requires_approval %}
-                    <form action="{% url 'entities:entities-approve' object|verbosename object.id %}"
-                          method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-warning">Approve</button>
-                    </form>
-                {% endif %}
             </div>
         {% endif %}
     </div>

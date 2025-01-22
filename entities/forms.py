@@ -29,12 +29,8 @@ class EntityBaseForm(forms.ModelForm):
             image = resize_and_crop_image(image, EntityBase.IMAGE_WIDTH, EntityBase.IMAGE_HEIGHT)
         return image
 
-    def _check_if_all_required_fields_filled(self: Self) -> None:
-        return all(self.cleaned_data.get(field) for field in self.instance.ADDITIONAL_DETAIL_FIELDS)
-
     def save(self: Self, commit: bool = True) -> EntityBase:
         self.instance.created_by = self.user
-        self.instance.draft = not self._check_if_all_required_fields_filled()
         return super().save(commit)
 
 
