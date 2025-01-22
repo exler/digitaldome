@@ -1,7 +1,7 @@
 from typing import Any, Self
 
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Avg, Count, QuerySet
+from django.db.models import QuerySet
 from django.views.generic import DetailView
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
@@ -43,17 +43,6 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
 
         return super().get_queryset()
 
-    def _get_entity_stats(self: Self) -> dict[str, Any]:
-        stats = {}
-        ratings = TrackingObject.objects.filter(
-            object_id=self.object.id,
-            content_type=ContentType.objects.get_for_model(self.object),
-            rating__isnull=False,
-        ).aggregate(Avg("rating"), Count("rating"))
-        stats["digitaldome_rating"] = ratings["rating__avg"]
-        stats["digitaldome_rating_count"] = ratings["rating__count"]
-        return stats
-
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
@@ -70,5 +59,4 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
             tracking_obj = None
 
         context["tracking_obj"] = tracking_obj
-        context["entity_stats"] = self._get_entity_stats()
         return context

@@ -83,14 +83,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-28 px-6 py-12 flex flex-col items-center justify-center h-12 border bg-white rounded-md text-center">
-                    <div class="inline-block">
-                        <span class="text-2xl uppercase font-bold">{{ entity_stats.digitaldome_rating|default_if_none:"—" }}</span>
-                        {% if entity_stats.digitaldome_rating %}<span class="text-xs uppercase">/5</span>{% endif %}
-                    </div>
-                    <span class="text-xs uppercase">{{ entity_stats.digitaldome_rating_count }} vote{{ entity_stats.digitaldome_rating_count|pluralize }}</span>
-                    <span class="text-xs uppercase font-bold mt-1">Community rating</span>
-                </div>
             </div>
             <div x-data="{ statusDropdownOpen: false }" class="relative px-4 md:px-0">
                 <button @click="statusDropdownOpen=true"
