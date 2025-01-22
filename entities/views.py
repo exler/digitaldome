@@ -1,15 +1,13 @@
 from typing import Any, Self
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg, Count, QuerySet
-from django.forms.models import BaseModelForm
-from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
+from django.views.generic import DetailView
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
 from digitaldome.common.mixins import ElidedPaginationMixin
-from entities.mappings import ENTITY_MODEL_TO_FILTER_MAPPING, ENTITY_MODEL_TO_FORM_MAPPING
+from entities.mappings import ENTITY_MODEL_TO_FILTER_MAPPING
 from entities.mixins import DynamicEntityMixin
 from entities.models import EntityBase
 from tracking.models import TrackingObject
@@ -74,37 +72,3 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
         context["tracking_obj"] = tracking_obj
         context["entity_stats"] = self._get_entity_stats()
         return context
-
-
-class EntitiesCreateChooseView(LoginRequiredMixin, TemplateView):
-    template_name = "entities/entities_create_choose.html"
-
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        entity_types = [(model._meta.verbose_name, model.COLOR) for model in EntityBase.__subclasses__()]
-        context["entity_types"] = entity_types
-        return context
-
-
-class EntitiesCreateView(DynamicEntityMixin, LoginRequiredMixin, CreateView):
-    template_name = "entities/entities_changeform.html"
-
-    def get_form_kwargs(self: Self) -> dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_form_class(self: Self) -> type[BaseModelForm]:
-        return ENTITY_MODEL_TO_FORM_MAPPING[self.model]
-
-
-class EntitiesUpdateView(DynamicEntityMixin, LoginRequiredMixin, UpdateView):
-    template_name = "entities/entities_changeform.html"
-
-    def get_form_kwargs(self: Self) -> dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_form_class(self: Self) -> type[BaseModelForm]:
-        return ENTITY_MODEL_TO_FORM_MAPPING[self.model]

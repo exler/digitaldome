@@ -4,14 +4,6 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
-    <div class="flex flex-row items-center justify-end mb-2">
-        {% if request.user.is_moderator or request.user == object.created_by %}
-            <div class="flex flex-row gap-2 mx-2">
-                <a class="btn btn-primary"
-                   href="{% url 'entities:entities-update' object|verbosename object.id %}">Update</a>
-            </div>
-        {% endif %}
-    </div>
     <div class="md:grid md:grid-cols-12 gap-y-6 gap-x-4">
         <div class="relative md:min-h-[20rem] flex col-span-9 gap-4 rounded-lg md:border md:border-gray-100">
             <figure class="p-4">

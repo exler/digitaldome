@@ -37,7 +37,6 @@ class CustomUserManager(UserManager.from_queryset(CustomUserQuerySet)):
         return self._create_user(username, password, **extra_fields)
 
     def create_superuser(self: Self, username: str, password: str, **extra_fields: Any) -> Any:
-        extra_fields.setdefault("is_moderator", True)
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -77,8 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
     bio = models.TextField(blank=True, validators=[MaxLengthValidator(200)])
-
-    is_moderator = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
