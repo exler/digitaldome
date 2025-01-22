@@ -8,7 +8,7 @@ from django.urls import path
 from django.urls.resolvers import URLPattern
 from django.utils.safestring import mark_safe
 
-from entities.models import Book, EntityBase, Game, Movie, Show, Tag
+from entities.models import Book, EntityBase, Game, Movie, Platform, Show, Tag
 from integrations.openai.client import get_openai_json_response
 from integrations.openai.prompts import GET_ENTITY_PROMPT
 
@@ -18,11 +18,17 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
+@admin.register(Platform)
+class PlatformAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
+
+
 class EntityBaseAdmin(admin.ModelAdmin):
     change_form_template = "entities/admin/change_form.html"
 
     list_display = ("__str__", "thumbnail")
     search_fields = ("name",)
+    autocomplete_fields = ("tags",)
 
     def thumbnail(self: Self, obj: EntityBase) -> str:
         if obj.image:
@@ -85,7 +91,7 @@ class ShowAdmin(EntityBaseAdmin):
 
 @admin.register(Game)
 class GameAdmin(EntityBaseAdmin):
-    pass
+    autocomplete_fields = (*EntityBaseAdmin.autocomplete_fields, *("platforms",))
 
 
 @admin.register(Book)

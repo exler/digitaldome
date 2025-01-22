@@ -16,6 +16,8 @@ from django.utils.translation import gettext_lazy as _
 from digitaldome.common.models import TimestampedModel
 from entities.helpers import format_time_spent
 
+### Near-constant models ###
+
 
 class Tag(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
@@ -25,6 +27,19 @@ class Tag(TimestampedModel):
 
     def __str__(self: Self) -> str:
         return self.name
+
+
+class Platform(TimestampedModel):
+    name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self: Self) -> str:
+        return self.name
+
+
+### Dynamic models ###
 
 
 class EntityQueryset(models.QuerySet):
@@ -156,7 +171,7 @@ class Game(EntityBase):
 
     steam_url = models.URLField(verbose_name=_("Steam URL"), blank=True)
 
-    platforms = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    platforms = models.ManyToManyField(Platform, blank=True)
 
     developer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     publisher = ArrayField(models.CharField(max_length=255), default=list, blank=True)
