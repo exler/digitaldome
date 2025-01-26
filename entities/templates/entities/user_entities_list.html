@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load digitaldome_tags %}
+{% load digitaldome_tags entities %}
 {% block title %}
     {{ page_title }}
 {% endblock title %}
@@ -10,7 +10,7 @@
             {% for object in object_list %}
                 <div class="card image-full w-40">
                     <figure>
-                        <img width="192" height="288" src="{{ object.image_url }}" alt="" />
+                        <img width="192" height="288" src="{{ object.image|imageurl }}" alt="" />
                     </figure>
                     <div class="card-body p-4 justify-between">
                         <h2 class="card-title break-words">{{ object.name }}</h2>

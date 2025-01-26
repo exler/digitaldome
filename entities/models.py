@@ -4,12 +4,13 @@ from pathlib import Path
 from typing import ClassVar, Self
 
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.core.validators import MaxLengthValidator
 from django.db import models
+from django.db.models.fields.generated import GeneratedField
 from django.db.models.functions import Lower
-from django.templatetags.static import static
 from django.urls import reverse
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from digitaldome.common.models import TimestampedModel
@@ -45,7 +46,7 @@ class EntityQueryset(models.QuerySet):
     pass
 
 
-def image_upload_destination(instance: object, filename: str) -> str:
+def image_upload_destination(instance: models.Model, filename: str) -> str:
     ext = Path(filename).suffix
     random_string = "".join(random.choices(string.ascii_letters + string.digits, k=14))  # noqa: S311
     return f"entities/{instance.__class__.__name__.lower()}s/{random_string}{ext}"
@@ -54,6 +55,13 @@ def image_upload_destination(instance: object, filename: str) -> str:
 class EntityBase(TimestampedModel):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
+
+    # Used for full-text search
+    search_vector = GeneratedField(
+        expression=SearchVector("name", config="english"),
+        output_field=SearchVectorField(),
+        db_persist=True,
+    )
 
     image = models.ImageField(upload_to=image_upload_destination, blank=True)
 
@@ -89,19 +97,13 @@ class EntityBase(TimestampedModel):
                 violation_error_message=_("Item with that name already exists."),
             ),
         ]
+        indexes: ClassVar = [
+            GinIndex(fields=["search_vector"], name="%(class)s_gin_search_vector_idx"),
+        ]
         ordering = ("name", "-id")
 
     def get_absolute_url(self: Self) -> str:
         return reverse("entities:entities-detail", kwargs={"entity_type": self._meta.verbose_name, "pk": self.pk})
-
-    @cached_property
-    def image_url(self: Self) -> str | None:
-        """
-        Gets image URL to display or a placeholder if no image is available.
-        """
-        if self.image:
-            return self.image.url
-        return static("img/image-placeholder.png")
 
 
 class Movie(EntityBase):

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load digitaldome_tags %}
+{% load digitaldome_tags entities %}
 {% block title %}
     My Dashboard
 {% endblock title %}
@@ -14,7 +14,7 @@
                         <figure>
                             <img width="192"
                                  height="288"
-                                 src="{{ object.content_object.image_url }}"
+                                 src="{{ object.content_object.image|imageurl }}"
                                  alt="" />
                         </figure>
                         <div class="card-body p-4 justify-between">
@@ -39,7 +39,7 @@
                         <figure>
                             <img width="192"
                                  height="288"
-                                 src="{{ object.content_object.image_url }}"
+                                 src="{{ object.content_object.image|imageurl }}"
                                  alt="" />
                         </figure>
                         <div class="card-body p-4 justify-between">
