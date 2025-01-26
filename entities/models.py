@@ -3,7 +3,6 @@ import string
 from pathlib import Path
 from typing import ClassVar, Self
 
-from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxLengthValidator
 from django.db import models
@@ -61,13 +60,6 @@ class EntityBase(TimestampedModel):
     wikipedia_url = models.URLField(verbose_name=_("Wikipedia URL"), blank=True)
 
     tags = models.ManyToManyField(Tag, blank=True)
-
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="+",
-    )
 
     # Fields and their icon's partial templates (svg as HTML file)
     # that are show in the detail view.

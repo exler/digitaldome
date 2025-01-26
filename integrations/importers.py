@@ -74,7 +74,6 @@ class GoodreadsImporter(CSVImporter):
                 name=row["Title"],
                 author=authors,
                 publish_date=publish_date,
-                created_by=self.user,
             )
             entities.append(obj)
 
@@ -117,7 +116,6 @@ class SimklImporter(CSVImporter):
         return Show(
             name=row["Title"],
             release_date=release_date,
-            created_by=self.user,
         )
 
     def _import_movie(self: Self, row: dict[str, str]) -> None:
@@ -125,7 +123,6 @@ class SimklImporter(CSVImporter):
         return Movie(
             name=row["Title"],
             release_date=release_date,
-            created_by=self.user,
         )
 
     def import_data(self: Self) -> None:
