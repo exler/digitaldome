@@ -23,9 +23,12 @@ You can also choose to run external services in Docker and the webapp locally
 * Run `docker compose up -d db minio` to start the database and storage containers
 * Run `uv sync` to install dependencies using [uv](https://docs.astral.sh/uv/)
 
-
 ## Usage
 
 See [entrypoint.sh](entrypoint.sh) for usage options.
 
 To create an admin user, run `docker compose exec web python manage.py createsuperuser` and follow the prompts.
+
+## Development
+
+In order to change the page's styles, you need to have [Bun](https://bun.sh/) installed. Run `bun run watch` or `bun run compile` to compile TailwindCSS styles.
