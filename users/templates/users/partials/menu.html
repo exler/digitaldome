@@ -6,7 +6,6 @@
          alt="Avatar"
          class="text-center pt-4">
     {% if user.is_staff %}<div class="badge badge-warning mt-4">Moderator</div>{% endif %}
-    {% if user.bio %}<p class="mt-2 italic">{{ user.bio }}</p>{% endif %}
 </div>
 <div class="flex flex-row flex-wrap justify-center items-center gap-8">
     <a href="{% url 'tracking:dashboard' user.id %}">Dashboard</a>

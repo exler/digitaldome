@@ -2,7 +2,7 @@ from typing import Any, Self
 
 from django.apps import apps
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
-from django.core.validators import MaxLengthValidator, RegexValidator
+from django.core.validators import RegexValidator
 from django.db import models
 from django.templatetags.static import static
 from django.utils.deconstruct import deconstructible
@@ -75,7 +75,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
-    bio = models.TextField(blank=True, validators=[MaxLengthValidator(200)])
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

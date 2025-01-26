@@ -11,7 +11,7 @@ from users.models import User
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("avatar", "bio")
+        fields = ("avatar",)
         widgets: ClassVar = {
             "avatar": ClearableFileInputWithImagePreview(
                 attrs={"width": 80, "height": 80, "placeholder": static("img/avatar-placeholder.png")}
