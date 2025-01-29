@@ -18,7 +18,7 @@ def get_detail_field_html(obj: EntityBase, field_name: str) -> str:
         return ", ".join(field_value)
     elif isinstance(field_value, Manager):
         return ", ".join(str(obj) for obj in field_value.all())
-    return str(field_value)
+    return str(field_value or "")
 
 
 @register.filter("imageurl")
