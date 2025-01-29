@@ -5,13 +5,13 @@
          width="{{ widget.attrs.width }}"
          height="{{ widget.attrs.height }}"
          alt=""
-         class="border-2 mr-2">
+         class="border-2 border-gray-200 mr-2">
     <img x-show="imageUrl"
          :src="imageUrl"
          width="{{ widget.attrs.width }}"
          height="{{ widget.attrs.height }}"
          alt=""
-         class="border-2 mr-2">
+         class="border-2 border-gray-200 mr-2">
     <input type="{{ widget.type }}"
            name="{{ widget.name }}"
            x-on:change="updateImagePreview($event)"

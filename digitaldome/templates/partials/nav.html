@@ -12,7 +12,7 @@
                 </svg>
             </label>
             <ul tabindex="0"
-                class="menu menu-sm dropdown-content mt-2 z-[100] p-2 shadow bg-base-100 rounded-box w-52">
+                class="menu menu-sm dropdown-content mt-2 z-[100] p-2 shadow-sm bg-base-100 rounded-box w-52">
                 <li>
                     <a class="py-2" href="{% url 'entities:entities-list' 'movies' %}">Movies</a>
                 </li>
@@ -74,7 +74,7 @@
                     </svg>
                 </button>
                 <ul x-show="open"
-                    class="absolute z-[100] origin-top-left top-0 w-36 mt-4 dropdown-content menu bg-base-100 shadow rounded-box"
+                    class="absolute z-[100] origin-top-left top-0 w-36 mt-4 dropdown-content menu bg-base-100 shadow-sm rounded-box"
                     x-transition
                     x-cloak>
                     <li>

@@ -1,5 +1,6 @@
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import RedirectView
 
 
-class IndexView(TemplateView):
-    template_name = "digitaldome/index.html"
+class IndexView(RedirectView):
+    url = reverse_lazy("users:login")

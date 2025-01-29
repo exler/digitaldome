@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin "daisyui" {
+    themes: winter --default;
+}
+
 
 .dd-bg-index-hero-pattern {
     background-color: #DFDBE5;

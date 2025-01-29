@@ -94,3 +94,8 @@ class EntitiesSearchView(ListView):
 
         # Return the combined queryset
         return unified_qs[:20]
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("search")
+        return context

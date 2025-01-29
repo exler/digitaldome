@@ -7,31 +7,30 @@
     <div class="container px-4 mx-auto">
         <div class="max-w-lg mx-auto">
             <form method="post" action="{% url 'users:login' %}">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">{{ form.username.label }}</span>
-                    </label>
-                    {{ form.username|addclass:"input input-bordered" }}
-                    {{ form.username.errors }}
-                </div>
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">{{ form.password.label }}</span>
-                    </label>
-                    {{ form.password|addclass:"input input-bordered" }}
-                    {{ form.password.errors }}
-                </div>
-                <div class="flex flex-wrap mb-6 items-center justify-between">
+                <fieldset class="fieldset md:w-xs mx-auto bg-base-200 border border-base-300 p-4 rounded-box gap-4">
+                    <legend class="fieldset-legend">Login</legend>
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
                     <div class="form-control">
-                        <label class="label cursor-pointer">
-                            {{ form.remember_me|addclass:"checkbox mr-2" }}
-                            <span class="label-text">{{ form.remember_me.label }}</span>
-                        </label>
+                        <label class="fieldset-label">{{ form.username.label }}</label>
+                        {{ form.username|addclass:"input" }}
+                        {{ form.username.errors }}
                     </div>
-                </div>
-                <button class="btn btn-primary w-full">Sign in</button>
+                    <div class="form-control">
+                        <label class="fieldset-label">{{ form.password.label }}</label>
+                        {{ form.password|addclass:"input" }}
+                        {{ form.password.errors }}
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between">
+                        <div class="form-control">
+                            <label class="fieldset-label cursor-pointer">
+                                {{ form.remember_me|addclass:"checkbox checkbox-md mr-2" }}
+                                {{ form.remember_me.label }}
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-full">Sign in</button>
+                </fieldset>
             </form>
         </div>
     </div>

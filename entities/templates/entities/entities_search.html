@@ -7,8 +7,12 @@
     <h2 class="text-2xl font-bold mb-4">{{ entity_type|title }}</h2>
     <div class="mb-4">
         <form method="get" class="relative flex justify-center">
-            <input class="w-full" type="search" name="search" placeholder="Search..." />
-            <button class="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg">
+            <input class="w-full input rounded-r-none border-neutral-400"
+                   type="search"
+                   name="search"
+                   value="{{ search_query }}"
+                   placeholder="Search..." />
+            <button class="btn btn-primary rounded-l-none">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 0 20 20"
                      fill="currentColor"
@@ -28,7 +32,7 @@
                     <span class="card-title text-base">{{ object.name }}</span>
                     <a href="{% url 'entities:entities-detail' object.entity_type object.id %}"
                        rel="noopener noreferrer"
-                       class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-none no-underline"></a>
+                       class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-hidden no-underline"></a>
                 </div>
             </div>
         {% endfor %}

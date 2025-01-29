@@ -43,7 +43,7 @@
                 <div x-data="{ ratingDropdownOpen: false, hoverIndex: null }"
                      class="relative">
                     <button @click="ratingDropdownOpen=true"
-                            class="w-28 px-6 py-12 flex flex-col md:gap-4 items-center justify-center h-12 border bg-white rounded-md">
+                            class="w-28 px-6 py-12 flex flex-col md:gap-4 items-center justify-center h-12 border border-gray-200 bg-white rounded-md">
                         <span class="text-2xl uppercase font-bold">
                             {% if tracking_obj.rating %}
                                 {{ tracking_obj.rating }}
@@ -61,7 +61,7 @@
                          class="absolute top-0 z-50 mt-12 -translate-x-1/2 left-1/2"
                          x-cloak>
                         <div class="p-1 mt-1 bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
-                            <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-none">
+                            <div class="relative flex w-full items-center rounded px-2 py-1.5 text-sm outline-hidden">
                                 {% for i in "AAAAA" %}
                                     {% comment %} djlint:off T001 {% endcomment %}
                                     <button @mouseover="hoverIndex = {{ forloop.counter }}"
@@ -86,7 +86,7 @@
             </div>
             <div x-data="{ statusDropdownOpen: false }" class="relative px-4 md:px-0">
                 <button @click="statusDropdownOpen=true"
-                        class="w-full inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                        class="w-full inline-flex items-center justify-center h-12 py-2 pl-3 pr-12 text-sm font-medium transition-colors bg-white border border-gray-200 rounded-md text-neutral-700 hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none">
                     {% if tracking_obj %}
                         {% if tracking_obj.status == 0 %}
                             {% include "entities/partials/dropdown_planned.html" %}
@@ -132,7 +132,7 @@
                                     hx-vals='{"status": "0"}'
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 {% include "entities/partials/dropdown_planned.html" %}
                             </button>
                         {% endif %}
@@ -142,7 +142,7 @@
                                     hx-vals='{"status": "1"}'
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 {% include "entities/partials/dropdown_in_progress.html" %}
                             </button>
                         {% endif %}
@@ -152,7 +152,7 @@
                                     hx-vals='{"status": "2"}'
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 {% include "entities/partials/dropdown_completed.html" %}
                             </button>
                         {% endif %}
@@ -162,7 +162,7 @@
                                     hx-vals='{"status": "3"}'
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 {% include "entities/partials/dropdown_dropped.html" %}
                             </button>
                         {% endif %}
@@ -172,7 +172,7 @@
                                     hx-vals='{"status": "4"}'
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 {% include "entities/partials/dropdown_on_hold.html" %}
                             </button>
                         {% endif %}
@@ -182,7 +182,7 @@
                                     hx-trigger="click"
                                     hx-target="body"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                    class="relative flex w-full select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                 <svg viewBox="0 0 256 256"
                                      xmlns="http://www.w3.org/2000/svg"
                                      class="w-4 h-4 mr-2">
@@ -194,13 +194,12 @@
                     </div>
                 </div>
                 {% if tracking_obj %}
-                    <form>
+                    <form class="md:mt-2">
                         <div class="form-control">
-                            <label class="label">
-                                <span class="label-text">Notes</span>
-                            </label>
+                            <label for="notes-textarea" class="label">Notes</label>
                             <textarea class="textarea textarea-bordered bg-white h-24"
                                       placeholder="Add a note..."
+                                      id="notes-textarea"
                                       name="notes">{{ tracking_obj.notes }}</textarea>
                         </div>
                         <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
@@ -212,8 +211,8 @@
                 {% endif %}
             </div>
         </div>
-        <div class="relative flex col-span-9 mx-4 mt-4 md:mt-0">
-            <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm w-full">
+        <div class="relative flex col-span-9 mx-4 mt-4 md:mt-0 md:mx-0">
+            <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-xs w-full">
                 <dl class="-my-3 divide-y divide-gray-100 text-sm">
                     <div class="grid md:hidden grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
                         <dt class="font-medium text-gray-900">Description</dt>
