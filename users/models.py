@@ -1,3 +1,6 @@
+import random
+import string
+from pathlib import Path
 from typing import Any, Self
 
 from django.apps import apps
@@ -58,6 +61,12 @@ class UsernameValidator(RegexValidator):
         super().__init__(self.regex, self.message, self.code, *args, **kwargs)
 
 
+def avatar_upload_destination(instance: models.Model, filename: str) -> str:
+    ext = Path(filename).suffix
+    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=14))  # noqa: S311
+    return f"users/avatars/{random_string}{ext}"
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Default user model.
@@ -74,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         },
     )
 
-    avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
+    avatar = models.ImageField(upload_to=avatar_upload_destination, blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
