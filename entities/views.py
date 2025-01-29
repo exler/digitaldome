@@ -97,5 +97,5 @@ class EntitiesSearchView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["search_query"] = self.request.GET.get("search")
+        context["search_query"] = self.request.GET.get("search", "")
         return context
