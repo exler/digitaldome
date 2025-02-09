@@ -21,10 +21,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-windows = [
-    "psycopg-binary>=3.2.4",
-    "python-magic-bin>=0.4.14",
-]
+windows = ["psycopg-binary>=3.2.4", "python-magic-bin>=0.4.14"]
 
 [dependency-groups]
 dev = ["djlint>=1.36.4", "ipython>=8.31.0", "ruff>=0.9.2"]
@@ -57,3 +54,6 @@ ignore = ["ANN401", "TRY003", "SIM118"]
 [tool.ruff.lint.per-file-ignores]
 "**/management/commands/*.py" = ["A003"]
 "**/migrations/0*_*.py" = ["RUF012"]
+
+[tool.djlint]
+ignore = "H006"

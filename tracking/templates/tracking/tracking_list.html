@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load digitaldome_tags %}
+{% load digitaldome_tags entities %}
 {% block title %}
     {{ entity_type|title }}
 {% endblock title %}
@@ -22,35 +22,26 @@
                 </select>
                 <button type="submit" class="btn btn-secondary ml-4 h-8 min-h-0">Filter</button>
             </form>
-            <table class="table table-auto mt-4">
-                <thead>
-                    <tr>
-                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-left rounded-l-md">#</th>
-                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-l-md">Title</th>
-                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Status</th>
-                        <th class="px-4 font-semibold text-xs text-coolGray-500 uppercase text-center rounded-r-md">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for object in page_obj %}
-                        <tr>
-                            <td class="whitespace-nowrap px-4 text-left">
-                                <p class="text-sm font-medium text-coolGray-800">{{ forloop.counter0|add:page_obj.start_index }}</p>
-                            </td>
-                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
-                                {{ object.content_object.name }}
-                            </td>
-                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
-                                {{ object.get_status_display }}
-                            </td>
-                            <td class="whitespace-nowrap px-4 text-sm font-medium text-coolGray-800 text-center">
-                                <a href="{% url 'entities:entities-detail' entity_type object.content_object.id %}"
-                                   class="inline btn btn-primary py-1 px-2 text-white">View</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="grid grid-cols-[1fr_3fr_4fr_3fr] gap-4 mt-4 font-medium text-sm text-coolGray-800">
+                <!-- Header Row -->
+                <div class="font-semibold text-xs uppercase text-left px-4">#</div>
+                <div class="font-semibold text-xs uppercase text-left px-4"></div>
+                <div class="font-semibold text-xs uppercase text-center px-4">Title</div>
+                <div class="font-semibold text-xs uppercase text-center px-4">Status</div>
+                {% for object in page_obj %}
+                    <a href="{% url 'entities:entities-detail' entity_type object.content_object.id %}"
+                       class="contents hover:bg-gray-100 transition">
+                        <div class="px-4 py-2 text-left">{{ forloop.counter0|add:page_obj.start_index }}</div>
+                        <div class="px-4 py-2 text-left">
+                            <img src="{{ object.content_object.image|imageurl }}"
+                                 class="w-full md:w-10"
+                                 alt="">
+                        </div>
+                        <div class="px-4 py-2 text-center">{{ object.content_object.name }}</div>
+                        <div class="px-4 py-2 text-center">{{ object.get_status_display }}</div>
+                    </a>
+                {% endfor %}
+            </div>
             {% include "partials/pagination.html" %}
         </div>
     </div>
