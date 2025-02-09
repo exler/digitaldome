@@ -82,9 +82,6 @@ class EntityBase(TimestampedModel):
 
     objects = EntityQueryset.as_manager()
 
-    IMAGE_WIDTH = 192
-    IMAGE_HEIGHT = 288
-
     # Used in the frontend to color the entity type record
     COLOR: str
 
