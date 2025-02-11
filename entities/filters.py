@@ -1,7 +1,7 @@
 from typing import ClassVar, Self
 
 import django_filters
-from django.contrib.postgres.search import SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import QuerySet
 from django_filters.filterset import FilterSet
 
@@ -45,4 +45,8 @@ class EntitySearchFilter(FilterSet):
         fields: ClassVar = ["search"]
 
     def search_filter(self: Self, queryset: QuerySet[EntityBase], name: str, value: str) -> QuerySet[EntityBase]:
-        return queryset.annotate(rank=SearchRank("search_vector", value)).filter(search_vector=value).order_by("-rank")
+        return (
+            queryset.annotate(similarity=TrigramSimilarity("name", value))
+            .filter(similarity__gt=0.3)
+            .order_by("-similarity")
+        )

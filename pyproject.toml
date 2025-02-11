@@ -8,6 +8,7 @@ dependencies = [
     "django>=5.1.5",
     "django-filter>=24.3",
     "django-storages[s3]>=1.14.4",
+    "factory-boy>=3.3.3",
     "gunicorn[gevent]>=23.0.0",
     "httpx>=0.28.1",
     "openai>=1.59.8",

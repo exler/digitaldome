@@ -5,10 +5,8 @@ from typing import ClassVar, Self
 
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.core.validators import MaxLengthValidator
 from django.db import models
-from django.db.models.fields.generated import GeneratedField
 from django.db.models.functions import Lower
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -56,13 +54,6 @@ class EntityBase(TimestampedModel):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 
-    # Used for full-text search
-    search_vector = GeneratedField(
-        expression=SearchVector("name", config="english"),
-        output_field=SearchVectorField(),
-        db_persist=True,
-    )
-
     image = models.ImageField(upload_to=image_upload_destination, blank=True)
 
     wikipedia_url = models.URLField(verbose_name=_("Wikipedia URL"), blank=True)
@@ -95,7 +86,11 @@ class EntityBase(TimestampedModel):
             ),
         ]
         indexes: ClassVar = [
-            GinIndex(fields=["search_vector"], name="%(class)s_gin_search_vector_idx"),
+            GinIndex(
+                fields=["name"],
+                name="%(class)s_trgm_name_idx",
+                opclasses=["gin_trgm_ops"],
+            ),
         ]
         ordering = ("name", "-id")
 

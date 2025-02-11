@@ -31,7 +31,7 @@ class CustomUserManager(UserManager.from_queryset(CustomUserQuerySet)):
         # managers are by definition working on the real model.
         GlobalUserModel = apps.get_model(self.model._meta.app_label, self.model._meta.object_name)
         username = GlobalUserModel.normalize_username(username)
-        user = self.model(username, **extra_fields)
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
