@@ -26,7 +26,9 @@ class Exporter:
         self.output_filename = output_filename
 
     def get_objects_iterator(self: Self) -> Iterator[TrackingObject]:
-        return TrackingObject.objects.filter(user=self.user).prefetch_related("content_object").iterator()
+        return (
+            TrackingObject.objects.filter(user=self.user).prefetch_related("content_object").iterator(chunk_size=1000)
+        )
 
     def get_headers_row(self: Self) -> list[str]:
         return ["Title", "Type", "Status", "Rating", "Notes"]
