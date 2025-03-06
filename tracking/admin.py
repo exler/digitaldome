@@ -5,4 +5,5 @@ from tracking.models import TrackingObject
 
 @admin.register(TrackingObject)
 class TrackingObjectAdmin(admin.ModelAdmin):
-    pass
+    list_select_related = ("user",)
+    list_display = ("content_object", "user", "status", "rating", "created_at")
