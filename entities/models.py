@@ -17,14 +17,31 @@ from entities.helpers import format_time_spent
 ### Near-constant models ###
 
 
-class Tag(TimestampedModel):
+class TagBase(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
 
     class Meta:
+        abstract = True
         ordering = ("name",)
 
     def __str__(self: Self) -> str:
         return self.name
+
+
+class MovieTag(TagBase):
+    pass
+
+
+class ShowTag(TagBase):
+    pass
+
+
+class GameTag(TagBase):
+    pass
+
+
+class BookTag(TagBase):
+    pass
 
 
 class Platform(TimestampedModel):
@@ -57,8 +74,6 @@ class EntityBase(TimestampedModel):
     image = models.ImageField(upload_to=image_upload_destination, blank=True)
 
     wikipedia_url = models.URLField(verbose_name=_("Wikipedia URL"), blank=True)
-
-    tags = models.ManyToManyField(Tag, blank=True)
 
     # Fields and their icon's partial templates (svg as HTML file)
     # that are show in the detail view.
@@ -99,6 +114,8 @@ class EntityBase(TimestampedModel):
 
 
 class Movie(EntityBase):
+    tags = models.ManyToManyField(MovieTag, blank=True)
+
     release_date = models.DateField(null=True, blank=True)
 
     imdb_url = models.URLField(verbose_name=_("IMDB URL"), blank=True)
@@ -132,6 +149,8 @@ class Movie(EntityBase):
 
 
 class Show(EntityBase):
+    tags = models.ManyToManyField(ShowTag, blank=True)
+
     release_date = models.DateField(null=True, blank=True)
 
     imdb_url = models.URLField(verbose_name=_("IMDB URL"), blank=True)
@@ -153,6 +172,8 @@ class Show(EntityBase):
 
 
 class Game(EntityBase):
+    tags = models.ManyToManyField(GameTag, blank=True)
+
     release_date = models.DateField(null=True, blank=True)
 
     steam_url = models.URLField(verbose_name=_("Steam URL"), blank=True)
@@ -176,6 +197,8 @@ class Game(EntityBase):
 
 
 class Book(EntityBase):
+    tags = models.ManyToManyField(BookTag, blank=True)
+
     publish_date = models.DateField(null=True, blank=True)
 
     goodreads_url = models.URLField(verbose_name=_("Goodreads URL"), blank=True)

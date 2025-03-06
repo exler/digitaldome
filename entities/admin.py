@@ -7,15 +7,102 @@ from django.shortcuts import redirect
 from django.urls import path
 from django.urls.resolvers import URLPattern
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _
 
-from entities.models import Book, EntityBase, Game, Movie, Platform, Show, Tag
+from entities.models import (
+    Book,
+    BookTag,
+    EntityBase,
+    Game,
+    GameTag,
+    Movie,
+    MovieTag,
+    Platform,
+    Show,
+    ShowTag,
+)
 from integrations.openai.client import get_openai_json_response
 from integrations.openai.prompts import GET_ENTITY_PROMPT
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
+class MovieInline(admin.TabularInline):
+    model = Movie.tags.through
+    extra = 0
+    can_delete = False
+    verbose_name = _("Movie with this tag")
+    verbose_name_plural = _("Movies with this tag")
+
+    def has_add_permission(self: Self, request: HttpRequest, obj: Movie) -> bool:
+        return False
+
+    def has_change_permission(self: Self, request: HttpRequest, obj: Movie | None = None) -> bool:
+        return False
+
+
+class ShowInline(admin.TabularInline):
+    model = Show.tags.through
+    extra = 0
+    can_delete = False
+    verbose_name = _("Show with this tag")
+    verbose_name_plural = _("Shows with this tag")
+
+    def has_add_permission(self: Self, request: HttpRequest, obj: Show) -> bool:
+        return False
+
+    def has_change_permission(self: Self, request: HttpRequest, obj: Show | None = None) -> bool:
+        return False
+
+
+class GameInline(admin.TabularInline):
+    model = Game.tags.through
+    extra = 0
+    can_delete = False
+    verbose_name = _("Game with this tag")
+    verbose_name_plural = _("Games with this tag")
+
+    def has_add_permission(self: Self, request: HttpRequest, obj: Game) -> bool:
+        return False
+
+    def has_change_permission(self: Self, request: HttpRequest, obj: Game | None = None) -> bool:
+        return False
+
+
+class BookInline(admin.TabularInline):
+    model = Book.tags.through
+    extra = 0
+    can_delete = False
+    verbose_name = _("Book with this tag")
+    verbose_name_plural = _("Books with this tag")
+
+    def has_add_permission(self: Self, request: HttpRequest, obj: Book) -> bool:
+        return False
+
+    def has_change_permission(self: Self, request: HttpRequest, obj: Book | None = None) -> bool:
+        return False
+
+
+class TagBaseAdmin(admin.ModelAdmin):
     search_fields = ("name",)
+
+
+@admin.register(BookTag)
+class BookTagAdmin(TagBaseAdmin):
+    inlines = (BookInline,)
+
+
+@admin.register(GameTag)
+class GameTagAdmin(TagBaseAdmin):
+    inlines = (GameInline,)
+
+
+@admin.register(MovieTag)
+class MovieTagAdmin(TagBaseAdmin):
+    inlines = (MovieInline,)
+
+
+@admin.register(ShowTag)
+class ShowTagAdmin(TagBaseAdmin):
+    inlines = (ShowInline,)
 
 
 @admin.register(Platform)
