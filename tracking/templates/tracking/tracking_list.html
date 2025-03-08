@@ -66,9 +66,13 @@
                             </div>
                         </div>
                     </a>
+                {% empty %}
+                    <div class="col-span-5 text-center">No tracked items.</div>
                 {% endfor %}
             </div>
-            {% include "partials/pagination.html" %}
+            {% if page_obj.has_other_pages %}
+                {% include "partials/pagination.html" %}
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
