@@ -1,4 +1,4 @@
-from typing import Self
+from typing import ClassVar, Self
 
 from django.contrib import admin, messages
 from django.db.models import ManyToManyField
@@ -116,6 +116,7 @@ class EntityBaseAdmin(admin.ModelAdmin):
     list_display = ("__str__", "thumbnail")
     search_fields = ("name",)
     autocomplete_fields = ("tags",)
+    prepopulated_fields: ClassVar = {"slug": ("name",)}
 
     def thumbnail(self: Self, obj: EntityBase) -> str:
         if obj.image:

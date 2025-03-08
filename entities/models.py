@@ -63,12 +63,13 @@ class EntityQueryset(models.QuerySet):
 
 def image_upload_destination(instance: models.Model, filename: str) -> str:
     ext = Path(filename).suffix
-    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=14))  # noqa: S311
-    return f"entities/{instance.__class__.__name__.lower()}s/{random_string}{ext}"
+    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=6))  # noqa: S311
+    return f"entities/{instance.__class__.__name__.lower()}s/{instance.slug}_{random_string}{ext}"
 
 
 class EntityBase(TimestampedModel):
     name = models.CharField(max_length=128)
+    slug = models.SlugField(max_length=128, unique=True)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 
     image = models.ImageField(upload_to=image_upload_destination, blank=True)
