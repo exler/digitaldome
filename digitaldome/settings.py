@@ -230,7 +230,7 @@ EMAIL_USE_SSL = get_env_bool("EMAIL_USE_SSL")
 DEFAULT_FROM_EMAIL = get_env_str("DEFAULT_FROM_EMAIL")
 
 # Integrations #
-# OpenAI #
-# https://platform.openai.com/docs/quickstart?context=python
+# TMDB API #
+# https://developer.themoviedb.org/reference
 
-OPENAI_API_KEY = get_env_str("OPENAI_API_KEY")
+TMDB_API_KEY = get_env_str("TMDB_API_KEY")

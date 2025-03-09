@@ -1,7 +1,8 @@
 from typing import ClassVar, Self
 
 from django.contrib import admin, messages
-from django.db.models import ManyToManyField
+from django.core.files import File
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import path
@@ -9,6 +10,7 @@ from django.urls.resolvers import URLPattern
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
+from entities.helpers import make_imdb_url
 from entities.models import (
     Book,
     BookTag,
@@ -21,8 +23,7 @@ from entities.models import (
     Show,
     ShowTag,
 )
-from integrations.openai.client import get_openai_json_response
-from integrations.openai.prompts import GET_ENTITY_PROMPT
+from integrations.external.tmdb import tmdb_client
 
 
 class MovieInline(admin.TabularInline):
@@ -118,9 +119,11 @@ class EntityBaseAdmin(admin.ModelAdmin):
     autocomplete_fields = ("tags",)
     prepopulated_fields: ClassVar = {"slug": ("name",)}
 
+    actions = ("fill_automagically_action",)
+
     def thumbnail(self: Self, obj: EntityBase) -> str:
         if obj.image:
-            return mark_safe(f"<img src='{obj.image.url}' width='48' height='72' />")  # noqa: S308
+            return mark_safe(f"<img src='{obj.image.url}' width='80' height='120' />")  # noqa: S308
 
         return "-"
 
@@ -132,44 +135,89 @@ class EntityBaseAdmin(admin.ModelAdmin):
         custom_urls = [
             path(
                 "<path:object_id>/fill-automagically/",
-                self.admin_site.admin_view(self.fill_automagically),
+                self.admin_site.admin_view(self.fill_automagically_view),
                 name=f"fill-automagically-{app_label}-{model_name}",
             )
         ]
         return custom_urls + default_urls
 
-    def fill_automagically(self: Self, request: HttpRequest, object_id: int) -> HttpResponse:
-        entity: EntityBase = self.model.objects.get(id=object_id)
+    def _fill_automagically(self: Self, request: HttpRequest, object_id: int) -> None:
+        """
+        Fill entity data using entity-specific approach (usually external API call).
 
-        response = get_openai_json_response(
-            system_prompt=GET_ENTITY_PROMPT, user_prompt=f"{entity._meta.verbose_name} | {entity.name}"
-        )
+        Save the entity after filling the data.
+        """
+        raise NotImplementedError
 
-        for key, value in response.items():
-            field = self.model._meta.get_field(key)
-            if isinstance(field, ManyToManyField):
-                target_model = field.related_model
-                target_model.objects.bulk_create(
-                    [target_model(name=v) for v in value],
-                    ignore_conflicts=True,
-                )
-                getattr(entity, key).set(target_model.objects.filter(name__in=value))
-            else:
-                setattr(entity, key, value)
+    @admin.action(description="Fill automagically", permissions=["change"])
+    def fill_automagically_action(self, request: HttpRequest, queryset: QuerySet[EntityBase]) -> None:
+        try:
+            for entity in queryset:
+                self._fill_automagically(request=request, object_id=entity.id)
+        except NotImplementedError:
+            messages.add_message(request, messages.WARNING, "Cannot fill automagically for this entity type.")
+        else:
+            messages.add_message(
+                request, messages.SUCCESS, f"Data filled automagically for {queryset.count()} entities."
+            )
 
-        entity.save()
-
-        messages.add_message(request, messages.SUCCESS, "Entity data filled automagically.")
+    def fill_automagically_view(self: Self, request: HttpRequest, object_id: int) -> HttpResponse:
+        try:
+            self._fill_automagically(request=request, object_id=object_id)
+        except NotImplementedError:
+            messages.add_message(request, messages.WARNING, "Cannot fill automagically for this entity type.")
+        else:
+            messages.add_message(request, messages.SUCCESS, "Entity data filled automagically.")
 
         app_label = self.model._meta.app_label
         model_name = self.model._meta.model_name
-
         return redirect(f"admin:{app_label}_{model_name}_change", object_id)
 
 
 @admin.register(Movie)
 class MovieAdmin(EntityBaseAdmin):
-    pass
+    def _fill_automagically(self, request: HttpRequest, object_id: int) -> None:
+        movie_entity_obj = Movie.objects.get(id=object_id)
+
+        response = tmdb_client.search(movie_entity_obj.name)
+        if len(response["results"]) < 1:
+            messages.add_message(request, messages.ERROR, "No data found for this movie.")
+            return
+
+        movie_id = response["results"][0]["id"]
+        movie_details = tmdb_client.get_movie_details(movie_id)
+
+        if not movie_entity_obj.description:
+            movie_entity_obj.description = movie_details["overview"]
+
+        if not movie_entity_obj.length:
+            movie_entity_obj.length = movie_details["runtime"]
+
+        if not movie_entity_obj.release_date:
+            movie_entity_obj.release_date = movie_details["release_date"]
+
+        if not movie_entity_obj.tags.exists():
+            tag_objs = []
+            for genre in movie_details["genres"]:
+                tag = MovieTag.objects.get_or_create(name=genre["name"])[0]
+                tag_objs.append(tag)
+
+            movie_entity_obj.tags.set(tag_objs)
+
+        if not movie_entity_obj.imdb_url:
+            movie_entity_obj.imdb_url = make_imdb_url(movie_details["imdb_id"])
+
+        if not movie_entity_obj.image:
+            image_path = movie_details["poster_path"]
+            image_content = File(tmdb_client.get_image("w500", image_path))
+            movie_entity_obj.image.save(image_path, image_content, save=False)
+
+        movie_entity_obj.save()
+
+        app_label = self.model._meta.app_label
+        model_name = self.model._meta.model_name
+
+        return redirect(f"admin:{app_label}_{model_name}_change", object_id)
 
 
 @admin.register(Show)
