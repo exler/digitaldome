@@ -3,6 +3,7 @@ from typing import Any, Self
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import QuerySet
 from django.db.models.expressions import Value
+from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
@@ -61,6 +62,7 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
             tracking_obj = None
 
         context["tracking_obj"] = tracking_obj
+        context["edit_url"] = reverse(f"admin:entities_{self.kwargs['entity_type']}_change", args=[self.object.id])
         return context
 
 

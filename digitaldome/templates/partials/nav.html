@@ -81,6 +81,20 @@
                         <a class="block md:hidden"
                            href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.username }}</a>
                     </li>
+                    {% if user.is_staff %}
+                        <li>
+                            <a href="{% url 'admin:entities_movie_add' %}">Add new movie</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'admin:entities_show_add' %}">Add new show</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'admin:entities_book_add' %}">Add new book</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'admin:entities_game_add' %}">Add new game</a>
+                        </li>
+                    {% endif %}
                     <!-- Separator -->
                     <div class="h-px my-2 bg-base-200"></div>
                     <li>
