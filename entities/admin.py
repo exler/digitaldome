@@ -23,7 +23,7 @@ from entities.models import (
     Show,
     ShowTag,
 )
-from integrations.external.tmdb import tmdb_client
+from integrations.external.tmdb import TMDBSupportedEntityType, tmdb_client
 
 
 class MovieInline(admin.TabularInline):
@@ -121,6 +121,15 @@ class EntityBaseAdmin(admin.ModelAdmin):
 
     actions = ("fill_automagically_action",)
 
+    def redirect_to_change_view(self: Self, object_id: int) -> HttpResponse:
+        """
+        Redirect to change view (details) of the entity.
+        """
+
+        app_label = self.model._meta.app_label
+        model_name = self.model._meta.model_name
+        return redirect(f"admin:{app_label}_{model_name}_change", object_id)
+
     def thumbnail(self: Self, obj: EntityBase) -> str:
         if obj.image:
             return mark_safe(f"<img src='{obj.image.url}' width='80' height='120' />")  # noqa: S308
@@ -179,13 +188,13 @@ class MovieAdmin(EntityBaseAdmin):
     def _fill_automagically(self, request: HttpRequest, object_id: int) -> None:
         movie_entity_obj = Movie.objects.get(id=object_id)
 
-        response = tmdb_client.search(movie_entity_obj.name)
+        response = tmdb_client.search(TMDBSupportedEntityType.MOVIE, movie_entity_obj.name)
         if len(response["results"]) < 1:
             messages.add_message(request, messages.ERROR, "No data found for this movie.")
             return
 
         movie_id = response["results"][0]["id"]
-        movie_details = tmdb_client.get_movie_details(movie_id)
+        movie_details = tmdb_client.get_details(TMDBSupportedEntityType.MOVIE, movie_id)
 
         if not movie_entity_obj.description:
             movie_entity_obj.description = movie_details["overview"]
@@ -214,15 +223,44 @@ class MovieAdmin(EntityBaseAdmin):
 
         movie_entity_obj.save()
 
-        app_label = self.model._meta.app_label
-        model_name = self.model._meta.model_name
-
-        return redirect(f"admin:{app_label}_{model_name}_change", object_id)
+        return self.redirect_to_change_view(object_id)
 
 
 @admin.register(Show)
 class ShowAdmin(EntityBaseAdmin):
-    pass
+    def _fill_automagically(self, request: HttpRequest, object_id: int) -> None:
+        show_entity_obj = Show.objects.get(id=object_id)
+
+        response = tmdb_client.search(TMDBSupportedEntityType.SHOW, show_entity_obj.name)
+        if len(response["results"]) < 1:
+            messages.add_message(request, messages.ERROR, "No data found for this show.")
+            return
+
+        show_id = response["results"][0]["id"]
+        show_details = tmdb_client.get_details(TMDBSupportedEntityType.SHOW, show_id)
+
+        if not show_entity_obj.description:
+            show_entity_obj.description = show_details["overview"]
+
+        if not show_entity_obj.release_date:
+            show_entity_obj.release_date = show_details["first_air_date"]
+
+        if not show_entity_obj.tags.exists():
+            tag_objs = []
+            for genre in show_details["genres"]:
+                tag = ShowTag.objects.get_or_create(name=genre["name"])[0]
+                tag_objs.append(tag)
+
+            show_entity_obj.tags.set(tag_objs)
+
+        if not show_entity_obj.image:
+            image_path = show_details["poster_path"]
+            image_content = File(tmdb_client.get_image("w500", image_path))
+            show_entity_obj.image.save(image_path, image_content, save=False)
+
+        show_entity_obj.save()
+
+        return self.redirect_to_change_view(object_id)
 
 
 @admin.register(Game)
