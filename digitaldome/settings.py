@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import sentry_sdk
+from botocore.config import Config as BotoConfig
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -179,26 +180,23 @@ USE_I18N = True
 
 USE_TZ = True
 
-# S3 Storage Auth #
-# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
-
-AWS_STORAGE_BUCKET_NAME = get_env_str("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = get_env_str("AWS_S3_ENDPOINT_URL")
-AWS_S3_ACCESS_KEY = get_env_str("AWS_S3_ACCESS_KEY")
-AWS_S3_SECRET_KEY = get_env_str("AWS_S3_SECRET_KEY")
-AWS_S3_SIGNATURE_VERSION = get_env_str("AWS_S3_SIGNATURE_VERSION", "s3v4")
-
 # Storage and static files (CSS, JavaScript, Images) #
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
 
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
-            "bucket_name": AWS_STORAGE_BUCKET_NAME,
-            "endpoint_url": AWS_S3_ENDPOINT_URL,
-            "access_key": AWS_S3_ACCESS_KEY,
-            "secret_key": AWS_S3_SECRET_KEY,
+            "bucket_name": get_env_str("AWS_STORAGE_BUCKET_NAME"),
+            "endpoint_url": get_env_str("AWS_S3_ENDPOINT_URL"),
+            "access_key": get_env_str("AWS_S3_ACCESS_KEY"),
+            "secret_key": get_env_str("AWS_S3_SECRET_KEY"),
+            "region_name": get_env_str("AWS_S3_REGION_NAME"),
+            "client_config": BotoConfig(
+                request_checksum_calculation="when_required",
+                response_checksum_validation="when_required",
+            ),
         },
     },
     "staticfiles": {

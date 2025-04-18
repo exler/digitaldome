@@ -8,20 +8,26 @@ Digital Dome is a comprehensive media tracking service designed to handle a dive
 
 ## Install
 
-### Docker Setup
+You can set up Digital Dome using Docker or run it locally.
+
+### Docker
 
 To set up Digital Dome using Docker, follow these steps:
 
 * Clone the repository and navigate to the project directory.
 * Run `docker compose up` to start all containers
 
-### Local Setup
+### Local
 
-You can also choose to run external services in Docker and the webapp locally
+You can also choose to run the webapp locally:
 
 * Clone the repository and navigate to the project directory.
-* Run `docker compose up -d db minio` to start the database and storage containers
 * Run `uv sync` to install dependencies using [uv](https://docs.astral.sh/uv/)
+
+### Environment
+
+In both cases, you should use the `.env.example` file as a template for your environment variables. 
+Copy it to `.env` and fill in the required values.
 
 ## Usage
 
