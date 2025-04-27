@@ -232,3 +232,9 @@ DEFAULT_FROM_EMAIL = get_env_str("DEFAULT_FROM_EMAIL")
 # https://developer.themoviedb.org/reference
 
 TMDB_API_KEY = get_env_str("TMDB_API_KEY")
+
+# TGDB API #
+# https://api-docs.igdb.com/
+
+TGDB_API_CLIENT_ID = get_env_str("TGDB_API_CLIENT_ID")
+TGDB_API_CLIENT_SECRET = get_env_str("TGDB_API_CLIENT_SECRET")

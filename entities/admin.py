@@ -1,3 +1,4 @@
+import datetime
 from typing import ClassVar, Self
 
 from django.contrib import admin, messages
@@ -23,6 +24,7 @@ from entities.models import (
     Show,
     ShowTag,
 )
+from integrations.external.tgdb import tgdb_client
 from integrations.external.tmdb import TMDBSupportedEntityType, tmdb_client
 
 
@@ -208,7 +210,7 @@ class MovieAdmin(EntityBaseAdmin):
         if not movie_entity_obj.tags.exists():
             tag_objs = []
             for genre in movie_details["genres"]:
-                tag = MovieTag.objects.get_or_create(name=genre["name"])[0]
+                tag = MovieTag.objects.get_or_create_with_aliases(genre["name"])[0]
                 tag_objs.append(tag)
 
             movie_entity_obj.tags.set(tag_objs)
@@ -266,6 +268,76 @@ class ShowAdmin(EntityBaseAdmin):
 @admin.register(Game)
 class GameAdmin(EntityBaseAdmin):
     autocomplete_fields = (*EntityBaseAdmin.autocomplete_fields, *("platforms",))
+
+    def _fill_automagically(self, request: HttpRequest, object_id: int) -> None:
+        game_entity_obj = Game.objects.get(id=object_id)
+
+        response = tgdb_client.search(game_entity_obj.name)
+        if len(response) < 1:
+            messages.add_message(request, messages.ERROR, "No data found for this game.")
+            return
+
+        game_details = response[0]
+
+        if not game_entity_obj.description:
+            game_entity_obj.description = game_details["summary"]
+
+        if not game_entity_obj.release_date:
+            game_entity_obj.release_date = datetime.date.fromtimestamp(game_details["first_release_date"])
+
+        if not game_entity_obj.tags.exists():
+            tag_objs = []
+            for genre in game_details["genres"]:
+                tag = GameTag.objects.get_or_create_with_aliases(genre["name"])[0]
+                tag_objs.append(tag)
+
+            game_entity_obj.tags.set(tag_objs)
+
+        if not game_entity_obj.platforms.exists():
+            platform_objs = []
+            for platform in game_details["platforms"]:
+                try:
+                    platform_obj = Platform.objects.get_with_aliases(platform["name"])
+                    platform_objs.append(platform_obj)
+                except Platform.DoesNotExist:
+                    messages.add_message(
+                        request,
+                        messages.WARNING,
+                        f"Platform '{platform['name']}' not found. Please create it first.",
+                    )
+
+            game_entity_obj.platforms.set(platform_objs)
+
+        if not game_entity_obj.developer:
+            for company in game_details["involved_companies"]:
+                if company["developer"]:
+                    game_entity_obj.developer.append(company["company"]["name"])
+
+        if not game_entity_obj.publisher:
+            for company in game_details["involved_companies"]:
+                if company["publisher"]:
+                    game_entity_obj.publisher.append(company["company"]["name"])
+
+        if not game_entity_obj.image:
+            image_id = game_details["cover"]["image_id"]
+            image_content = File(tgdb_client.get_cover_image(image_id))
+            game_entity_obj.image.save(f"{image_id}.webp", image_content, save=False)
+
+        if not game_entity_obj.steam_url:
+            for website in game_details["websites"]:
+                if website["type"]["type"] == "Steam":
+                    game_entity_obj.steam_url = website["url"]
+                    break
+
+        if not game_entity_obj.wikipedia_url:
+            for website in game_details["websites"]:
+                if website["type"]["type"] == "Wikipedia":
+                    game_entity_obj.wikipedia_url = website["url"]
+                    break
+
+        game_entity_obj.save()
+
+        return self.redirect_to_change_view(object_id)
 
 
 @admin.register(Book)

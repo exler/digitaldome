@@ -17,8 +17,40 @@ from entities.helpers import format_time_spent
 ### Near-constant models ###
 
 
+class ObjectWithAliasQuerySet(models.QuerySet):
+    def get_with_aliases(self: Self, value: str) -> Self:
+        """
+        Get the tag by its name or by its aliases.
+        Mostly used for integration with external APIs.
+
+        Requires a `name` CharField and an `aliases` ArrayField of CharFields
+        in the model.
+        """
+        try:
+            return self.get(name=value)
+        except self.model.DoesNotExist:
+            return self.get(aliases__contains=[value])
+
+    def get_or_create_with_aliases(self: Self, value: str) -> tuple[Self, bool]:
+        """
+        Get the tag by its name or by its aliases.
+        If it doesn't exist, create it.
+
+        Requires a `name` CharField and an `aliases` ArrayField of CharFields
+        in the model.
+        """
+        try:
+            return self.get(name=value), False
+        except self.model.DoesNotExist:
+            return self.get_or_create(aliases__contains=[value], defaults={"name": value})
+
+
 class TagBase(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
+
+    aliases = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    objects = ObjectWithAliasQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -46,6 +78,10 @@ class BookTag(TagBase):
 
 class Platform(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
+
+    aliases = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+
+    objects = ObjectWithAliasQuerySet.as_manager()
 
     class Meta:
         ordering = ("name",)
