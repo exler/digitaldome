@@ -324,13 +324,13 @@ class GameAdmin(EntityBaseAdmin):
             game_entity_obj.image.save(f"{image_id}.webp", image_content, save=False)
 
         if not game_entity_obj.steam_url:
-            for website in game_details["websites"]:
+            for website in game_details.get("websites", []):
                 if website["type"]["type"] == "Steam":
                     game_entity_obj.steam_url = website["url"]
                     break
 
         if not game_entity_obj.wikipedia_url:
-            for website in game_details["websites"]:
+            for website in game_details.get("websites", []):
                 if website["type"]["type"] == "Wikipedia":
                     game_entity_obj.wikipedia_url = website["url"]
                     break
