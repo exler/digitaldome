@@ -24,7 +24,7 @@ from entities.models import (
     Show,
     ShowTag,
 )
-from integrations.external.tgdb import tgdb_client
+from integrations.external.igdb import igdb_client
 from integrations.external.tmdb import TMDBSupportedEntityType, tmdb_client
 
 
@@ -272,7 +272,7 @@ class GameAdmin(EntityBaseAdmin):
     def _fill_automagically(self, request: HttpRequest, object_id: int) -> None:
         game_entity_obj = Game.objects.get(id=object_id)
 
-        response = tgdb_client.search(game_entity_obj.name)
+        response = igdb_client.search(game_entity_obj.name)
         if len(response) < 1:
             messages.add_message(request, messages.ERROR, "No data found for this game.")
             return
@@ -320,7 +320,7 @@ class GameAdmin(EntityBaseAdmin):
 
         if not game_entity_obj.image:
             image_id = game_details["cover"]["image_id"]
-            image_content = File(tgdb_client.get_cover_image(image_id))
+            image_content = File(igdb_client.get_cover_image(image_id))
             game_entity_obj.image.save(f"{image_id}.webp", image_content, save=False)
 
         if not game_entity_obj.steam_url:

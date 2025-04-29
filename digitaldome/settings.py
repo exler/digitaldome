@@ -233,8 +233,8 @@ DEFAULT_FROM_EMAIL = get_env_str("DEFAULT_FROM_EMAIL")
 
 TMDB_API_KEY = get_env_str("TMDB_API_KEY")
 
-# TGDB API #
+# IGDB API #
 # https://api-docs.igdb.com/
 
-TGDB_API_CLIENT_ID = get_env_str("TGDB_API_CLIENT_ID")
-TGDB_API_CLIENT_SECRET = get_env_str("TGDB_API_CLIENT_SECRET")
+IGDB_API_CLIENT_ID = get_env_str("IGDB_API_CLIENT_ID")
+IGDB_API_CLIENT_SECRET = get_env_str("IGDB_API_CLIENT_SECRET")

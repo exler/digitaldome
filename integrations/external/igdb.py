@@ -4,9 +4,9 @@ import requests
 from django.conf import settings
 
 
-class TGDBClient:
-    API_CLIENT_ID = settings.TGDB_API_CLIENT_ID
-    API_CLIENT_SECRET = settings.TGDB_API_CLIENT_SECRET
+class IGDBClient:
+    API_CLIENT_ID = settings.IGDB_API_CLIENT_ID
+    API_CLIENT_SECRET = settings.IGDB_API_CLIENT_SECRET
 
     AUTH_URL = "https://id.twitch.tv/oauth2/token"
 
@@ -49,4 +49,4 @@ class TGDBClient:
         return BytesIO(response.content)
 
 
-tgdb_client = TGDBClient()
+igdb_client = IGDBClient()
