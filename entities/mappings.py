@@ -23,6 +23,17 @@ def get_entity_type_to_model_mapping() -> dict[str, Type[EntityBase]]:
 ENTITY_TYPE_TO_MODEL_MAPPING = get_entity_type_to_model_mapping()
 
 
+def normalize_entity_type(entity_type: str) -> str:
+    """
+    Get the singular form of the entity type.
+    """
+    model = ENTITY_TYPE_TO_MODEL_MAPPING.get(entity_type, None)
+    if model is None:
+        raise ValueError(f"Invalid entity type: {entity_type}")
+
+    return model._meta.verbose_name
+
+
 def get_model_from_entity_type(entity_type: str) -> EntityBase:
     """
     Get model from entity type string, plural or singular.

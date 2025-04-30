@@ -2,7 +2,7 @@ from typing import Any, Self
 
 from django.http import HttpRequest
 
-from entities.mappings import get_model_from_entity_type
+from entities.mappings import get_model_from_entity_type, normalize_entity_type
 
 
 class DynamicEntityMixin:
@@ -13,4 +13,5 @@ class DynamicEntityMixin:
     def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["entity_type"] = self.kwargs["entity_type"]
+        context["entity_type_normalized"] = normalize_entity_type(self.kwargs["entity_type"])
         return context

@@ -62,7 +62,9 @@ class EntitiesDetailView(DynamicEntityMixin, DetailView):
             tracking_obj = None
 
         context["tracking_obj"] = tracking_obj
-        context["edit_url"] = reverse(f"admin:entities_{self.kwargs['entity_type']}_change", args=[self.object.id])
+        context["edit_url"] = reverse(
+            f"admin:entities_{context['entity_type_normalized']}_change", args=[self.object.id]
+        )
         return context
 
 

@@ -12,7 +12,7 @@ from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
 from digitaldome.common.mixins import DefaultFilterMixin, DynamicOrderingMixin, ElidedPaginationMixin
-from entities.mappings import get_model_from_entity_type
+from entities.mixins import DynamicEntityMixin
 from tracking.forms import TrackingObjectForm
 from tracking.mixins import TrackingObjectMixin
 from tracking.models import TrackingObject
@@ -52,7 +52,13 @@ class TrackingFilter(FilterSet):
 
 
 class TrackingListView(
-    DynamicOrderingMixin, UserDashboardMixin, ElidedPaginationMixin, DefaultFilterMixin, LoginRequiredMixin, FilterView
+    DynamicOrderingMixin,
+    DynamicEntityMixin,
+    UserDashboardMixin,
+    ElidedPaginationMixin,
+    DefaultFilterMixin,
+    LoginRequiredMixin,
+    FilterView,
 ):
     template_name = "tracking/tracking_list.html"
     paginate_by = 20
@@ -62,15 +68,9 @@ class TrackingListView(
     default_filter_values: ClassVar = {"status": TrackingObject.Status.IN_PROGRESS}
 
     def get_queryset(self: Self) -> QuerySet[TrackingObject]:
-        entity_type = get_model_from_entity_type(self.kwargs["entity_type"])
-        content_type = ContentType.objects.get_for_model(entity_type)
+        content_type = ContentType.objects.get_for_model(self.model)
         queryset = TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type)
         return self.order_queryset(queryset)
-
-    def get_context_data(self: Self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["entity_type"] = self.kwargs["entity_type"]
-        return context
 
 
 class TrackingFormView(LoginRequiredMixin, TrackingObjectMixin, ModelFormMixin, ProcessFormView):
