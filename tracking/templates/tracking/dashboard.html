@@ -7,28 +7,67 @@
     <div class="flex flex-col gap-4">
         {% include "users/partials/menu.html" %}
         {% if in_progress_list %}
-            <h2 class="text-2xl font-bold text-center md:text-left">In progress</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-y-2 md:gap-4 justify-items-center">
-                {% for object in in_progress_list %}
-                    <div class="card image-full w-40">
-                        <figure>
-                            <img width="192"
-                                 height="288"
-                                 src="{{ object.content_object.image|imageurl }}"
-                                 alt="" />
-                        </figure>
-                        <div class="card-body p-4 justify-between">
-                            <h2 class="card-title text-base">{{ object.content_object.name }}</h2>
-                            <div class="badge"
-                                 style="background-color: {{ object.content_object.COLOR }};
-                                        border-color: {{ object.content_object.COLOR }}">
-                                {{ object.content_object|verbosename|title }}
+            <div x-data="{ showAll: false }" class="flex flex-col gap-4">
+                <h2 class="text-2xl font-bold text-center md:text-left">In progress</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-y-2 md:gap-4 justify-items-center">
+                    {% for object in in_progress_list %}
+                        {% if forloop.counter <= 6 %}
+                            <div class="card image-full w-40">
+                                <figure>
+                                    <img width="192"
+                                         height="288"
+                                         src="{{ object.content_object.image|imageurl }}"
+                                         alt="" />
+                                </figure>
+                                <div class="card-body p-4 justify-between">
+                                    <h2 class="card-title text-base">{{ object.content_object.name }}</h2>
+                                    <div class="badge"
+                                         style="background-color: {{ object.content_object.COLOR }};
+                                                border-color: {{ object.content_object.COLOR }}">
+                                        {{ object.content_object|verbosename|title }}
+                                    </div>
+                                    <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
+                                       class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-hidden no-underline"></a>
+                                </div>
                             </div>
-                            <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
-                               class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-hidden no-underline"></a>
-                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if in_progress_list.count > 6 %}
+                    <div x-show="showAll"
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 transform -translate-y-4"
+                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                         class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-y-2 md:gap-4 justify-items-center mt-4">
+                        {% for object in in_progress_list %}
+                            {% if forloop.counter > 6 %}
+                                <div class="card image-full w-40">
+                                    <figure>
+                                        <img width="192"
+                                             height="288"
+                                             src="{{ object.content_object.image|imageurl }}"
+                                             alt="" />
+                                    </figure>
+                                    <div class="card-body p-4 justify-between">
+                                        <h2 class="card-title text-base">{{ object.content_object.name }}</h2>
+                                        <div class="badge"
+                                             style="background-color: {{ object.content_object.COLOR }};
+                                                    border-color: {{ object.content_object.COLOR }}">
+                                            {{ object.content_object|verbosename|title }}
+                                        </div>
+                                        <a href="{% url 'entities:entities-detail' object.content_object|verbosename object.content_object.id %}"
+                                           class="absolute left-0 top-0 right-0 bottom-0 text-transparent outline-hidden no-underline"></a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                    <div class="flex justify-center">
+                        <button @click="showAll = !showAll"
+                                class="btn btn-accent w-full"
+                                x-text="showAll ? 'Show less' : 'Show all'"></button>
+                    </div>
+                {% endif %}
             </div>
         {% endif %}
         {% if completed_list %}

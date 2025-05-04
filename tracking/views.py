@@ -41,7 +41,7 @@ class DashboardView(UserDashboardMixin, LoginRequiredMixin, TemplateView):
         )[:6]
         context["in_progress_list"] = tracking_objects.filter(status=TrackingObject.Status.IN_PROGRESS).order_by(
             "-updated_at"
-        )[:6]
+        )
         return context
 
 
