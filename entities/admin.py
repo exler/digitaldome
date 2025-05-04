@@ -207,6 +207,14 @@ class MovieAdmin(EntityBaseAdmin):
         if not movie_entity_obj.release_date:
             movie_entity_obj.release_date = movie_details["release_date"]
 
+        if not movie_entity_obj.director:
+            movie_entity_obj.director = [
+                person["name"] for person in movie_details["credits"]["crew"] if person["job"] == "Director"
+            ]
+
+        if not movie_entity_obj.cast:
+            movie_entity_obj.cast = [person["name"] for person in movie_details["credits"]["cast"][:8]]
+
         if not movie_entity_obj.tags.exists():
             tag_objs = []
             for genre in movie_details["genres"]:

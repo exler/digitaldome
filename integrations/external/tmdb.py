@@ -33,7 +33,7 @@ class TMDBClient:
         return response.json()
 
     def get_details(self, entity_type: TMDBSupportedEntityType, entity_id: int) -> dict:
-        url = f"{self.BASE_API_URL}/{entity_type}/{entity_id}"
+        url = f"{self.BASE_API_URL}/{entity_type}/{entity_id}?append_to_response=credits"
 
         response = self.session.get(url, timeout=5)
         return response.json()
