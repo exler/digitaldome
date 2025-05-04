@@ -6,26 +6,25 @@
 {% block content %}
     <div class="container px-4 mx-auto">
         <div class="max-w-lg mx-auto">
+            <h2 class="text-lg font-bold">Import</h2>
             <form method="post"
                   action="{% url 'integrations:import-tracking-data' %}"
-                  enctype="multipart/form-data">
+                  enctype="multipart/form-data"
+                  class="flex flex-col gap-4">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">{{ form.import_format.label }}</span>
+                    <label class="select w-full">
+                        <span class="label">{{ form.import_format.label }}</span>
+                        {{ form.import_format|addclass:"input input-bordered w-full" }}
                     </label>
-                    {{ form.import_format|addclass:"input input-bordered" }}
                     {{ form.import_format.errors }}
                 </div>
                 <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">{{ form.import_file.label }}</span>
-                    </label>
-                    {{ form.import_file|addclass:"file-input file-input-bordered" }}
+                    {{ form.import_file|addclass:"file-input file-input-bordered w-full" }}
                     {{ form.import_file.errors }}
                 </div>
-                <button class="btn btn-primary w-full mt-4">Import</button>
+                <button class="btn btn-primary w-full">Import</button>
             </form>
             <div class="h-px my-8 bg-base-200"></div>
             <h2 class="text-lg font-bold">Export</h2>

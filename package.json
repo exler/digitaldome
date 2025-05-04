@@ -7,8 +7,8 @@
     "watch": "tailwindcss -i digitaldome/static/css/base.tailwind -o digitaldome/static/css/base.css --watch"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.0.1",
-    "daisyui": "^5.0.0-beta.3",
-    "tailwindcss": "^4.0.1"
+    "@tailwindcss/cli": "^4.1.5",
+    "daisyui": "^5.0.35",
+    "tailwindcss": "^4.1.5"
   }
 }
