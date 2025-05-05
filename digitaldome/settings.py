@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
 
-from digitaldome.utils.env import get_env_bool, get_env_float, get_env_list, get_env_str
+from digitaldome.utils.env import get_env_bool, get_env_float, get_env_int, get_env_list, get_env_str
 
 load_dotenv()
 
@@ -167,6 +167,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = reverse_lazy("users:login")
+
+SESSION_COOKIE_AGE = get_env_int("SESSION_COOKIE_AGE", 2419200)  # 4 weeks
 
 
 # Internationalization #
