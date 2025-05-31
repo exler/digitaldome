@@ -4,12 +4,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.defaults import page_not_found
 
-from digitaldome.views import IndexView
+from digitaldome.views import IndexView, ManifestView
 
 urlpatterns = [
     *[
         path("admin/", admin.site.urls),
         path("", IndexView.as_view(), name="index"),
+        path("manifest.json", ManifestView.as_view(), name="manifest"),
         path("", include("users.urls")),
         path("entities/", include("entities.urls")),
         path("user/", include("tracking.urls")),
