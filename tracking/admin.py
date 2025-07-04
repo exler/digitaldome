@@ -7,3 +7,4 @@ from tracking.models import TrackingObject
 class TrackingObjectAdmin(admin.ModelAdmin):
     list_select_related = ("user",)
     list_display = ("content_object", "user", "status", "rating", "created_at")
+    list_filter = ("status",)
