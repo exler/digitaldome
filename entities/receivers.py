@@ -11,7 +11,7 @@ from entities.models import Book, EntityBase, Game, Movie, Show
 @receiver(post_delete, sender=Show)
 @receiver(post_delete, sender=Game)
 @receiver(post_delete, sender=Book)
-def delete_tracking_objects_on_parent_deletion(instance: EntityBase, **kwargs: Any) -> None:
+def delete_image_file_on_obj_deletion(instance: EntityBase, **kwargs: Any) -> None:
     """Delete the image file in storage when the parent object is deleted."""
 
     on_commit(lambda: instance.image.delete(save=False))
