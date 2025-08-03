@@ -69,7 +69,9 @@ class TrackingListView(
 
     def get_queryset(self: Self) -> QuerySet[TrackingObject]:
         content_type = ContentType.objects.get_for_model(self.model)
-        queryset = TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type)
+        queryset = TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type).prefetch_related(
+            "content_object"
+        )
         return self.order_queryset(queryset)
 
 
