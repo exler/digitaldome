@@ -3,7 +3,6 @@ import string
 from pathlib import Path
 from typing import ClassVar, Self
 
-from django.contrib.postgres.indexes import GinIndex
 from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models.functions import Lower
@@ -136,13 +135,7 @@ class EntityBase(TimestampedModel):
                 violation_error_message=_("Item with that name already exists."),
             ),
         ]
-        indexes: ClassVar = [
-            GinIndex(
-                fields=["name"],
-                name="%(class)s_trgm_name_idx",
-                opclasses=["gin_trgm_ops"],
-            ),
-        ]
+        indexes: ClassVar = []
         ordering = ("name", "-id")
 
     def get_absolute_url(self: Self) -> str:
