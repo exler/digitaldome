@@ -3,7 +3,6 @@ import string
 from pathlib import Path
 from typing import ClassVar, Self
 
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.validators import MaxLengthValidator
 from django.db import models
@@ -29,7 +28,7 @@ class ObjectWithAliasQuerySet(models.QuerySet):
         try:
             return self.get(name=value)
         except self.model.DoesNotExist:
-            return self.get(aliases__contains=[value])
+            return self.get(aliases__contains=value)
 
     def get_or_create_with_aliases(self: Self, value: str) -> tuple[Self, bool]:
         """
@@ -42,13 +41,13 @@ class ObjectWithAliasQuerySet(models.QuerySet):
         try:
             return self.get(name=value), False
         except self.model.DoesNotExist:
-            return self.get_or_create(aliases__contains=[value], defaults={"name": value})
+            return self.get_or_create(aliases__contains=value, defaults={"name": value})
 
 
 class TagBase(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
 
-    aliases = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    aliases = models.JSONField(default=list, blank=True)
 
     objects = ObjectWithAliasQuerySet.as_manager()
 
@@ -79,7 +78,7 @@ class BookTag(TagBase):
 class Platform(TimestampedModel):
     name = models.CharField(max_length=255, unique=True)
 
-    aliases = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    aliases = models.JSONField(default=list, blank=True)
 
     objects = ObjectWithAliasQuerySet.as_manager()
 
@@ -159,8 +158,8 @@ class Movie(EntityBase):
 
     length = models.PositiveSmallIntegerField(null=True, blank=True)  # In minutes
 
-    director = ArrayField(models.CharField(max_length=255), default=list, blank=True)
-    cast = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    director = models.JSONField(default=list, blank=True)
+    cast = models.JSONField(default=list, blank=True)
 
     ADDITIONAL_LINK_AS_ICON_FIELDS = (
         *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
@@ -192,8 +191,8 @@ class Show(EntityBase):
 
     imdb_url = models.URLField(verbose_name=_("IMDB URL"), blank=True)
 
-    creator = ArrayField(models.CharField(max_length=255), default=list, blank=True)
-    stars = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    creator = models.JSONField(default=list, blank=True)
+    stars = models.JSONField(default=list, blank=True)
 
     ADDITIONAL_LINK_AS_ICON_FIELDS = (
         *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
@@ -217,8 +216,8 @@ class Game(EntityBase):
 
     platforms = models.ManyToManyField(Platform, blank=True)
 
-    developer = ArrayField(models.CharField(max_length=255), default=list, blank=True)
-    publisher = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    developer = models.JSONField(default=list, blank=True)
+    publisher = models.JSONField(default=list, blank=True)
 
     ADDITIONAL_LINK_AS_ICON_FIELDS = (
         *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,
@@ -240,7 +239,7 @@ class Book(EntityBase):
 
     goodreads_url = models.URLField(verbose_name=_("Goodreads URL"), blank=True)
 
-    author = ArrayField(models.CharField(max_length=255), default=list, blank=True)
+    author = models.JSONField(default=list, blank=True)
 
     ADDITIONAL_LINK_AS_ICON_FIELDS = (
         *EntityBase.ADDITIONAL_LINK_AS_ICON_FIELDS,

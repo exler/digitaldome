@@ -1,4 +1,4 @@
-<div x-data="arrayField('{{ widget.attrs.id }}')"
+<div x-data="tagWidget('{{ widget.attrs.id }}')"
      class="w-full flex flex-col items-center mx-auto">
     <select multiple
             name="{{ widget.name }}"
@@ -40,7 +40,7 @@
 </div>
 {% with "widget-value-"|add:widget.attrs.id as value_id %}{{ widget.value|json_script:value_id }}{% endwith %}
 <script>
-    function arrayField(widgetId) {
+    function tagWidget(widgetId) {
         return {
             initial: JSON.parse(document.getElementById(`widget-value-${widgetId}`).textContent),
             items: [],

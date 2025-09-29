@@ -23,16 +23,16 @@ class ClearableFileInputWithImagePreview(ClearableFileInput):
         super().__init__(attrs)
 
 
-class ArrayField(SelectMultiple):
+class TagWidget(SelectMultiple):
     """
-    Widget for rendering an array field.
+    Widget for rendering an array-like field.
 
     Requires:
     - Alpine.js for proper functionality
     - TailwindCSS for proper styling
     """
 
-    template_name = "widgets/array_field.html"
+    template_name = "widgets/tag_widget.html"
 
     def format_value(self: Self, value: Any) -> list[str]:
         if not value:
