@@ -34,12 +34,12 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels -r /tmp/requireme
 # Cleanup and setup app user and directory
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    libpq-dev \
     libmagic1 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -U liara \
     && install -d -m 0755 -o liara -g liara /app/staticfiles \
-    && install -d -m 0755 -o liara -g liara /app/media
+    && install -d -m 0755 -o liara -g liara /app/media \
+    && install -d -m 0755 -o liara -g liara /app/data
 
 WORKDIR /app
 

@@ -127,13 +127,22 @@ LOGGING = {
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": get_env_str("POSTGRES_DB_NAME"),
-        "USER": get_env_str("POSTGRES_DB_USER"),
-        "PASSWORD": get_env_str("POSTGRES_DB_PASSWORD"),
-        "HOST": get_env_str("POSTGRES_DB_HOST"),
-        "PORT": get_env_str("POSTGRES_DB_PORT", "5432"),
-    }
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "data" / "db.sqlite3",
+        "ATOMIC_REQUESTS": False,
+        "OPTIONS": {
+            "transaction_mode": "IMMEDIATE",
+            "init_command": """
+                PRAGMA foreign_keys=ON;
+                PRAGMA journal_mode=WAL;
+                PRAGMA synchronous=NORMAL;
+                PRAGMA mmap_size=134217728;
+                PRAGMA journal_size_limit=27103364;
+                PRAGMA busy_timeout=5000;
+                PRAGMA cache_size=2000;
+            """,
+        },
+    },
 }
 
 # Cache #
