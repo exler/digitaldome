@@ -75,7 +75,7 @@ class EntitiesSearchView(ListView):
         return EntitySearchFilter(
             self.request.GET,
             queryset=model.objects.annotate(entity_type=Value(model._meta.verbose_name)),
-        ).qs.values("id", "name", "image", "entity_type", "similarity")
+        ).qs.values("id", "name", "image", "entity_type")
 
     def get_queryset(self) -> QuerySet[EntityBase]:
         """
