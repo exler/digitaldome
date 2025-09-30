@@ -72,10 +72,13 @@ class EntitiesSearchView(ListView):
     template_name = "entities/entities_search.html"
 
     def _prepare_queryset(self, model: type[EntityBase]) -> QuerySet[EntityBase]:
-        return EntitySearchFilter(
+        filtered_qs = EntitySearchFilter(
             self.request.GET,
             queryset=model.objects.annotate(entity_type=Value(model._meta.verbose_name)),
         ).qs.values("id", "name", "image", "entity_type")
+
+        # Remove any ordering before union
+        return filtered_qs.order_by()
 
     def get_queryset(self) -> QuerySet[EntityBase]:
         """
@@ -95,6 +98,9 @@ class EntitiesSearchView(ListView):
 
         # Combine all querysets using union
         unified_qs = movie_qs.union(show_qs, game_qs, book_qs)
+
+        # Order the unified queryset
+        unified_qs = unified_qs.order_by("name")
 
         # Return the combined queryset
         return unified_qs[:20]
