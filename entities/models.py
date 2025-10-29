@@ -18,29 +18,42 @@ from entities.helpers import format_time_spent
 class ObjectWithAliasQuerySet(models.QuerySet):
     def get_with_aliases(self: Self, value: str) -> Self:
         """
-        Get the tag by its name or by its aliases.
-        Mostly used for integration with external APIs.
+        Get an object by its name or any of its aliases, case-insensitively.
 
-        Requires a `name` CharField and an `aliases` ArrayField of CharFields
-        in the model.
+        Requires that the model has a 'name' field and an 'aliases' JSONField
+        containing a list of strings.
         """
+        normalized_value = value.casefold()
         try:
-            return self.get(name=value)
+            return self.get(name__iexact=value)
         except self.model.DoesNotExist:
-            return self.get(aliases__contains=value)
+            for obj in self.exclude(aliases=[]).only("id", "aliases"):
+                aliases = getattr(obj, "aliases", []) or []
+                if any(isinstance(alias, str) and alias.casefold() == normalized_value for alias in aliases):
+                    return obj
+
+            raise self.model.DoesNotExist(
+                f"{self.model._meta.object_name} matching alias {value!r} does not exist."
+            ) from None
 
     def get_or_create_with_aliases(self: Self, value: str) -> tuple[Self, bool]:
         """
-        Get the tag by its name or by its aliases.
-        If it doesn't exist, create it.
+        Get an object by its name or any of its aliases, case-insensitively.
+        If not found, create a new object with the given name.
 
-        Requires a `name` CharField and an `aliases` ArrayField of CharFields
-        in the model.
+        Requires that the model has a 'name' field and an 'aliases' JSONField
+        containing a list of strings.
         """
+        normalized_value = value.casefold()
         try:
-            return self.get(name=value), False
+            return self.get(name__iexact=value), False
         except self.model.DoesNotExist:
-            return self.get_or_create(aliases__contains=value, defaults={"name": value})
+            for obj in self.exclude(aliases=[]).only("id", "aliases"):
+                aliases = getattr(obj, "aliases", []) or []
+                if any(isinstance(alias, str) and alias.casefold() == normalized_value for alias in aliases):
+                    return obj, False
+
+            return self.get_or_create(name=value)
 
 
 class TagBase(TimestampedModel):
