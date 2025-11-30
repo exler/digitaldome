@@ -25,10 +25,16 @@
                             {% if request.GET.ordering == "" or not request.GET.ordering %}selected{% endif %}>
                         Sort by
                     </option>
+                    <option value="entity_name"
+                            {% if request.GET.ordering == "entity_name" %}selected{% endif %}>Title A-Z</option>
+                    <option value="-entity_name"
+                            {% if request.GET.ordering == "-entity_name" %}selected{% endif %}>Title Z-A</option>
                     <option value="-rating"
                             {% if request.GET.ordering == "-rating" %}selected{% endif %}>Best rated</option>
                     <option value="rating"
                             {% if request.GET.ordering == "rating" %}selected{% endif %}>Worst rated</option>
+                    <option value="-updated_at"
+                            {% if request.GET.ordering == "-updated_at" %}selected{% endif %}>Recently updated</option>
                 </select>
                 <button type="submit" class="btn btn-secondary ml-4 h-8 min-h-0">Filter</button>
             </form>

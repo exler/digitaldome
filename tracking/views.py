@@ -2,7 +2,7 @@ from typing import Any, ClassVar, Dict, Self
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import QuerySet
+from django.db.models import OuterRef, QuerySet, Subquery
 from django.forms import ModelForm
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -63,14 +63,26 @@ class TrackingListView(
     template_name = "tracking/tracking_list.html"
     paginate_by = 20
     filterset_class = TrackingFilter
-    ordering_fields = ("rating", "-rating")
+    # AIDEV-NOTE: Use 'entity_name' (annotated field) instead of 'content_object__name' for sorting
+    ordering_fields = (
+        "rating",
+        "-rating",
+        "entity_name",
+        "-entity_name",
+        "updated_at",
+        "-updated_at",
+    )
 
     default_filter_values: ClassVar = {"status": TrackingObject.Status.IN_PROGRESS}
 
     def get_queryset(self: Self) -> QuerySet[TrackingObject]:
         content_type = ContentType.objects.get_for_model(self.model)
-        queryset = TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type).prefetch_related(
-            "content_object"
+        # AIDEV-NOTE: Annotate entity_name via Subquery since GenericForeignKey doesn't support reverse querying
+        entity_name_subquery = Subquery(self.model.objects.filter(pk=OuterRef("object_id")).values("name")[:1])
+        queryset = (
+            TrackingObject.objects.filter(user=self.dashboard_user, content_type=content_type)
+            .prefetch_related("content_object")
+            .annotate(entity_name=entity_name_subquery)
         )
         return self.order_queryset(queryset)
 

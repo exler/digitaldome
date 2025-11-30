@@ -1,10 +1,12 @@
 import factory
+from django.utils.text import slugify
 
 from entities.models import Book, Game, Movie, Show
 
 
 class EntityFactory(factory.django.DjangoModelFactory):
     name = factory.Faker("name")
+    slug = factory.LazyAttribute(lambda obj: slugify(obj.name))
     description = factory.Faker("text")
 
     wikipedia_url = factory.Faker("url")
