@@ -4,6 +4,9 @@ node_modules/
 ### VisualStudioCode ###
 .vscode/
 
+### Zed ###
+.zed/
+
 ### Django ###
 *.log
 *.pot
