@@ -1,6 +1,11 @@
 {% load static %}
-<footer class="footer footer-center p-4 mb-2 bg-gray-300 text-base-content">
-    <div>
-        <p>Copyright © Digital Dome {% now "Y" %} - All rights reserved</p>
+<footer class="border-t-3 border-black bg-white py-4 mt-8 mb-2">
+    <div class="flex items-center justify-between px-4">
+        <p class="text-sm font-bold">Copyright © Digital Dome {% now "Y" %}</p>
+        <div class="flex gap-2">
+            <div class="w-6 h-6 bg-neo-yellow border-2 border-black"></div>
+            <div class="w-6 h-6 bg-neo-pink border-2 border-black"></div>
+            <div class="w-6 h-6 bg-black border-2 border-black"></div>
+        </div>
     </div>
 </footer>

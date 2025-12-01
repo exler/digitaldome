@@ -1,8 +1,8 @@
+from itertools import chain
 from typing import Any, Self
 
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import QuerySet
-from django.db.models.expressions import Value
+from django.db.models import OuterRef, QuerySet, Subquery
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from django_filters.filterset import FilterSet
@@ -31,9 +31,22 @@ class EntitiesListView(ElidedPaginationMixin, DynamicEntityMixin, FilterView):
     def get_queryset(self: Self) -> QuerySet[EntityBase]:
         """
         Get queryset based on entity type passed in URL.
+        Annotate with tracking status if user is authenticated.
         """
+        queryset = super().get_queryset()
 
-        return super().get_queryset()
+        if self.request.user.is_authenticated:
+            # Get content type for this entity model
+            content_type = ContentType.objects.get_for_model(self.model)
+
+            # Subquery to get tracking status for each entity
+            tracking_status = TrackingObject.objects.filter(
+                user=self.request.user, content_type=content_type, object_id=OuterRef("pk")
+            ).values("status")[:1]
+
+            queryset = queryset.annotate(tracking_status=Subquery(tracking_status))
+
+        return queryset
 
 
 class EntitiesDetailView(DynamicEntityMixin, DetailView):
@@ -74,10 +87,19 @@ class EntitiesSearchView(ListView):
     def _prepare_queryset(self, model: type[EntityBase]) -> QuerySet[EntityBase]:
         filtered_qs = EntitySearchFilter(
             self.request.GET,
-            queryset=model.objects.annotate(entity_type=Value(model._meta.verbose_name)),
-        ).qs.values("id", "name", "image", "entity_type")
+            queryset=model.objects.all(),
+        ).qs
 
-        # Remove any ordering before union
+        # Add tracking status if user is authenticated
+        if self.request.user.is_authenticated:
+            content_type = ContentType.objects.get_for_model(model)
+            tracking_status = TrackingObject.objects.filter(
+                user=self.request.user, content_type=content_type, object_id=OuterRef("pk")
+            ).values("status")[:1]
+
+            filtered_qs = filtered_qs.annotate(tracking_status=Subquery(tracking_status))
+
+        # Remove any ordering before combining
         return filtered_qs.order_by()
 
     def get_queryset(self) -> QuerySet[EntityBase]:
@@ -91,19 +113,17 @@ class EntitiesSearchView(ListView):
             # to focus on rendering the page
             return []
 
+        # Get querysets for each model type
         movie_qs = self._prepare_queryset(Movie)
         show_qs = self._prepare_queryset(Show)
         game_qs = self._prepare_queryset(Game)
         book_qs = self._prepare_queryset(Book)
 
-        # Combine all querysets using union
-        unified_qs = movie_qs.union(show_qs, game_qs, book_qs)
+        # Combine all querysets - note: cannot use union() with full models
+        # so we'll chain them instead
+        combined = list(chain(movie_qs, show_qs, game_qs, book_qs))
 
-        # Order the unified queryset
-        unified_qs = unified_qs.order_by("name")
-
-        # Return the combined queryset
-        return unified_qs[:20]
+        return combined
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

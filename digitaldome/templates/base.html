@@ -10,7 +10,7 @@
             | Digital Dome
         </title>
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=inter:400,700" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=sora:400,700" rel="stylesheet" />
         <link rel="stylesheet" href="{% static 'css/base.css' %}" />
         <link rel="apple-touch-icon"
               href="{% static 'apple-touch-icon.png' %}"
@@ -28,18 +28,18 @@
         <script src="{% static 'js/alpinejs-3.13.0.min.js' %}" defer></script>
         <script src="{% static 'js/htmx-1.9.5.min.js' %}" defer></script>
     </head>
-    <body>
+    <body class="bg-gray-50">
         <div class="max-w-5xl mx-auto">
             {% include "partials/nav.html" %}
             <main class="container my-4 mx-auto px-2 md:px-0">
                 {% if messages %}
-                    <ul class="messages">
+                    <ul class="space-y-2 mb-4">
                         {% for message in messages %}
-                            <li class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                            <li class="border-3 border-black bg-neo-yellow p-3 font-bold text-sm flex items-center gap-2" style="box-shadow: 4px 4px 0px 0px #000;">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      fill="none"
                                      viewBox="0 0 24 24"
-                                     class="stroke-purple-700 shrink-0 w-6 h-6">
+                                     class="stroke-black shrink-0 w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                     </path>
                                 </svg>

@@ -1,9 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-    --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Sora', sans-serif;
+    --color-neo-yellow: #FFE500;
+    --color-neo-pink: #FF006E;
+    --color-neo-green: #06FF00;
+    --color-neo-purple: #8338EC;
 }
 
 @plugin "daisyui" {
     themes: winter --default;
+}
+
+/* Neobrutalist overrides */
+.btn {
+    @apply border-2 border-black font-bold uppercase text-sm;
+    box-shadow: 3px 3px 0px 0px #000;
+    transition: all 0.1s;
+}
+
+.btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px 0px #000;
+}
+
+.btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+.btn-primary {
+    @apply bg-neo-yellow text-black;
+}
+
+.btn-outline {
+    @apply bg-white;
+}
+
+.card-neo {
+    @apply border-3 border-black bg-white;
+    box-shadow: 5px 5px 0px 0px #000;
+}
+
+.input, .textarea, .select {
+    @apply border-2 border-black;
+}
+
+.badge {
+    @apply border-2 border-black font-bold uppercase text-xs px-2 py-1;
+}
+
+.badge-primary {
+    @apply bg-neo-pink text-white;
+}
+
+.badge-success {
+    @apply bg-neo-green text-black;
+}
+
+.neo-box {
+    @apply border-3 border-black bg-neo-yellow;
+    box-shadow: 4px 4px 0px 0px #000;
 }

@@ -4,11 +4,43 @@
     My Dashboard
 {% endblock title %}
 {% block content %}
-    <div class="flex flex-col gap-4">
-        {% include "users/partials/menu.html" %}
+    <div class="flex flex-col gap-6">
+        {# User header with neobrutalist design #}
+        <div class="p-6 mx-auto">
+            <div class="flex items-center gap-8">
+                {# Avatar circle with yellow accent #}
+                <div class="relative">
+                    <div class="w-24 h-24 rounded-full border-3 border-black bg-gray-300 overflow-hidden">
+                        <img src="{{ user.avatar_url }}"
+                             alt="{{ user.username }}"
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-neo-yellow border-2 border-black"></div>
+                </div>
+
+                <div>
+                    <h1 class="text-3xl font-bold">{{ user.username }}</h1>
+                    {% if user.is_staff %}
+                        <span class="inline-block mt-2 px-3 py-1 bg-neo-yellow border-2 border-black text-xs font-bold uppercase">Moderator</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Browse collections section #}
+        <div>
+            <h2 class="text-2xl font-bold mb-4 uppercase">Browse Collections</h2>
+            <div class="flex flex-wrap gap-3">
+                <a href="{% url 'tracking:tracking-list' user.id 'movies' %}" class="btn btn-primary">Movies</a>
+                <a href="{% url 'tracking:tracking-list' user.id 'books' %}" class="btn btn-primary">Books</a>
+                <a href="{% url 'tracking:tracking-list' user.id 'games' %}" class="btn btn-primary">Games</a>
+                <a href="{% url 'tracking:tracking-list' user.id 'shows' %}" class="btn btn-primary">Shows</a>
+            </div>
+        </div>
+
         {% if in_progress_list %}
             <div x-data="{ showAll: false }" class="flex flex-col gap-4">
-                <h2 class="text-2xl font-bold text-center md:text-left">In progress</h2>
+                <h2 class="text-2xl font-bold uppercase">Currently In Progress</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-y-2 md:gap-4 justify-items-center">
                     {% for object in in_progress_list %}
                         {% if forloop.counter <= 6 %}
@@ -30,17 +62,17 @@
                     </div>
                     <div class="flex justify-center">
                         <button @click="showAll = !showAll"
-                                class="btn w-full"
+                                class="btn btn-outline w-full"
                                 x-text="showAll ? 'Show less' : 'Show all'"></button>
                     </div>
                 {% endif %}
             </div>
         {% endif %}
         {% if completed_list %}
-            <h2 class="text-2xl font-bold text-center md:text-left">Recently Completed</h2>
+            <h2 class="text-2xl font-bold uppercase">Recently Completed</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-y-2 md:gap-4 justify-items-center">
                 {% for object in completed_list %}
-                    {% include "entities/partials/entity_item.html" with entity=object.content_object %}
+                    {% include "entities/partials/entity_item.html" with entity=object.content_object show_completed=True %}
                 {% endfor %}
             </div>
         {% endif %}

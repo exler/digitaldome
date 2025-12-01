@@ -5,7 +5,7 @@
 {% endblock title %}
 {% block content %}
     <!-- Back Button -->
-    <a href="javascript:history.back()" class="btn btn-outline btn-sm mb-6">
+    <a href="javascript:history.back()" class="btn btn-outline mb-4 text-xs">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -14,25 +14,29 @@
 
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Left Column: Image and Find It On -->
-        <div class="flex flex-col gap-6 md:w-64 shrink-0">
-            <!-- Image -->
-            <figure class="border border-base-300 rounded-box overflow-hidden">
-                <img width="256"
-                     height="384"
-                     class="w-full"
-                     src="{{ object.image|imageurl }}"
-                     alt="{{ object.name }}" />
-            </figure>
+        <div class="flex flex-col gap-4 md:w-64 shrink-0">
+            <!-- Image with neobrutalist border -->
+            <div class="relative">
+                <div class="absolute -right-2 -top-2 w-4 h-4 bg-neo-yellow border-2 border-black"></div>
+                <div class="absolute -left-2 -bottom-2 w-4 h-4 bg-neo-pink border-2 border-black"></div>
+                <figure class="border-3 border-black overflow-hidden bg-white">
+                    <img width="256"
+                         height="384"
+                         class="w-full"
+                         src="{{ object.image|imageurl }}"
+                         alt="{{ object.name }}" />
+                </figure>
+            </div>
 
             <!-- Find It On Section -->
             {% if object.ADDITIONAL_LINK_AS_ICON_FIELDS %}
-                <div class="border border-base-300 rounded-box p-4">
-                    <h3 class="font-bold text-sm uppercase mb-3">Find It On</h3>
+                <div class="border-3 border-black bg-white p-4">
+                    <h3 class="font-bold text-xs uppercase mb-3">Find It On</h3>
                     <div class="flex flex-wrap gap-2">
                         {% for field_icon_tuple in object.ADDITIONAL_LINK_AS_ICON_FIELDS %}
                             {% with url=object|getattr:field_icon_tuple.0 field_name=field_icon_tuple.0 %}
                                 {% if url %}
-                                    <a href="{{ url }}" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">
+                                    <a href="{{ url }}" class="btn btn-outline text-xs py-1 px-2" target="_blank" rel="noopener noreferrer">
                                         {{ field_name|cut:"_url"|title }}
                                     </a>
                                 {% endif %}
@@ -46,25 +50,25 @@
         <!-- Right Column: Main Content -->
         <div class="flex-1">
             <!-- Entity Type Badge and Edit Button -->
-            <div class="flex items-center gap-2 mb-2">
-                <span class="badge badge-primary uppercase font-bold">{{ object|verbosename }}</span>
+            <div class="flex items-center gap-2 mb-3">
+                <span class="badge badge-primary">{{ object|verbosename }}</span>
                 {% if user.is_staff %}
-                    <a href="{{ edit_url }}" class="btn btn-outline btn-sm uppercase">Edit</a>
+                    <a href="{{ edit_url }}" class="btn btn-outline text-xs py-1 px-2">Edit</a>
                 {% endif %}
             </div>
 
             <!-- Title -->
-            <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ object.name }}</h1>
+            <h1 class="text-3xl font-bold mb-4">{{ object.name }}</h1>
 
             <!-- Status and Rating Box -->
             <div x-data="{ statusDropdownOpen: false, ratingDropdownOpen: false, hoverIndex: null }"
-                 class="bg-warning p-4 border border-base-300 rounded-box mb-6">
+                 class="neo-box p-4 mb-6">
                 <div class="flex flex-col sm:flex-row justify-between gap-4">
                     <!-- Status Dropdown -->
                     <div class="relative">
-                        <label class="text-xs uppercase font-bold block mb-1">Status</label>
+                        <label class="text-xs uppercase font-bold block mb-2">Status</label>
                         <button @click="statusDropdownOpen = !statusDropdownOpen"
-                                class="btn btn-outline bg-white min-w-[160px] justify-between">
+                                class="btn btn-outline min-w-[160px] justify-between text-xs">
                             {% if tracking_obj %}
                                 {% if tracking_obj.status == 0 %}
                                     Planned
@@ -78,7 +82,7 @@
                                     On Hold
                                 {% endif %}
                             {% else %}
-                                Not Tracking
+                                Not Tracked
                             {% endif %}
                             <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -87,7 +91,8 @@
                         <div x-show="statusDropdownOpen"
                              @click.away="statusDropdownOpen = false"
                              x-transition
-                             class="absolute z-50 mt-1 bg-white border border-base-300 rounded-box shadow-lg min-w-[160px]"
+                             class="absolute z-50 mt-1 bg-white border-3 border-black min-w-[160px]"
+                             style="box-shadow: 3px 3px 0px 0px #000;"
                              x-cloak>
                             {% if tracking_obj.status != 0 %}
                                 <button hx-post="{% url 'tracking:track' object|verbosename object.id %}"
@@ -95,7 +100,7 @@
                                         hx-vals='{"status": "0"}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100 first:rounded-t-box">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase">
                                     Planned
                                 </button>
                             {% endif %}
@@ -105,7 +110,7 @@
                                         hx-vals='{"status": "1"}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase">
                                     In Progress
                                 </button>
                             {% endif %}
@@ -115,7 +120,7 @@
                                         hx-vals='{"status": "2"}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase">
                                     Completed
                                 </button>
                             {% endif %}
@@ -125,7 +130,7 @@
                                         hx-vals='{"status": "3"}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase">
                                     Dropped
                                 </button>
                             {% endif %}
@@ -135,17 +140,17 @@
                                         hx-vals='{"status": "4"}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase">
                                     On Hold
                                 </button>
                             {% endif %}
                             {% if tracking_obj %}
-                                <div class="border-t border-base-300"></div>
+                                <div class="border-t-2 border-black"></div>
                                 <button hx-delete="{% url 'tracking:tracking-delete' object|verbosename object.id %}"
                                         hx-trigger="click"
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="block w-full text-left px-4 py-2 hover:bg-neutral-100 text-error last:rounded-b-box">
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 text-error text-xs font-bold uppercase">
                                     Remove from list
                                 </button>
                             {% endif %}
@@ -154,9 +159,9 @@
 
                     <!-- Rating -->
                     <div class="relative">
-                        <label class="text-xs uppercase font-bold block mb-1 text-right">Your Rating</label>
+                        <label class="text-xs uppercase font-bold block mb-2 text-right">Your Rating</label>
                         <div class="flex items-center gap-1">
-                            {% for i in "AAAA" %}
+                            {% for i in "XXXXX" %}
                                 {% comment %} djlint:off T001 {% endcomment %}
                                 <button @click="ratingDropdownOpen = true"
                                         @mouseover="hoverIndex = {{ forloop.counter }}"
@@ -166,7 +171,7 @@
                                         hx-vals='{"rating": {{ forloop.counter }}}'
                                         hx-target="body"
                                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                        class="w-8 h-8 border border-base-300 rounded-field bg-white flex items-center justify-center hover:bg-neutral-100">
+                                        class="w-8 h-8 border-2 border-black bg-white flex items-center justify-center hover:bg-gray-100">
                                     <svg :class="(hoverIndex && {{ forloop.counter }} <= hoverIndex) || ({{ tracking_obj.rating|default:0 }} >= {{ forloop.counter }}) ? 'text-black' : 'text-gray-300'"
                                          class="w-5 h-5"
                                          viewBox="0 0 24 24"
@@ -178,9 +183,9 @@
                                 {% comment %} djlint:on T001 {% endcomment %}
                             {% endfor %}
                         </div>
-                        <span class="text-xs block text-right mt-1">
+                        <span class="text-xs block text-right mt-1 font-bold">
                             {% if tracking_obj.rating %}
-                                {{ tracking_obj.rating }}/4
+                                {{ tracking_obj.rating }}/5
                             {% else %}
                                 No rating
                             {% endif %}
@@ -191,36 +196,27 @@
 
             <!-- Description -->
             <div class="mb-6">
-                <h2 class="text-lg font-bold uppercase mb-2">Description</h2>
-                <p class="text-gray-700">{{ object.description|default:"No description available." }}</p>
+                <h2 class="text-base font-bold uppercase mb-3">Description</h2>
+                <p class="text-sm text-gray-700">{{ object.description|default:"No description available." }}</p>
             </div>
 
             <!-- Metadata Fields Grid -->
             {% if object.ADDITIONAL_DETAIL_FIELDS %}
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
                     {% for detail_field in object.ADDITIONAL_DETAIL_FIELDS %}
-                        <div class="border border-base-300 rounded-box p-3">
-                            <label class="text-xs uppercase text-gray-500 block">{{ object|fieldlabel:detail_field|title }}</label>
-                            <span class="font-medium">{{ object|detailfieldhtml:detail_field|default:"n/a" }}</span>
+                        <div class="border-2 border-black bg-white p-3">
+                            <label class="text-xs uppercase text-gray-500 block font-bold mb-1">{{ object|fieldlabel:detail_field|title }}</label>
+                            <span class="text-sm font-medium">{{ object|detailfieldhtml:detail_field|default:"n/a" }}</span>
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
 
-            <!-- Tags -->
-            {% if object.tags.all %}
-                <div class="flex flex-wrap gap-2 mb-6">
-                    {% for tag in object.tags.all %}
-                        <span class="badge badge-outline">{{ tag }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
             <!-- Notes Section -->
-            <div class="border border-base-300 rounded-box p-4">
-                <h2 class="text-lg font-bold uppercase mb-3">Your Notes</h2>
+            <div class="border-3 border-black bg-white p-4">
+                <h2 class="text-base font-bold uppercase mb-3">Your Notes</h2>
                 <form>
-                    <textarea class="textarea textarea-bordered w-full bg-white h-32"
+                    <textarea class="w-full border-2 border-black px-3 py-2 h-32 text-sm"
                               placeholder="Add your personal notes about this media..."
                               id="notes-textarea"
                               name="notes">{% if tracking_obj %}{{ tracking_obj.notes }}{% endif %}</textarea>
@@ -228,7 +224,7 @@
                             hx-trigger="click"
                             hx-target="body"
                             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                            class="btn btn-warning mt-3 uppercase font-bold">
+                            class="btn btn-primary mt-3">
                         Save Notes
                     </button>
                 </form>

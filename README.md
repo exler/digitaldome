@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="digitaldome/static/img/logo.png" width="180">
+    <img src="digitaldome/static/img/logo.svg" width="180">
     <h3 align="center">Digital Dome</h3>
     <p align="center">⏺️ Comprehensive media tracker</p>
 </p>
