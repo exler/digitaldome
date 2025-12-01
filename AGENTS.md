@@ -8,23 +8,7 @@
 
 ## 0. Project overview
 
-Placemarker is a MPA application to collect and rate various media, including but not limited to: games, movies, shows, books. The application is made so that more media types can be accommodated if needed. It is a Django application using Django templates with HTMX + AlpineJS + TailwindCSS for the frontend, SQLite as the database and Backblaze B2 for user-uploaded file storage.
-
-### Design System
-
-The application uses a **neobrutalist design** with the following characteristics:
-- **Colors**: Yellow (#FFE500), Pink (#FF006E), Green (#06FF00), Purple (#8338EC)
-- **Typography**: Bold, black text with small font sizes (text-xs, text-sm)
-- **Borders**: Thick black borders (border-2, border-3) with offset shadows
-- **Buttons**: Colored backgrounds with black borders and box-shadow offsets
-- **Cards**: White backgrounds with thick black borders and colored accents
-- **Interactive elements**: Transform on hover/active states to create depth effect
-- **Status badges**: Show tracking status in top-right corner of entity cards:
-  - **Completed** (status=2): Green square with checkmark ✓
-  - **Planned** (status=0): Yellow square with eye icon 👁
-  - **In Progress** (status=1): Pink square with play button ▶
-  - **Dropped** (status=3): Gray square with thumbs down 👎
-  - **On Hold** (status=4): Purple square with pause button ⏸
+Placemarker is a MPA application to collect and rate various media, including but not limited to: games, movies, shows, books. The application is made so that more media types can be accommodated if needed. It is a Django application using Django templates with HTMX + AlpineJS + TailwindCSS for the frontend, SQLite as the database and Backblaze B2 for user-uploaded file storage. The application uses a neobrutalist design.
 
 ---
 
@@ -53,7 +37,7 @@ bun run compile
 ## 2. Coding standards
 
 * **Python**: Use type hinting whenever possible
-* **DaisyUI**: Use DaisyUI components where possible to maintain consistent styling
+* **TailwindCSS**: Use custom component classes (`.btn`, `.badge`, etc.) defined in `base.tailwind` for consistent neobrutalist styling
 
 ---
 

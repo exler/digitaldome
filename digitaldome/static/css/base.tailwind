@@ -8,13 +8,9 @@
     --color-neo-purple: #8338EC;
 }
 
-@plugin "daisyui" {
-    themes: winter --default;
-}
-
-/* Neobrutalist overrides */
+/* AIDEV-NOTE: Neobrutalist button styles with offset shadow effect */
 .btn {
-    @apply border-2 border-black font-bold uppercase text-sm;
+    @apply inline-flex items-center justify-center border-2 border-black font-bold uppercase text-sm px-3 py-2 bg-white;
     box-shadow: 3px 3px 0px 0px #000;
     transition: all 0.1s;
 }
@@ -34,20 +30,23 @@
 }
 
 .btn-outline {
-    @apply bg-white;
+    @apply bg-white text-black;
 }
 
+/* AIDEV-NOTE: Neobrutalist card with thick border and shadow */
 .card-neo {
     @apply border-3 border-black bg-white;
     box-shadow: 5px 5px 0px 0px #000;
 }
 
+/* AIDEV-NOTE: Form input styles matching neobrutalist design */
 .input, .textarea, .select {
-    @apply border-2 border-black;
+    @apply border-2 border-black px-3 py-2 bg-white text-sm;
 }
 
+/* AIDEV-NOTE: Badge styles for status indicators */
 .badge {
-    @apply border-2 border-black font-bold uppercase text-xs px-2 py-1;
+    @apply inline-flex items-center border-2 border-black font-bold uppercase text-xs px-2 py-1;
 }
 
 .badge-primary {
@@ -58,6 +57,11 @@
     @apply bg-neo-green text-black;
 }
 
+.badge-warning {
+    @apply bg-neo-yellow text-black;
+}
+
+/* AIDEV-NOTE: Colored box container for status/rating sections */
 .neo-box {
     @apply border-3 border-black bg-neo-yellow;
     box-shadow: 4px 4px 0px 0px #000;
