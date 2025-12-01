@@ -1,0 +1,38 @@
+{% load digitaldome_tags entities %}
+{# AIDEV-NOTE: Entity card component with colored border accent matching entity type #}
+<div class="w-40">
+    <div class="relative">
+        {# Colored border accents #}
+        <div class="absolute right-0 top-0 bottom-0 w-2 translate-x-full" style="background-color: {{ entity.COLOR }}"></div>
+        <div class="absolute left-0 bottom-0 right-0 h-2 translate-y-full" style="background-color: {{ entity.COLOR }}"></div>
+
+        {# Main card with black border #}
+        <div class="border-4 border-black relative">
+        {# Image container #}
+        <div class="relative aspect-[2/3] bg-neutral-200">
+            <img src="{{ entity.image|imageurl }}"
+                 alt="{{ entity.name }}"
+                 class="w-full h-full object-cover" />
+        </div>
+
+        {# Content section with black background #}
+        <div class="bg-black text-white p-3 space-y-2">
+            {# Entity type badge #}
+            <div class="inline-block">
+                <span class="px-2 py-1 text-xs font-bold uppercase"
+                      style="background-color: {{ entity.COLOR }}">
+                    {{ entity|verbosename }}
+                </span>
+            </div>
+
+            {# Entity title #}
+            <h3 class="text-sm font-bold line-clamp-2">{{ entity.name }}</h3>
+        </div>
+
+        {# Clickable overlay #}
+        <a href="{% url 'entities:entities-detail' entity|verbosename entity.id %}"
+           class="absolute inset-0 z-10"
+           aria-label="View {{ entity.name }}"></a>
+        </div>
+    </div>
+</div>
