@@ -398,6 +398,9 @@
   .h-full {
     height: 100%;
   }
+  .max-h-96 {
+    max-height: calc(var(--spacing) * 96);
+  }
   .w-1\.5 {
     width: calc(var(--spacing) * 1.5);
   }
@@ -677,6 +680,9 @@
   }
   .stroke-black {
     stroke: var(--color-black);
+  }
+  .object-contain {
+    object-fit: contain;
   }
   .object-cover {
     object-fit: cover;
