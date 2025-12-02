@@ -118,7 +118,17 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
-        }
+        },
+        "botocore": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "boto3": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
