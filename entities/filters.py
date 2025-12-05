@@ -1,7 +1,7 @@
 from typing import ClassVar, Self
 
 import django_filters
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django_filters.filterset import FilterSet
 
 from entities.models import Book, EntityBase, Game, Movie, Show
@@ -14,7 +14,7 @@ class EntityBaseFilter(FilterSet):
         fields: ClassVar = ["search"]
 
     def search_filter(self: Self, queryset: QuerySet[EntityBase], name: str, value: str) -> QuerySet[EntityBase]:
-        return queryset.filter(name__icontains=value)
+        return queryset.filter(Q(name__icontains=value) | Q(aliases__icontains=value))
 
 
 class MovieFilter(EntityBaseFilter):
@@ -44,4 +44,4 @@ class EntitySearchFilter(FilterSet):
         fields: ClassVar = ["search"]
 
     def search_filter(self: Self, queryset: QuerySet[EntityBase], name: str, value: str) -> QuerySet[EntityBase]:
-        return queryset.filter(name__icontains=value)
+        return queryset.filter(Q(name__icontains=value) | Q(aliases__icontains=value))

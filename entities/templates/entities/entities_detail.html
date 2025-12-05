@@ -58,7 +58,14 @@
             </div>
 
             <!-- Title -->
-            <h1 class="text-3xl font-bold mb-4">{{ object.name }}</h1>
+            <h1 class="text-3xl font-bold mb-2">{{ object.name }}</h1>
+
+            <!-- Aliases -->
+            {% if object.aliases %}
+                <p class="text-sm text-gray-500 mb-4 italic">
+                    Alternative titles: {{ object.aliases|join:", " }}
+                </p>
+            {% endif %}
 
             <!-- Status and Rating Box -->
             <div x-data="{ statusDropdownOpen: false, ratingDropdownOpen: false, hoverIndex: null }"

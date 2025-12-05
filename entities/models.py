@@ -105,7 +105,22 @@ class Platform(TimestampedModel):
 
 
 class EntityQueryset(models.QuerySet):
-    pass
+    def get_with_aliases(self: Self, value: str) -> Self:
+        """
+        Get an entity by its name or any of its aliases, case-insensitively.
+        """
+        normalized_value = value.casefold()
+        try:
+            return self.get(name__iexact=value)
+        except self.model.DoesNotExist:
+            for obj in self.exclude(aliases=[]).only("id", "aliases"):
+                aliases = getattr(obj, "aliases", []) or []
+                if any(isinstance(alias, str) and alias.casefold() == normalized_value for alias in aliases):
+                    return obj
+
+            raise self.model.DoesNotExist(
+                f"{self.model._meta.object_name} matching alias {value!r} does not exist."
+            ) from None
 
 
 def image_upload_destination(instance: models.Model, filename: str) -> str:
@@ -118,6 +133,12 @@ class EntityBase(TimestampedModel):
     name = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
+
+    aliases = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Alternative names for this entity (e.g., translations, original titles)",
+    )
 
     image = models.ImageField(upload_to=image_upload_destination, blank=True)
 

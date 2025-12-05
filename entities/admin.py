@@ -117,7 +117,7 @@ class EntityBaseAdmin(admin.ModelAdmin):
     change_form_template = "entities/admin/change_form.html"
 
     list_display = ("__str__", "thumbnail")
-    search_fields = ("name",)
+    search_fields = ("name", "aliases")
     autocomplete_fields = ("tags",)
     prepopulated_fields: ClassVar = {"slug": ("name",)}
 
