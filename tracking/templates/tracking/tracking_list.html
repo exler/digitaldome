@@ -10,13 +10,13 @@
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <div class="w-20 h-20 rounded-full border-3 border-black bg-gray-300 overflow-hidden">
-                        <img src="{{ user.avatar_url }}" 
+                        <img src="{{ user.avatar_url }}"
                              alt="{{ user.username }}"
                              class="w-full h-full object-cover">
                     </div>
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-neo-yellow border-2 border-black"></div>
                 </div>
-                
+
                 <div>
                     <h1 class="text-2xl font-bold">{{ user.username }}</h1>
                     {% if user.is_staff %}
@@ -24,24 +24,24 @@
                     {% endif %}
                 </div>
             </div>
-            
+
             {# Navigation tabs #}
             <div class="flex flex-wrap gap-2 mt-4">
                 <a href="{% url 'tracking:dashboard' user.id %}" class="btn btn-outline text-xs py-1 px-3">Dashboard</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'movies' %}" 
+                <a href="{% url 'tracking:tracking-list' user.id 'movies' %}"
                    class="btn {% if entity_type == 'movies' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Movies</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'shows' %}" 
+                <a href="{% url 'tracking:tracking-list' user.id 'shows' %}"
                    class="btn {% if entity_type == 'shows' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Shows</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'games' %}" 
+                <a href="{% url 'tracking:tracking-list' user.id 'games' %}"
                    class="btn {% if entity_type == 'games' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Games</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'books' %}" 
+                <a href="{% url 'tracking:tracking-list' user.id 'books' %}"
                    class="btn {% if entity_type == 'books' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Books</a>
             </div>
         </div>
 
         <div class="flex flex-col gap-4">
             <h2 class="text-2xl font-bold uppercase">{{ entity_type|title }}</h2>
-            
+
             {# Filters #}
             <form method="get" class="flex flex-wrap gap-2">
                 <select name="{{ filter.form.status.name }}"
@@ -73,20 +73,20 @@
                 </select>
                 <button type="submit" class="btn btn-primary text-xs">Filter</button>
             </form>
-            
+
             {# List view #}
             <div class="border-3 border-black bg-white" style="box-shadow: 4px 4px 0px 0px #000;">
-                <div class="grid grid-cols-[3rem_4rem_1fr_8rem_5rem] gap-2 p-2 bg-gray-100 border-b-2 border-black font-bold text-xs uppercase">
+                <div class="grid grid-cols-[3rem_4rem_1fr_8rem_5rem] p-2 bg-gray-100 border-b-2 border-black font-bold text-xs uppercase">
                     <div class="text-center">#</div>
                     <div></div>
                     <div class="text-left">Title</div>
                     <div class="text-center">Status</div>
                     <div class="text-center">Rating</div>
                 </div>
-                
+
                 {% for object in page_obj %}
                     <a href="{% url 'entities:entities-detail' entity_type object.object_id %}"
-                       class="grid grid-cols-[3rem_4rem_1fr_8rem_5rem] gap-2 p-2 hover:bg-gray-50 border-b border-gray-200 items-center">
+                       class="grid grid-cols-[3rem_4rem_1fr_8rem_5rem] p-2 hover:bg-gray-50 border-b border-gray-200 items-center">
                         <div class="text-center text-sm font-bold">{{ forloop.counter0|add:page_obj.start_index }}</div>
                         <div>
                             <img src="{{ object.content_object.image|imageurl }}"
@@ -112,7 +112,7 @@
                     <div class="col-span-5 text-center p-8 text-sm font-bold uppercase">No tracked items.</div>
                 {% endfor %}
             </div>
-            
+
             {% if page_obj.has_other_pages %}
                 {% include "partials/pagination.html" %}
             {% endif %}
