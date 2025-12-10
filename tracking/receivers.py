@@ -16,5 +16,6 @@ from tracking.models import TrackingObject
 def delete_tracking_objects_on_parent_deletion(sender: type[EntityBase], instance: EntityBase, **kwargs: Any) -> None:
     """Delete all TrackingObjects related to the parent object when it's deleted."""
 
+    instance_id = instance.id  # Capture instance ID before the instance is deleted
     content_type = ContentType.objects.get_for_model(sender)
-    on_commit(lambda: TrackingObject.objects.filter(object_id=instance.id, content_type=content_type).delete())
+    on_commit(lambda: TrackingObject.objects.filter(object_id=instance_id, content_type=content_type).delete())
