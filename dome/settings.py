@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
 
-from digitaldome.utils.env import get_env_bool, get_env_float, get_env_int, get_env_list, get_env_str
+from dome.utils.env import get_env_bool, get_env_float, get_env_int, get_env_list, get_env_str
 
 load_dotenv()
 
@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "digitaldome",
+    "dome",
     "users",
     "entities",
     "tracking",
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "digitaldome.urls"
+ROOT_URLCONF = "dome.urls"
 
 TEMPLATES = [
     {
@@ -66,13 +66,13 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "digitaldome.context_processors.base_url_processor",
+                "dome.context_processors.base_url_processor",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "digitaldome.wsgi.application"
+WSGI_APPLICATION = "dome.wsgi.application"
 
 # Sentry #
 # https://docs.sentry.io/platforms/python/integrations/django/
@@ -98,7 +98,7 @@ LOGGING = {
     },
     "formatters": {
         "verbose": {
-            "()": "digitaldome.formatters.ExtraFormatter",
+            "()": "dome.formatters.ExtraFormatter",
             "format": "[{asctime}] [{levelname}] [{name}] [{module}] {message}",
             "style": "{",
         },

@@ -1,4 +1,4 @@
-{% load digitaldome_tags %}
+{% load dome_tags %}
 <div class="{% if page_obj.has_next or page_obj.has_previous %}flex gap-1 {% endif %} mt-6 flex-row justify-center">
     {% if page_obj.has_previous %}
         <a href="{% merge_query_params page=page_obj.previous_page_number %}"

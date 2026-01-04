@@ -13,8 +13,8 @@ class IndexView(RedirectView):
 class ManifestView(View):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         data = {
-            "name": "Digital Dome",
-            "short_name": "Digital Dome",
+            "name": "Dome",
+            "short_name": "Dome",
             "description": "Comprehensive media tracker",
             "start_url": "/",
             "display": "standalone",

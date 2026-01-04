@@ -1,5 +1,5 @@
 [project]
-name = "digitaldome"
+name = "dome"
 version = "0.1.0"
 description = "Comprehensive media tracker"
 readme = "README.md"

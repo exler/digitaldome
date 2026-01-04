@@ -8,7 +8,7 @@ from django.views.generic import DetailView, ListView
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
-from digitaldome.common.mixins import ElidedPaginationMixin
+from dome.common.mixins import ElidedPaginationMixin
 from entities.filters import EntitySearchFilter
 from entities.mappings import ENTITY_MODEL_TO_FILTER_MAPPING
 from entities.mixins import DynamicEntityMixin

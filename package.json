@@ -1,10 +1,10 @@
 {
-    "name": "digitaldome",
+    "name": "dome",
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "compile": "tailwindcss -i digitaldome/static/css/base.tailwind -o digitaldome/static/css/base.css",
-        "watch": "tailwindcss -i digitaldome/static/css/base.tailwind -o digitaldome/static/css/base.css --watch"
+        "compile": "tailwindcss -i dome/static/css/base.tailwind -o dome/static/css/base.css",
+        "watch": "tailwindcss -i dome/static/css/base.tailwind -o dome/static/css/base.css --watch"
     },
     "devDependencies": {
         "@tailwindcss/cli": "^4.1.17",

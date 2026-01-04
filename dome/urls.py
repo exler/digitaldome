@@ -5,7 +5,7 @@ from django.urls import include, path
 from django.views.defaults import page_not_found
 from django.views.generic import TemplateView
 
-from digitaldome.views import IndexView, ManifestView
+from dome.views import IndexView, ManifestView
 
 urlpatterns = [
     *[

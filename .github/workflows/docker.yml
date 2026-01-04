@@ -11,7 +11,7 @@ on:
             - v*
 
 env:
-    IMAGE_NAME: digitaldome
+    IMAGE_NAME: dome
 
 jobs:
     push:

@@ -1,14 +1,14 @@
 services:
-  web:
-    build: .
-    command: server
-    volumes:
-      - .:/app
-      - digitaldome_data:/app/data
-    ports:
-      - "8000:8000"
-    environment:
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+    web:
+        build: .
+        command: server
+        volumes:
+            - .:/app
+            - dome_data:/app/data
+        ports:
+            - "8000:8000"
+        environment:
+            - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 
 volumes:
-  digitaldome_data:
+    dome_data:

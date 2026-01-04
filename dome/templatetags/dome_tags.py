@@ -8,7 +8,7 @@ from django.http import HttpRequest
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import SafeString
 
-from digitaldome.utils.url import get_full_url
+from dome.utils.url import get_full_url
 
 register = template.Library()
 

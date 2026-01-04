@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
-from digitaldome.common.models import TimestampedModel
+from dome.common.models import TimestampedModel
 
 
 class TrackingObject(TimestampedModel):

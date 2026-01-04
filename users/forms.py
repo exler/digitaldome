@@ -3,8 +3,8 @@ from typing import ClassVar, Self
 from django import forms
 from django.templatetags.static import static
 
-from digitaldome.common.widgets import ClearableFileInputWithImagePreview
-from digitaldome.utils.image import resize_and_crop_image
+from dome.common.widgets import ClearableFileInputWithImagePreview
+from dome.utils.image import resize_and_crop_image
 from users.models import User
 
 

@@ -11,7 +11,7 @@ from django.views.generic.edit import DeleteView, ModelFormMixin, ProcessFormVie
 from django_filters.filterset import FilterSet
 from django_filters.views import FilterView
 
-from digitaldome.common.mixins import DefaultFilterMixin, DynamicOrderingMixin, ElidedPaginationMixin
+from dome.common.mixins import DefaultFilterMixin, DynamicOrderingMixin, ElidedPaginationMixin
 from entities.mixins import DynamicEntityMixin
 from tracking.forms import TrackingObjectForm
 from tracking.mixins import TrackingObjectMixin

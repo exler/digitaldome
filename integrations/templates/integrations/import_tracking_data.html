@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load digitaldome_tags %}
+{% load dome_tags %}
 {% block title %}
     Import/export library
 {% endblock title %}
@@ -16,7 +16,7 @@
                     {{ form.non_field_errors }}
                     <div>
                         <label class="block text-xs font-bold uppercase mb-2">{{ form.import_format.label }}</label>
-                        <select name="{{ form.import_format.name }}" 
+                        <select name="{{ form.import_format.name }}"
                                 class="w-full border-2 border-black px-3 py-2 text-sm font-bold bg-white">
                             {% for value, label in form.import_format.field.choices %}
                                 <option value="{{ value }}" {% if form.import_format.value == value %}selected{% endif %}>
@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase mb-2">{{ form.import_file.label }}</label>
-                        <input type="file" 
+                        <input type="file"
                                name="{{ form.import_file.name }}"
                                class="w-full border-2 border-black px-3 py-2 text-sm bg-white file:mr-4 file:py-1 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-neo-yellow file:text-black">
                         {{ form.import_file.errors }}
@@ -36,7 +36,7 @@
                     <button class="btn btn-primary w-full">Import</button>
                 </form>
             </div>
-            
+
             <div class="border-3 border-black bg-white p-6" style="box-shadow: 4px 4px 0px 0px #000;">
                 <h2 class="text-lg font-bold uppercase mb-2">Export</h2>
                 <p class="text-sm text-gray-600 mb-4">Export all tracking data as a CSV file.</p>

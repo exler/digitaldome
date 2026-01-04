@@ -1,4 +1,4 @@
-# AGENTS.md Digital Dome  
+# AGENTS.md Dome  
 
 > **purpose** – This file is the onboarding manual for every AI assistant (Claude, Cursor, GPT, etc.) and every human who edits this repository.
 
@@ -45,8 +45,8 @@ bun run compile
 
 | Directory             | Description                                                                                   |
 | --------------------- | --------------------------------------------------------------------------------------------- |
-| `digitaldome/`        | Django settings, views that do not fit any domain logic                                       |
-| `digitaldome/common/` | Reusable components (e.g., template tags, filters) that do not fit any specific app's domain  |
+| `dome/`        | Django settings, views that do not fit any domain logic                                       |
+| `dome/common/` | Reusable components (e.g., template tags, filters) that do not fit any specific app's domain  |
 | `entities/`           | Django app for media entities (games, movies, etc.) logic                                     |
 | `users/`              | Django app for user management (profiles, authentication, etc.)                               |
 | `tracking`            | Django app for tracking user interactions with media entities (status, ratings)               |

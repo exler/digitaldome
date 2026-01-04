@@ -1,18 +1,18 @@
 <p align="center">
-    <img src="digitaldome/static/img/logo.svg" width="180">
-    <h3 align="center">Digital Dome</h3>
+    <img src="dome/static/img/logo.png" width="180">
+    <h3 align="center">dome</h3>
     <p align="center">⏺️ Comprehensive media tracker</p>
 </p>
 
-Digital Dome is a comprehensive media tracking service designed to handle a diverse range of entities.
+Dome is a comprehensive media tracking service designed to handle a diverse range of entities.
 
 ## Install
 
-You can set up Digital Dome using Docker or run it locally.
+You can set up Dome using Docker or run it locally.
 
 ### Docker
 
-To set up Digital Dome using Docker, follow these steps:
+To set up Dome using Docker, follow these steps:
 
 * Clone the repository and navigate to the project directory.
 * Run `docker compose up` to start all containers

@@ -9,7 +9,7 @@ from django.db.models.functions import Lower
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from digitaldome.common.models import TimestampedModel
+from dome.common.models import TimestampedModel
 from entities.helpers import format_time_spent
 
 ### Near-constant models ###

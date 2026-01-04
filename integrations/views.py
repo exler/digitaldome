@@ -34,5 +34,5 @@ class ImportTrackingDataView(LoginRequiredMixin, FormView):
 
 class ExportTrackingDataView(LoginRequiredMixin, View):
     def get(self: Self, request: HttpRequest) -> HttpResponse:
-        exporter = Exporter(request.user, f"digitaldome_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
+        exporter = Exporter(request.user, f"dome_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}")
         return exporter.get_streaming_response()
