@@ -1,6 +1,6 @@
 <p align="center">
     <img src="dome/static/img/logo.png" width="180">
-    <h3 align="center">dome</h3>
+    <h3 align="center">Dome</h3>
     <p align="center">⏺️ Comprehensive media tracker</p>
 </p>
 

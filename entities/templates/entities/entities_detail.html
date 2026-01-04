@@ -4,19 +4,22 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
-    <!-- Back Button -->
-    <a href="javascript:history.back()" class="btn btn-outline mb-4 text-xs">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back
-    </a>
+    <!-- Back Button and Entity Type Badge -->
+    <div class="flex items-center justify-between mb-4">
+        <a href="javascript:history.back()" class="btn btn-outline text-xs">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back
+        </a>
+        <span class="badge text-black" style="background-color: {{ object.COLOR }};">{{ object|verbosename }}</span>
+    </div>
 
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Left Column: Image and Find It On -->
         <div class="flex flex-col gap-4 md:w-64 shrink-0">
             <!-- Image with neobrutalist border -->
-            <div class="relative flex justify-center">
+            <div class="relative flex justify-center w-fit self-center">
                 <div class="absolute -right-2 -top-2 w-4 h-4 bg-neo-yellow border-2 border-black"></div>
                 <div class="absolute -left-2 -bottom-2 w-4 h-4 bg-neo-pink border-2 border-black"></div>
                 <figure class="border-3 border-black overflow-hidden bg-white inline-block max-w-full">
@@ -49,12 +52,18 @@
 
         <!-- Right Column: Main Content -->
         <div class="flex-1">
-            <!-- Entity Type Badge and Edit Button -->
-            <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-primary">{{ object|verbosename }}</span>
+            <!-- Edit and Share Buttons -->
+            <div class="flex items-center gap-2 mb-3" x-data="{ copied: false }">
                 {% if user.is_staff %}
                     <a href="{{ edit_url }}" class="btn btn-outline text-xs py-1 px-2">Edit</a>
                 {% endif %}
+                <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)"
+                        class="btn btn-outline text-xs py-1 px-2 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22" />
+                            </svg>
+                    <span x-text="copied ? 'Copied!' : 'Share'"></span>
+                </button>
             </div>
 
             <!-- Title -->
