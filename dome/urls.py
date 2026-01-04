@@ -15,7 +15,7 @@ urlpatterns = [
         path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots"),
         path("", include("users.urls")),
         path("entities/", include("entities.urls")),
-        path("user/", include("tracking.urls")),
+        path("", include("tracking.urls")),
         path("integrations/", include("integrations.urls")),
     ],
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),

@@ -42,7 +42,7 @@ class LoginView(FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self: Self) -> str:
-        return reverse("tracking:dashboard", kwargs={"user_id": self.request.user.id})
+        return reverse("tracking:dashboard", kwargs={"username": self.request.user.username})
 
 
 class LogoutView(RedirectView):

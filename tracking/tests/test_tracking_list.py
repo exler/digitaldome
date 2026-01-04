@@ -47,7 +47,7 @@ class TrackingListViewOrderingTestCase(TestCase):
         self.client.force_login(self.user)
 
     def _get_tracking_list_url(self: Self, ordering: str | None = None) -> str:
-        url = reverse("tracking:tracking-list", kwargs={"user_id": self.user.id, "entity_type": "movie"})
+        url = reverse("tracking:tracking-list", kwargs={"username": self.user.username, "entity_type": "movie"})
         if ordering:
             url += f"?ordering={ordering}"
         return url

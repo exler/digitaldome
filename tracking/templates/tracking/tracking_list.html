@@ -27,14 +27,14 @@
 
             {# Navigation tabs #}
             <div class="flex flex-wrap gap-2 mt-4">
-                <a href="{% url 'tracking:dashboard' user.id %}" class="btn btn-outline text-xs py-1 px-3">Dashboard</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'movies' %}"
+                <a href="{% url 'tracking:dashboard' user.username %}" class="btn btn-outline text-xs py-1 px-3">Dashboard</a>
+                <a href="{% url 'tracking:tracking-list' user.username 'movies' %}"
                    class="btn {% if entity_type == 'movies' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Movies</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'shows' %}"
+                <a href="{% url 'tracking:tracking-list' user.username 'shows' %}"
                    class="btn {% if entity_type == 'shows' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Shows</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'games' %}"
+                <a href="{% url 'tracking:tracking-list' user.username 'games' %}"
                    class="btn {% if entity_type == 'games' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Games</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'books' %}"
+                <a href="{% url 'tracking:tracking-list' user.username 'books' %}"
                    class="btn {% if entity_type == 'books' %}btn-primary{% else %}btn-outline{% endif %} text-xs py-1 px-3">Books</a>
             </div>
         </div>
@@ -93,7 +93,7 @@
                                  class="w-12 h-16 object-cover border-2 border-black"
                                  alt="{{ object.content_object.name }}">
                         </div>
-                        <div class="text-sm font-bold">{{ object.content_object.name }}</div>
+                        <div class="text-sm font-bold break-all">{{ object.content_object.name }}</div>
                         <div class="text-center text-xs font-bold uppercase">{{ object.get_status_display }}</div>
                         <div class="text-center">
                             {% if object.rating %}

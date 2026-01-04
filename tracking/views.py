@@ -22,7 +22,7 @@ from users.models import User
 class UserDashboardMixin:
     def setup(self: Self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
         super().setup(request, *args, **kwargs)
-        self.dashboard_user = get_object_or_404(User.objects.active(), pk=self.kwargs["user_id"])
+        self.dashboard_user = get_object_or_404(User.objects.active(), username=self.kwargs["username"])
 
     def get_context_data(self: Self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)

@@ -8,9 +8,9 @@
     {% if user.is_staff %}<div class="badge badge-warning mt-4">Moderator</div>{% endif %}
 </div>
 <div class="flex flex-row flex-wrap justify-center items-center gap-8">
-    <a href="{% url 'tracking:dashboard' user.id %}">Dashboard</a>
-    <a href="{% url 'tracking:tracking-list' user.id 'movies' %}">Movies</a>
-    <a href="{% url 'tracking:tracking-list' user.id 'shows' %}">Shows</a>
-    <a href="{% url 'tracking:tracking-list' user.id 'games' %}">Games</a>
-    <a href="{% url 'tracking:tracking-list' user.id 'books' %}">Books</a>
+    <a href="{% url 'tracking:dashboard' user.username %}">Dashboard</a>
+    <a href="{% url 'tracking:tracking-list' user.username 'movies' %}">Movies</a>
+    <a href="{% url 'tracking:tracking-list' user.username 'shows' %}">Shows</a>
+    <a href="{% url 'tracking:tracking-list' user.username 'games' %}">Games</a>
+    <a href="{% url 'tracking:tracking-list' user.username 'books' %}">Books</a>
 </div>

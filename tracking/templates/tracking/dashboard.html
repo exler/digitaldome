@@ -31,10 +31,10 @@
         <div>
             <h2 class="text-2xl font-bold mb-4 uppercase">Browse Collections</h2>
             <div class="flex flex-wrap gap-3">
-                <a href="{% url 'tracking:tracking-list' user.id 'movies' %}" class="btn btn-primary">Movies</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'books' %}" class="btn btn-primary">Books</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'games' %}" class="btn btn-primary">Games</a>
-                <a href="{% url 'tracking:tracking-list' user.id 'shows' %}" class="btn btn-primary">Shows</a>
+                <a href="{% url 'tracking:tracking-list' user.username 'movies' %}" class="btn btn-primary">Movies</a>
+                <a href="{% url 'tracking:tracking-list' user.username 'books' %}" class="btn btn-primary">Books</a>
+                <a href="{% url 'tracking:tracking-list' user.username 'games' %}" class="btn btn-primary">Games</a>
+                <a href="{% url 'tracking:tracking-list' user.username 'shows' %}" class="btn btn-primary">Shows</a>
             </div>
         </div>
 

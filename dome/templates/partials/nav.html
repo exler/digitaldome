@@ -6,7 +6,7 @@
             <a href="{% url 'index' %}" class="flex items-center gap-2">
                 <img src="{% static 'img/logo.png' %}"
                      alt="dome"
-                     class="h-8">
+                     class="h-6">
             </a>
         </div>
 
@@ -23,7 +23,7 @@
         <div class="flex items-center gap-2">
             {% if request.user.is_authenticated %}
                 <a class="text-sm font-bold hidden md:block"
-                   href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.username }}</a>
+                   href="{% url 'tracking:dashboard' request.user.username %}">{{ request.user.username }}</a>
                 <div x-data="{ open: false }"
                      @click.outside="open=false"
                      class="relative">
@@ -41,7 +41,7 @@
                         x-transition
                         x-cloak>
                         <a class="block md:hidden px-3 py-2 hover:bg-gray-100 text-xs font-bold uppercase border-b-2 border-black"
-                           href="{% url 'tracking:dashboard' request.user.id %}">{{ request.user.username }}</a>
+                           href="{% url 'tracking:dashboard' request.user.username %}">{{ request.user.username }}</a>
 
                         {# Mobile nav links #}
                         <div class="md:hidden border-b-2 border-black">
